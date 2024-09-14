@@ -25,7 +25,9 @@ class Product extends Controller
     public function detail($id = 0) {
         $product = $this -> model('ProductModel');
         $dataProduct = $product -> get_detail($id);
-        $this -> data['info'] = $dataProduct;
-        $this -> render('product/detail', $this -> data);
+        $this -> data['sub_content']['info'] = $dataProduct;
+        $this -> data['sub_content']['title'] = 'Chi tiet san pham';
+        $this -> data['content'] = 'product/detail';
+        $this -> render('layouts/client', $this -> data);
     }
 }

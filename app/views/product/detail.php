@@ -1,9 +1,7 @@
-Chi tiet san pham
-
 <?php
+Tiêu đề:
+echo $title;
 echo '<pre>';
-    print_r($info);
+print_r($info);
 echo '</pre>';
-
-
 ?>
