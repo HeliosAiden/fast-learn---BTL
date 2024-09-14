@@ -2,6 +2,9 @@
 
 class Product extends Controller
 {
+
+    public $data = [];
+
     public function index()
     {
         echo 'Danh sach san pham';
@@ -9,9 +12,14 @@ class Product extends Controller
 
     public function list_product() {
         $product = $this -> model('ProductModel');
-        $data = $product -> get_product_list();
-        echo '<pre>';
-            print_r($data);
-        echo '</pre>';
+        $dataProduct = $product -> get_product_list();
+
+        // Render view
+        $this -> data['product_list'] = $dataProduct;
+        $this -> render('product/list', $this -> data);
+    }
+
+    public function detail() {
+        $this -> render('product/detail');
     }
 }

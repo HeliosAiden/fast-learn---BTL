@@ -14,4 +14,11 @@ class Controller
 
         return false;
     }
+
+    public function render($view, $data = []) {
+        $view_url = _DIR_ROOT . '/app/views/' . $view . '.php';
+        if (file_exists($view_url)) {
+            require_once $view_url;
+        } 
+    }
 }
