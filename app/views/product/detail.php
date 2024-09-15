@@ -1,9 +1,6 @@
-Chi tiet san pham
-
 <?php
+echo $title;
 echo '<pre>';
-    print_r($info);
+print_r($info);
 echo '</pre>';
-
-
 ?>
