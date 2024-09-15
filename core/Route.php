@@ -5,9 +5,6 @@
         function handle_route($url) {
             global $routes;
             unset($routes['default_controller']);
-            echo '<pre>';
-                print_r($routes);
-            echo '</pre>';
             $url = ltrim($url, '/');
 
             $dest_route = $url;

@@ -9,7 +9,7 @@ class App
     {
         global $routes;
 
-        $this -> __routes = new Route();
+        $this->__routes = new Route();
         if (!empty($routes)) {
             $this->__controller = $routes['default_controller'];
         }
@@ -33,19 +33,43 @@ class App
     {
 
         $url = $this->get_url();
-        
-        $this -> __routes -> handle_route($url);
-        $urlArray = array_filter(explode('/', $url));
-        $urlArray = array_values($urlArray);
+
+        $url = $this->__routes->handle_route($url);
+
+        $url_array = array_filter(explode('/', $url));
+        $url_array = array_values($url_array);
+
+        $url_check = '';
+        if (!empty($url_array)) {
+            foreach ($url_array as $key => $item) {
+                $url_check .= $item . '/';
+                $file_check = rtrim($url_check, '/');
+                $file_arr = explode('/', $file_check);
+                $file_arr[count($file_arr) - 1] = ucfirst($file_arr[count($file_arr) - 1]);
+                $file_check = implode('/', $file_arr);
+                $file_url = 'app/controllers/' . ($file_check) . '.php';
+
+
+                if (!empty($url_array[$key - 1])) {
+                    unset($url_array[$key - 1]);
+                }
+                if (file_exists($file_url)) {
+                    $url_check = $file_check;
+                    break;
+                }
+            }
+            $url_array = array_values($url_array);
+        }
+
 
         // handle controller
-        if (!empty($urlArray[0])) {
-            $this->__controller = ucfirst($urlArray[0]);
+        if (!empty($url_array[0])) {
+            $this->__controller = ucfirst($url_array[0]);
         } else {
             $this->__controller = ucfirst($this->__controller);
         }
 
-        $file_url = 'app/controllers/' . ($this->__controller) . '.php';
+        $file_url = 'app/controllers/' . $url_check . '.php';
         if (file_exists($file_url)) {
             require_once $file_url;
             if (class_exists($this->__controller)) {
@@ -53,19 +77,19 @@ class App
             } else {
                 $this->load_errors();
             }
-            unset($urlArray[0]);
+            unset($url_array[0]);
         } else {
             $this->load_errors();
         }
 
         // handle action
-        if (!empty($urlArray[1])) {
-            $this->__action = $urlArray[1];
-            unset($urlArray[1]);
+        if (!empty($url_array[1])) {
+            $this->__action = $url_array[1];
+            unset($url_array[1]);
         }
 
         // handle param
-        $this->__params = array_values($urlArray);
+        $this->__params = array_values($url_array);
         if (method_exists($this->__controller, $this->__action)) {
             call_user_func_array([$this->__controller, $this->__action], $this->__params);
         } else {
