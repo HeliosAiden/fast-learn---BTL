@@ -1,7 +1,9 @@
 <?php
+
+use FTP\Connection;
+
 define('_DIR_ROOT', str_replace("\\", '/',__DIR__));
 
-require_once 'configs/routes.php';
 
 // Xử lý http root
 if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
@@ -15,9 +17,33 @@ $web_root = $web_root . $folder;
 
 define('_WEB_ROOT', $web_root);
 
-require_once 'app/app.php'; // Load Apps
-require_once 'core/Controller.php'; // Load Base Controller
+/*
+*   Tự động load configs
+*
+*/
+
+$config_dir = scandir('configs');
+if (!empty($config_dir)) {
+    foreach($config_dir as $item) {
+        if ($item !== '.' && $item !== '..' && file_exists('configs/' . $item)) {
+            require_once 'configs/' . $item;
+        }
+    }
+}
+
 require_once 'core/Route.php'; // Load Base Router
+require_once 'app/App.php'; // Load Apps
+
+// Kiểm tra config & load database
+if (!empty($config['database'])) {
+    $db_config = array_filter($config['database']);
+    if (!empty($db_config)) {
+        require 'core/Connection.php';
+        $conn = DB_Connection::get_instance();
+        
+    }
+}
+require_once 'core/Controller.php'; // Load Base Controller
 
 
 ?>

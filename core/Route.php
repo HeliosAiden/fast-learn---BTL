@@ -7,6 +7,10 @@
             unset($routes['default_controller']);
             $url = ltrim($url, '/');
 
+            if (empty($url)) {
+                $url = '/';
+            }
+
             $dest_route = $url;
             if(!empty($routes)) {
                 foreach ($routes as $key => $value) {

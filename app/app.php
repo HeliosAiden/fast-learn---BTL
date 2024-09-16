@@ -7,7 +7,7 @@ class App
 
     function __construct()
     {
-        global $routes;
+        global $routes, $config;
 
         $this->__routes = new Route();
         if (!empty($routes)) {
@@ -32,8 +32,9 @@ class App
     public function handle_url()
     {
 
+        
         $url = $this->get_url();
-
+        
         $url = $this->__routes->handle_route($url);
 
         $url_array = array_filter(explode('/', $url));
@@ -67,6 +68,11 @@ class App
             $this->__controller = ucfirst($url_array[0]);
         } else {
             $this->__controller = ucfirst($this->__controller);
+        }
+
+        // Xử lý khi url rỗng
+        if (empty($url_check)) {
+            $url_check = $this -> __controller;
         }
 
         $file_url = 'app/controllers/' . $url_check . '.php';
