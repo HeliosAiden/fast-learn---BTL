@@ -1,7 +1,5 @@
 <?php
 
-use FTP\Connection;
-
 define('_DIR_ROOT', str_replace("\\", '/',__DIR__));
 
 
@@ -39,10 +37,11 @@ if (!empty($config['database'])) {
     $db_config = array_filter($config['database']);
     if (!empty($db_config)) {
         require 'core/Connection.php';
-        $conn = DB_Connection::get_instance();
-        
+        require 'core/Database.php';
     }
 }
+
+require_once 'core/Model.php'; // Load Base Model
 require_once 'core/Controller.php'; // Load Base Controller
 
 

@@ -1,16 +1,16 @@
 <?php
 
-class HomeModel
+class HomeModel extends Model
 {
-    protected $table = 'products';
+    protected $__table = 'roles';
+    function __construct()
+    {
+        parent::__construct();
+    }
 
     public function get_list()
     {
-        $data = [
-            'Item 1',
-            'Item 2',
-            'Item 3'
-        ];
+        $data = $this ->db->select($this -> __table);
         return $data;
     }
 
