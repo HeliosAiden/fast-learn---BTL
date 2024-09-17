@@ -29,7 +29,7 @@ class UserModel extends Model
             'role_id' => $role_id
         ];
 
-        $this->create_user($data);
+        $this -> insert($this->__table, $data);
     }
 
     public function get_list()
@@ -43,22 +43,9 @@ class UserModel extends Model
         return $this -> detail($details);
     }
 
-    public function create_user($data = []) {
-        $statement = $this -> insert($this->__table, $data);
-        if ($statement) {
-            return $this -> get_detail(1);
-        } else {
-
-        }
-    }
-
     public function search_user($details=[]) {
         $details = $this -> init_details('', $details);
         return $this -> detail($details);
-    }
-
-    public function add_user() {
-
     }
 
     public function delete_user() {
