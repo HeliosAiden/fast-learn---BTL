@@ -1,10 +1,10 @@
 <?php
 
 // Include Composer's autoloader
-require __DIR__ . '/vendor/autoload.php';
+require _DIR_ROOT . '\vendor\autoload.php';
 
 // Load the .env file
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv = Dotenv\Dotenv::createImmutable(_DIR_ROOT);
 $dotenv->load();
 
 $config['database'] = [
@@ -12,7 +12,7 @@ $config['database'] = [
     'db' => $_ENV['DB_NAME'],
     'user' => $_ENV['DB_USERNAME'],
     'password' => $_ENV['DB_PASSWORD']
-]
+];
 
 
 ?>

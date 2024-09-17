@@ -1,6 +1,6 @@
 <?php
 
-define('_DIR_ROOT', str_replace("\\", '/',__DIR__));
+define('_DIR_ROOT', str_replace("\\", '/', __DIR__));
 
 
 // Xử lý http root
@@ -22,7 +22,7 @@ define('_WEB_ROOT', $web_root);
 
 $config_dir = scandir('configs');
 if (!empty($config_dir)) {
-    foreach($config_dir as $item) {
+    foreach ($config_dir as $item) {
         if ($item !== '.' && $item !== '..' && file_exists('configs/' . $item)) {
             require_once 'configs/' . $item;
         }
@@ -39,10 +39,8 @@ if (!empty($config['database'])) {
         require 'core/Connection.php';
         require 'core/Database.php';
     }
+    $hashing_config = array_filter($config['hashing']);
 }
 
 require_once 'core/Model.php'; // Load Base Model
 require_once 'core/Controller.php'; // Load Base Controller
-
-
-?>
