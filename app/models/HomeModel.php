@@ -6,6 +6,7 @@ class HomeModel extends Model
     {
         parent::__construct();
         $this -> __table = 'roles';
+        $this->init_table_id();
     }
 
     public function get_list()
@@ -15,12 +16,12 @@ class HomeModel extends Model
 
     public function get_detail($id, $details=[])
     {
-        $condition = ['id' => $id];
+        $params = [$this->__table_id => $id];
         if (!empty($details)) {
             foreach($details as $key => $value) {
-                $condition[$key] = $value;
+                $params[$key] = $value;
             }
         }
-        return $this -> detail($condition);
+        return $this -> detail($params);
     }
 }

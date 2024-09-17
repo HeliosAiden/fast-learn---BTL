@@ -1,10 +1,11 @@
 <?php
-class User extends Model
+class UserModel extends Model
 {
     function __construct()
     {
         parent::__construct();
         $this->__table = 'users';
+        $this->init_table_id();
     }
 
     public function get_list()
@@ -14,13 +15,8 @@ class User extends Model
 
     public function get_detail($id, $details=[])
     {
-        $condition = ['id' => $id];
-        if (!empty($details)) {
-            foreach($details as $key => $value) {
-                $condition[$key] = $value;
-            }
-        }
-        return $this -> detail($condition);
+        $details = $this -> init_details($id, $details);
+        return $this -> detail($details);
     }
 
     public function create_user($data = []) {
@@ -31,4 +27,18 @@ class User extends Model
 
         }
     }
+
+    public function search_user($details=[]) {
+        $details = $this -> init_details('', $details);
+        return $this -> detail($details);
+    }
+
+    public function add_user() {
+
+    }
+
+    public function delete_user() {
+
+    }
+
 }

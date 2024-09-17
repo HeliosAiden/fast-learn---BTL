@@ -1,10 +1,15 @@
 <?php
-// TODO: config is currently public, set it as private inside .env file
+
+require __DIR__ . '/../vendor/autoload.php';
+use Dotenv\Dotenv;
+$dotenv = Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
+
 $config['database'] = [
-    'host' => 'localhost',
-    'user' => 'helios_aiden',
-    'password' => 'A&C3^i^(9@8(MJ!MQG',
-    'db' => 'fast_learn_db'
+    'host' => $_ENV['DB_HOST'],
+    'db' => $_ENV['DB_NAME'],
+    'user' => $_ENV['DB_USERNAME'],
+    'password' => $_ENV['DB_PASSWORD']
 ]
 
 
