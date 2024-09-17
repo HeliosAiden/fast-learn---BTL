@@ -8,7 +8,6 @@ class Database
     {
         global $db_config;
         $this->__conn = DB_Connection::get_instance($db_config);
-        var_dump($this->__conn);
     }
 
     function query($sql)
@@ -25,18 +24,21 @@ class Database
 
     function select($table, $condition = '')
     {
-        if (!empty($condition)) {
-            $sql = "SELECT * FROM $table WHERE $condition";
-        } else {
-            $sql = "SELECT * FROM $table";
-        }
+        try {
+            if (!empty($condition)) {
+                $sql = "SELECT * FROM $table WHERE $condition";
+            } else {
+                $sql = "SELECT * FROM $table";
+            }
 
-        $status = $this->query($sql);
-        if ($status) {
-            return true;
+            $query = $this->query($sql);
+            if ($query) {
+                $data = $query -> fetchAll(PDO::FETCH_ASSOC);
+                return $data;
+            }
+        } catch (PDOException $exception) {
+            die('Query failed: ' . $exception->getMessage());
         }
-
-        return false;
     }
 
     function insert($table, $data)

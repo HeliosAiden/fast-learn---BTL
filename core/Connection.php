@@ -22,7 +22,7 @@ class DB_Connection
             self::$connection = $connection;
         } catch (PDOException $exception) {
             if ($exception !== null) {
-                echo 'Connection failed: ' . $exception->getMessage();
+                die('Connection failed: ' . $exception->getMessage());
             }
         }
     }
@@ -30,7 +30,7 @@ class DB_Connection
     public static function get_instance($config)
     {
         if (self::$instance == null) {
-            $connection = new DB_Connection($config);
+            new DB_Connection($config);
             self::$instance = self::$connection;
         }
         return self::$instance;

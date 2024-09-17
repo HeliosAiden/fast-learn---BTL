@@ -2,25 +2,19 @@
 
 class HomeModel extends Model
 {
-    protected $__table = 'roles';
     function __construct()
     {
         parent::__construct();
+        $this -> __table = 'roles';
     }
 
     public function get_list()
     {
-        $data = $this ->db->select($this -> __table);
-        return $data;
+        return $this -> list();
     }
 
     public function get_detail($id)
     {
-        $data = [
-            'Item 1',
-            'Item 2',
-            'Item 3'
-        ];
-        return $data[$id];
+        return $this -> detail($id);
     }
 }

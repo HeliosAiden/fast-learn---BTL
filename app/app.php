@@ -32,9 +32,8 @@ class App
     public function handle_url()
     {
 
-        
         $url = $this->get_url();
-        
+
         $url = $this->__routes->handle_route($url);
 
         $url_array = array_filter(explode('/', $url));
