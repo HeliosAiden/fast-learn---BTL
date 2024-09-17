@@ -10,7 +10,7 @@
 <body>
     <?php
     $this->render('blocks/header');
-    $this->render($content, $sub_content);
+    $this->render($data['url'], $data);
     $this->render('blocks/footer');
     ?>
 

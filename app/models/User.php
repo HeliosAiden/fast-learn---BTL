@@ -1,11 +1,10 @@
 <?php
-
-class HomeModel extends Model
+class User extends Model
 {
     function __construct()
     {
         parent::__construct();
-        $this -> __table = 'roles';
+        $this->__table = 'users';
     }
 
     public function get_list()
@@ -22,5 +21,14 @@ class HomeModel extends Model
             }
         }
         return $this -> detail($condition);
+    }
+
+    public function create_user($data = []) {
+        $statement = $this -> insert($this->__table, $data);
+        if ($statement) {
+            return $this -> get_detail(1);
+        } else {
+
+        }
     }
 }

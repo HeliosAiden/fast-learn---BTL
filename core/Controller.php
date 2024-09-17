@@ -17,10 +17,22 @@ class Controller
 
     public function render($view, $data = []) {
         extract($data);
-        
+
         $view_url = _DIR_ROOT . '/app/views/' . $view . '.php';
         if (file_exists($view_url)) {
             require_once $view_url;
         }
+    }
+
+    public function render_layout($view, $data = []) {
+        extract($data);
+        $view_url = _DIR_ROOT . '/app/views/layouts/' . $view . '.php';
+        if (file_exists($view_url)) {
+            require_once $view_url;
+        }
+    }
+
+    protected function get_data($data = []) {
+        
     }
 }
