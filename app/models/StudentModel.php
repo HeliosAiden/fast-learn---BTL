@@ -1,5 +1,7 @@
 <?php
-class Student extends UserModel
+    require_once _DIR_ROOT . '/app/models/UserModel.php';
+
+class StudentModel extends UserModel
 {
     function __construct()
     {

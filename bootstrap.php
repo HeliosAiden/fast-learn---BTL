@@ -1,6 +1,22 @@
 <?php
 
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
+
 define('_DIR_ROOT', str_replace("\\", '/', __DIR__));
+
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+
+// Get the host (domain)
+$host = $_SERVER['HTTP_HOST'];
+
+// Construct the origin
+$root = $protocol . $host;
+
+define('__URL_ROOT__', $root);
+define('__URL_DIR__', basename(__DIR__));
+define('__URL_ORIGIN__', __URL_ROOT__ . '/' . __URL_DIR__);
 
 
 // Xử lý http root

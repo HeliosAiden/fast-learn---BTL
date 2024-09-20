@@ -1,1 +1,53 @@
 /* This is a random comment */
+
+body {
+    overflow-x: hidden;
+}
+
+#sidebar {
+    min-height: 100vh;
+    /* Full height */
+    min-width: 250px;
+    max-width: 250px;
+    background: #343a40;
+    color: #fff;
+    transition: all 0.3s;
+}
+
+#sidebar.active {
+    margin-left: -250px;
+}
+
+#sidebar .nav-link {
+    color: #fff;
+}
+
+#sidebar .nav-link:hover {
+    background-color: #495057;
+}
+
+.folder-content {
+    display: none;
+    /* Hide content initially */
+}
+
+.folder-toggle {
+    cursor: pointer;
+}
+
+#content {
+    width: 100%;
+    padding: 20px;
+    transition: all 0.3s;
+}
+
+#sidebarToggle {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    border: none;
+    background: none;
+    font-size: 24px;
+    color: #343a40;
+}

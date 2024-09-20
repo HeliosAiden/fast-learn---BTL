@@ -7,7 +7,7 @@ class Home extends Controller
 
     public function __construct()
     {
-        $this->model_home = $this->model('UserModel');
+        $this->model_home = $this->model('HomeModel');
     }
 
     public function index()

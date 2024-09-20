@@ -71,7 +71,7 @@ class App
 
         // Xử lý khi url rỗng
         if (empty($url_check)) {
-            $url_check = $this -> __controller;
+            $url_check = $this->__controller;
         }
 
         $file_url = 'app/controllers/' . $url_check . '.php';
@@ -95,9 +95,9 @@ class App
 
         // ** Debugging code
         // echo '<pre>';
-        // print_r($this -> __controller);
+        // print_r($this->__controller);
         // echo '</pre>';
-        // echo $this -> __action;
+        // echo $this->__action;
         $this->__params = array_values($url_array);
         // echo '<pre>';
         // print_r($this->__params);
@@ -105,7 +105,11 @@ class App
 
         // handle param
         if (method_exists($this->__controller, $this->__action)) {
-            call_user_func_array([$this->__controller, $this->__action], $this->__params);
+
+            $res = call_user_func_array([$this->__controller, $this->__action], $this->__params);
+            if (!$res) {
+                $this->load_errors();
+            }
         } else {
             $this->load_errors();
         }

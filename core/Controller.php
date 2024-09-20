@@ -24,6 +24,10 @@ class Controller
         }
     }
 
+    public function extract_data($data=[]) {
+        extract($data);
+    }
+
     public function render_layout($view, $data = []) {
         extract($data);
         $view_url = _DIR_ROOT . '/app/views/layouts/' . $view . '.php';
@@ -32,7 +36,24 @@ class Controller
         }
     }
 
-    protected function get_data($data = []) {
-        
+    protected function serialize() {
+
+    }
+
+    protected function get_page_data($page_title, $dir, $data = []) {
+        $page_data = ['page_title' => $page_title, 'dir' => $dir];
+        if (!empty($data)) {
+            foreach($data as $key => $value) {
+                $page_data[$key] = $value;
+            }
+        }
+        return $page_data;
+    }
+
+    protected function get_page_dir($page_action) {
+        $page_controller = get_class($this);
+        $page_controller = strtolower($page_controller);
+        $page_dir = $page_controller . '/' . $page_action;
+        return $page_dir;
     }
 }

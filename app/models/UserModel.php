@@ -29,7 +29,26 @@ class UserModel extends Model
             'role_id' => $role_id
         ];
 
-        $this -> insert($this->__table, $data);
+        $is_registered = $this -> insert($this->__table, $data);
+        if ($is_registered) {
+            $user = $this->db->select($this->__table, $data);
+            return $user;
+        }
+
+        return false;
+    }
+
+    public function login($username, $password)
+    {
+        $condition = [
+            'username' => $username
+        ];
+        $user = $this->db->select($this->__table, $condition);
+        if ($user && password_verify($password, $user['password_hash'])) {
+            return $user; // Return user data if login is successful
+        }
+
+        return false; // Return false if credentials don't match
     }
 
     public function get_list()
