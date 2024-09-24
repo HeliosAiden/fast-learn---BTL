@@ -10,12 +10,14 @@ class User extends Controller
         $this->model_user = $this->model('UserModel');
     }
 
-    public function index()
+    public function list()
     {
-        $data = $this->model_user->get_list();
-        echo '<pre>';
-        print_r($data);
-        echo '</pre>';
+        $all_users = $this -> model_user -> select_all();
+        $page_action = __FUNCTION__;
+        $page_dir = $this -> get_page_dir($page_action);
+        $page_data = $this -> get_page_data("Tất cả người dùng hiện tại", $page_dir, ['$all_users' => $all_users]);
+        $this -> render_layout('test', $page_data);
+        return $page_data;
     }
 
     public function detail($id) {
@@ -27,11 +29,12 @@ class User extends Controller
         echo '</pre>';
     }
 
-    public function register($username, $password, $email) {
-        $data = $this->model_user->register($username, $password, $email);
-        echo '<pre>';
-            print_r($data);
-        echo '</pre>';
+    public function register() {
+        $page_action = __FUNCTION__;
+        $page_dir = $this -> get_page_dir($page_action);
+        $page_data = $this -> get_page_data("Đăng ký người dùng mới", $page_dir);
+        $this -> render_layout('test', $page_data);
+        return $page_data;
     }
 
     public function login($username, $password) {

@@ -51,11 +51,6 @@ class UserModel extends Model
         return false; // Return false if credentials don't match
     }
 
-    public function get_list()
-    {
-        return $this -> list();
-    }
-
     public function get_detail($id, $details=[])
     {
         $details = $this -> init_details($id, $details);

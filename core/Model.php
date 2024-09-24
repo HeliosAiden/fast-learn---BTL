@@ -12,12 +12,12 @@ class Model extends Database
         $this->db = new Database();
     }
 
-    protected function init_table_id()
+    public function init_table_id()
     {
         $this->__table_id = rtrim($this->__table, 's') . '_id';
     }
 
-    protected function init_details($id, $params = []) {
+    public function init_details($id, $params = []) {
         $details = [];
         if (empty($params)) {
             $details = [$this->__table_id => $id];
@@ -29,12 +29,16 @@ class Model extends Database
         return $details;
     }
 
-    protected function list($condition = '')
+    public function select_all() {
+        return $this->db->select($this->__table);
+    }
+
+    public function select_condition($condition = '')
     {
         return $this->db->select($this->__table, $condition);
     }
 
-    protected function detail($details = [])
+    public function detail($details = [])
     {
         if (!empty($details)) {
             $condition = '';
@@ -42,11 +46,11 @@ class Model extends Database
                 $condition .= $key . ' = ' . $value . ' AND ';
             }
             $condition = rtrim($condition, ' AND ');
-            return $this->list($condition);
-        } else return $this -> list();
+            return $this->select_condition($condition);
+        } else return $this -> select_all();
     }
 
-    protected function search($queries=[]) {
+    public function search($queries=[]) {
         if (!empty($queries)) {
             return $this -> detail($queries);
         }

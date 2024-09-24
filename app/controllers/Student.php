@@ -15,6 +15,13 @@
             return $page_data;
         }
 
+        public function list() {
+            $page_action = __FUNCTION__;
+            $page_dir = $this -> get_page_dir($page_action);
+            $data = $this -> model_student -> select_all();
+            $page_data = $this -> get_page_data("Liệt kê trang sinh viên", $page_dir);
+        }
+
         public function register() {
             $page_action = __FUNCTION__;
             $page_dir = $this -> get_page_dir($page_action);
