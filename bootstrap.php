@@ -36,11 +36,11 @@ define('_WEB_ROOT', $web_root);
 *
 */
 
-$config_dir = scandir('configs');
+$config_dir = scandir(_DIR_ROOT . '/configs');
 if (!empty($config_dir)) {
     foreach ($config_dir as $item) {
-        if ($item !== '.' && $item !== '..' && file_exists('configs/' . $item)) {
-            require_once 'configs/' . $item;
+        if ($item !== '.' && $item !== '..' && file_exists(_DIR_ROOT . '/configs/' . $item)) {
+            require_once _DIR_ROOT .  '/configs/' . $item;
         }
     }
 }

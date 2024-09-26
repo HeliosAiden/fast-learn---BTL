@@ -74,8 +74,8 @@ class Database
                 $this->set_last_insert_id($this->__connection->lastInsertId());
                 return [$this->last_insert_id(), true];
             }
-
-            return [null, false];
+        } else {
+            return [false, null];
         }
     }
 

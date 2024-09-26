@@ -2,9 +2,10 @@
 
 class DB_Connection
 {
-    private static $instance = null, $connection = null;
+    private static $instance = null;
+    private $__connection = null;
 
-    public function __construct($config)
+    private function __construct($config)
     {
         // Kết nối db
         try {
@@ -18,11 +19,10 @@ class DB_Connection
                 PDO::ATTR_EMULATE_PREPARES   => false
             ];
 
-            $connection = new PDO($dsn, $config['user'], $config['password'], $options);
-            self::$connection = $connection;
+            $this -> __connection = new PDO($dsn, $config['user'], $config['password'], $options);
         } catch (PDOException $exception) {
             if ($exception !== null) {
-                die('Connection failed: ' . $exception->getMessage());
+                die('Database connection error: ' . $exception->getMessage());
             }
         }
     }
@@ -30,9 +30,8 @@ class DB_Connection
     public static function get_instance($config)
     {
         if (self::$instance == null) {
-            new DB_Connection($config);
-            self::$instance = self::$connection;
+            self::$instance = new DB_Connection($config);
         }
-        return self::$instance;
+        return self::$instance->__connection;
     }
 }

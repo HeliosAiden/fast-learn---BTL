@@ -18,16 +18,17 @@
 </head>
 
 <body>
-    <?php
-    $this->render('blocks/test/test_layout', $data);
-    ?>
-
     <!-- Bootstrap Script -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Jquery Script -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <!-- Custom Script -->
     <script type="text/javascript" src="<?php echo _WEB_ROOT; ?>/public/assets/client/js/script.js"></script>
+
+    <?php
+    $this->render('blocks/test/test_layout', $data);
+    ?>
+
 </body>
 
 </html>

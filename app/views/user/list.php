@@ -10,9 +10,9 @@
     </thead>
     <tbody>
         <?php
-        if (!empty($data['data'])) {
+        if (!empty($data['all_users'])) {
             // Output data of each row
-            foreach ($data['data'] as $row) {
+            foreach ($data['all_users'] as $row) {
                 echo "<tr>
                             <td>{$row['id']}</td>
                             <td>{$row['username']}</td>

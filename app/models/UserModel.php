@@ -16,26 +16,25 @@ class UserModel extends Model
         return ['cost' => $this->hashing_config['cost']];
     }
 
-    public function register($username, $email, $password, $role_id)
+    public function register($username, $password, $role='Student')
     {
         // Hash the password using bcrypt
         $options = $this->get_options();
-        $hashedPassword = password_hash($password, $this->hashing_config['algorithm'], $options);
+        $hashedPassword = password_hash($password, constant($this->hashing_config['algorithm']), $options);
 
         $data = [
             'username' => $username,
-            'email' => $email,
-            'password' => $hashedPassword,
-            'role_id' => $role_id
+            'password_hash' => $hashedPassword,
+            'role' => $role
         ];
 
-        $is_registered = $this -> insert($this->__table, $data);
-        if ($is_registered) {
-            $user = $this->db->select($this->__table, $data);
+        $response = $this -> db -> insert($this->__table, $data);
+        if ($response) {
+            $user = $this -> select($this->__table, $data);
             return $user;
         }
 
-        return false;
+        return $response;
     }
 
     public function login($username, $password)

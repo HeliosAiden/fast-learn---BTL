@@ -93,15 +93,7 @@ class App
             unset($url_array[1]);
         }
 
-        // ** Debugging code
-        // echo '<pre>';
-        // print_r($this->__controller);
-        // echo '</pre>';
-        // echo $this->__action;
         $this->__params = array_values($url_array);
-        // echo '<pre>';
-        // print_r($this->__params);
-        // echo '</pre>';
 
         // handle param
         if (method_exists($this->__controller, $this->__action)) {
