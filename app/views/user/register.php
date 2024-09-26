@@ -25,7 +25,7 @@
 
 </div>
 <script type="module">
-    import httpMixin from "<?php echo _WEB_ROOT . '/public/assets/client/js/api/httpMixin.js' ?>";
+    import httpMixin from "<?php echo _WEB_ROOT . '/public/assets/js/api/httpMixin.js' ?>";
 
     let url = "<?php echo _WEB_ROOT . '/app/apis/user.php' ?>"
     const handleButtonClick = () => {
@@ -37,7 +37,6 @@
             password: passwordInput,
             confirm_password: confirmPasswordInput
         }
-        console.log(data)
         httpMixin.postMixin(url, data)
     }
     const submitButton = document.getElementById("submitBtn")

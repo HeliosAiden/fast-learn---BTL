@@ -29,6 +29,17 @@ class Model extends Database
         return $details;
     }
 
+    public function init_condition($data = []) {
+        $condition = '';
+        if (!empty($data)) {
+            foreach($data as $key => $value) {
+                $condition .= $key . ' = ' . $value;
+            }
+            $condition = rtrim($condition, ' = ');
+        }
+        return $condition;
+    }
+
     public function select_all() {
         return $this->db->select($this->__table);
     }

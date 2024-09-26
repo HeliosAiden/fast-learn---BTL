@@ -59,4 +59,16 @@ class User extends Controller
             $this -> errorResponse();
         }
     }
+
+    public function get_user() {
+        $response = $this -> __model -> select_all();
+        if ($response[1]) {
+            $this->jsonResponse([
+                'status' => 'success',
+                'data' => $response[0]
+            ]);
+        } else {
+            $this -> errorResponse();
+        }
+    }
 }

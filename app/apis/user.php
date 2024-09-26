@@ -10,6 +10,10 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 // Route the request based on the HTTP method
 switch ($method) {
+    case 'GET':
+        $api -> get_controller() -> get_user();
+        break;
+
     case 'POST':
         $api -> get_controller() -> create_user();
         break;

@@ -39,7 +39,9 @@ class Database
             $query = $this->query($sql);
             if ($query) {
                 $data = $query->fetchAll(PDO::FETCH_ASSOC);
-                return $data;
+                return [$data, true];
+            } else {
+                return [null, false];
             }
         } catch (PDOException $exception) {
             die('Query failed: ' . $exception->getMessage());
@@ -75,7 +77,7 @@ class Database
                 return [$this->last_insert_id(), true];
             }
         } else {
-            return [false, null];
+            return [null, false];
         }
     }
 

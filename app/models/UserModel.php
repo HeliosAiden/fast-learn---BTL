@@ -30,7 +30,9 @@ class UserModel extends Model
 
         $response = $this -> db -> insert($this->__table, $data);
         if ($response) {
-            $user = $this -> select($this->__table, $data);
+            $condition = $this -> init_condition($data);
+
+            $user = $this -> select($this->__table, $condition);
             return $user;
         }
 
