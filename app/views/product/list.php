@@ -1,4 +1,3 @@
-Danh sach san pham
 <?php
 echo $page_title;
 echo '<pre>';

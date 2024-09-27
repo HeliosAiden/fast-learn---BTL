@@ -12,14 +12,16 @@ class Home extends Controller
 
     public function index()
     {
-        $data = $this->model_home->get_list();
-        echo '<pre>';
-        print_r($data);
-        echo '</pre>';
+        $page_action = __FUNCTION__;
+        $page_dir = $this -> get_page_dir($page_action);
+        $page_data = $this -> get_page_data("Trang chủ", $page_dir);
+        $this -> render_layout('test', $page_data);
+    }
 
-        $detail = $this->model_home->get_detail(0);
+    public function detail($id) {
+        $data = $this->model_home->get_detail($id);
         echo '<pre>';
-        print_r($detail);
+            print_r($data);
         echo '</pre>';
     }
 }

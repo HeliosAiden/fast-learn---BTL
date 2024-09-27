@@ -17,19 +17,20 @@ class Product extends Controller
         $title = 'Danh mục sản phẩm';
 
         // Render view
-        $this -> data['data']['product_list'] = $dataProduct;
-        $this -> data['data']['page_title'] = $title;
-        $this -> data['view'] = 'product/list';
-        $this -> render($this -> data['view'], $this -> data['data']);
+        $this -> data['product_list'] = $dataProduct;
+        $this -> data['page_title'] = $title;
+        $this -> data['url'] = 'product/list';
+        $this -> render_layout('client', $this -> data);
     }
 
     public function detail($id = 0) {
         $product = $this -> model('ProductModel');
         $dataProduct = $product -> get_detail($id);
-        $this -> data['data']['info'] = $dataProduct;
-        $this -> data['data']['title'] = 'Chi tiet san pham';
-        $this -> data['data']['page_title'] = 'Chi tiet san pham';
-        $this -> data['content'] = 'product/detail';
-        $this -> render($this -> data['content'], $this -> data['data']);
+        $this -> data['info'] = $dataProduct;
+        $this -> data['title'] = 'Chi tiet san pham';
+        $this -> data['page_title'] = 'Chi tiet san pham';
+        $this -> data['url'] = 'product/detail';
+        $this -> render_layout('client', $this -> data);
     }
+
 }

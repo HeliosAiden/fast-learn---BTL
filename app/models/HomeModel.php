@@ -1,26 +1,27 @@
 <?php
 
-class HomeModel
+class HomeModel extends Model
 {
-    protected $table = 'products';
+    function __construct()
+    {
+        parent::__construct();
+        $this -> __table = 'users';
+        $this->init_table_id();
+    }
 
     public function get_list()
     {
-        $data = [
-            'Item 1',
-            'Item 2',
-            'Item 3'
-        ];
-        return $data;
+        return $this -> select_all();
     }
 
-    public function get_detail($id)
+    public function get_detail($id, $details=[])
     {
-        $data = [
-            'Item 1',
-            'Item 2',
-            'Item 3'
-        ];
-        return $data[$id];
+        $params = [$this->__table_id => $id];
+        if (!empty($details)) {
+            foreach($details as $key => $value) {
+                $params[$key] = $value;
+            }
+        }
+        return $this -> detail($params);
     }
 }

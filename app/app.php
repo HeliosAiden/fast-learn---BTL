@@ -7,7 +7,7 @@ class App
 
     function __construct()
     {
-        global $routes;
+        global $routes, $config;
 
         $this->__routes = new Route();
         if (!empty($routes)) {
@@ -69,6 +69,11 @@ class App
             $this->__controller = ucfirst($this->__controller);
         }
 
+        // Xử lý khi url rỗng
+        if (empty($url_check)) {
+            $url_check = $this->__controller;
+        }
+
         $file_url = 'app/controllers/' . $url_check . '.php';
         if (file_exists($file_url)) {
             require_once $file_url;
@@ -88,10 +93,15 @@ class App
             unset($url_array[1]);
         }
 
-        // handle param
         $this->__params = array_values($url_array);
+
+        // handle param
         if (method_exists($this->__controller, $this->__action)) {
-            call_user_func_array([$this->__controller, $this->__action], $this->__params);
+
+            $res = call_user_func_array([$this->__controller, $this->__action], $this->__params);
+            if (!$res) {
+                $this->load_errors();
+            }
         } else {
             $this->load_errors();
         }

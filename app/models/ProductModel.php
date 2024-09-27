@@ -1,5 +1,5 @@
 <?php
-class ProductModel
+class ProductModel extends Model
 {
 
     public function get_product_list()
