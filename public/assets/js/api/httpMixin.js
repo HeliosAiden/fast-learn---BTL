@@ -1,98 +1,64 @@
-const httpMixin = {
-    /**
-     * Make a GET request
-     * @param {string} url - The URL to send the request to
-     */
-    async getMixin(url) {
-      return fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        }
-      }).then(this.handleResponse)
-    },
-    /**
-     * Make a POST request
-     * @param {string} url - The URL to send the request to
-     * @param {Object} data - The data to send as the request body
-     */
-    async postMixin(url, data = {}) {
-      return fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      })
-        .then(this.handleResponse)
-        .then((result) => {
-          if (result.status === "success") {
-            alert(result.message); // User registered successfully
-          } else {
-            alert(result.message); // Display error message
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    },
+class HttpMixin {
+  constructor(baseURL) {
+      this.baseURL = baseURL;
+      this.token = localStorage.getItem('jwtToken');  // Store JWT token in localStorage
+  }
 
-    /**
-     * Make a PUT request
-     * @param {string} url - The URL to send the request to
-     * @param {Object} data - The data to send as the request body
-     */
-    async putMixin(url, data = {}) {
-      return fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }).then(this.handleResponse);
-    },
+  // Private method to handle HTTP requests
+  async _request(method, endpoint, body = null) {
+      const headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.token}`  // Add JWT token to request headers
+      };
 
-    /**
-     * Make a PATCH request
-     * @param {string} url - The URL to send the request to
-     * @param {Object} data - The data to send as the request body
-     */
-    async patchMixin(url, data = {}) {
-      return fetch(url, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }).then(this.handleResponse);
-    },
+      const options = {
+          method,
+          headers
+      };
 
-    /**
-     * Make a DELETE request
-     * @param {string} url - The URL to send the request to
-     * @param {Object} data - The data to send as the request body (if any)
-     */
-    async deleteMixin(url, data = {}) {
-      return fetch(url, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }).then(this.handleResponse);
-    },
-
-    /**
-     * Handle the response of an HTTP request
-     * @param {Response} response - The response object from fetch
-     * @returns {Promise<any>} - A promise that resolves to the response data or throws an error
-     */
-    handleResponse(response) {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (body) {
+          options.body = JSON.stringify(body);
       }
-      return response.json();
-    },
-  };
 
-  export default httpMixin;
+      try {
+          const response = await fetch(`${this.baseURL}/${endpoint}`, options);
+          const data = await response.json();
+
+          if (!response.ok) {
+              throw new Error(data.message || 'Request failed');
+          }
+
+          return data;
+      } catch (error) {
+          console.error(`HTTP ${method} Error:`, error.message);
+          throw error;
+      }
+  }
+
+  // GET method
+  async getMixin(endpoint) {
+      return this._request('GET', endpoint);
+  }
+
+  // POST method
+  async postMixin(endpoint, body) {
+      return this._request('POST', endpoint, body);
+  }
+
+  // PUT method
+  async putMixin(endpoint, body) {
+      return this._request('PUT', endpoint, body);
+  }
+
+  // PATCH method
+  async patchMixin(endpoint, body) {
+      return this._request('PATCH', endpoint, body);
+  }
+
+  // DELETE method
+  async deleteMixin(endpoint) {
+      return this._request('DELETE', endpoint);
+  }
+}
+
+export default HttpMixin;

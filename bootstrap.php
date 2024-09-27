@@ -55,7 +55,12 @@ if (!empty($config['database'])) {
         require 'core/Connection.php';
         require 'core/Database.php';
     }
+}
+if (!empty($config['hashing'])) {
     $hashing_config = array_filter($config['hashing']);
+}
+if (!empty($config['jwt'])) {
+    $jwt_config = array_filter($config['jwt']);
 }
 
 require_once 'core/Model.php'; // Load Base Model

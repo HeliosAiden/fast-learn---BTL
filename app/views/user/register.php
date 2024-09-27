@@ -1,6 +1,6 @@
 <div class="register-form mt-4" id="register-form" style="width: 40%; margin:auto;"></div>
 <script type="module">
-    import httpMixin from "<?php echo _WEB_ROOT . '/public/assets/js/api/httpMixin.js' ?>";
+    import HttpMixin from "<?php echo _WEB_ROOT . '/public/assets/js/api/httpMixin.js' ?>";
     import FormMixin from "<?php echo _WEB_ROOT . '/public/assets/js/components/form.js' ?>";
 
     const formConfigs = {
@@ -44,7 +44,9 @@
     const registerForm = new FormMixin(formConfigs)
     registerForm.render("#register-form")
 
-    let url = "<?php echo _WEB_ROOT . '/app/apis/user.php' ?>"
+    const httpMixin = new HttpMixin('<?php echo _WEB_ROOT ?>')
+
+    let url = '/app/apis/user.php'
     const handleSubmitForm = () => {
         const usernameInput = document.getElementById("username").value
         const passwordInput = document.getElementById("password").value

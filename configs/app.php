@@ -13,3 +13,7 @@ $config['hashing'] = [
     'algorithm' => $_ENV['ALGORITHM'],
     'cost' => $_ENV['COST'],
 ];
+
+$config['jwt'] = [
+    'secret_key' => $_ENV['SECRET_KEY']
+];

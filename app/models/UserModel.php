@@ -12,14 +12,10 @@ class UserModel extends Model
         $this->hashing_config = $hashing_config;
     }
 
-    private function get_options() {
-        return ['cost' => $this->hashing_config['cost']];
-    }
-
     public function register($username, $password, $role='Student')
     {
         // Hash the password using bcrypt
-        $options = $this->get_options();
+        $options = ['cost' => $this->hashing_config['cost']];
         $hashedPassword = password_hash($password, constant($this->hashing_config['algorithm']), $options);
 
         $data = [
@@ -32,7 +28,7 @@ class UserModel extends Model
         if ($response) {
             $condition = $this -> init_condition($data);
 
-            $user = $this -> select($this->__table, $condition);
+            $user = $this -> db ->select($this->__table, $condition);
             return $user;
         }
 
@@ -44,9 +40,9 @@ class UserModel extends Model
         $condition = [
             'username' => $username
         ];
-        $user = $this->db->select($this->__table, $condition);
-        if ($user && password_verify($password, $user['password_hash'])) {
-            return $user; // Return user data if login is successful
+        $statement = $this->db->select($this->__table, $condition);
+        if ($statement[1] && password_verify($password, $statement[0]['password_hash'])) {
+            return $statement[0]; // Return user data if login is successful
         }
 
         return false; // Return false if credentials don't match

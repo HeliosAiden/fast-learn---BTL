@@ -35,11 +35,10 @@ class User extends Controller
 
     public function login($username, $password) {
         $data = $this->__model->login($username, $password);
-        echo "Bạn đã đăng nhập!";
-        echo "<br/>";
-        echo '<pre>';
-            print_r($data);
-        echo '</pre>';
+        if ($data) {
+            return true;
+        }
+        return false;
     }
 
     public function create_user() {
