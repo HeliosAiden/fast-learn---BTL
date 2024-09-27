@@ -4,7 +4,7 @@
     </a>
     <ul class="nav flex-column">
         <li class="nav-item">
-            <span class="nav-link folder-toggle"><i class="fa-regular fa-folder"></i> b5_mydb</span>
+            <span class="nav-link folder-toggle"><i class="fa-regular fa-user"></i> User</span>
             <ul class="folder-content">
                 <li class="nav-item">
                     <a class="nav-link" href="<?php echo __URL_ORIGIN__ ?>/user/list/" >List</a>
