@@ -7,7 +7,8 @@
     import TableMixin from "<?php echo _WEB_ROOT . '/public/assets/js/components/table.js' ?>";
     let url = "<?php echo _WEB_ROOT . '/app/apis/user.php' ?>"
     // Sample data
-    httpMixin.getMixin(url)
+    let data = httpMixin.getMixin(url)
+    console.log(data)
 
     // const tableMixin = new TableMixin([], 3);
     // tableMixin.render(document.getElementById('table-container'));

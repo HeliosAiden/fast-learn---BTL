@@ -8,10 +8,8 @@ const httpMixin = {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-      },
-    }).then(data => {
-      console.log('Data received from API:', data)
-    })
+      }
+    }).then(this.handleResponse)
   },
   /**
    * Make a POST request
