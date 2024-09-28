@@ -33,12 +33,16 @@ class User extends Controller
         return $page_data;
     }
 
-    public function login($username, $password) {
-        $data = $this->__model->login($username, $password);
-        if ($data) {
-            return true;
-        }
-        return false;
+    public function login() {
+        $page_dir = $this -> get_page_dir(__FUNCTION__);
+        $page_data = $this -> get_page_data("Đăng nhập tài khoản", $page_dir);
+        $this -> render_layout('test_blank', $page_data);
+        return $page_data;
+    }
+
+    public function perform_login($username, $password, $role='Student') {
+        $response = $this -> __model -> login($username, $password, $role);
+        return $response;
     }
 
     public function create_user() {

@@ -5,7 +5,10 @@ class FormMixin {
 
     // Method to create a form dynamically
     createForm() {
-        const form = document.createElement('div');
+        const form = document.createElement('form');
+        if (this.formConfig.class) {
+            form.setAttribute('class', this.formConfig.class)
+        }
 
         // Add title if provided
         if (this.formConfig.title) {
@@ -64,14 +67,32 @@ class FormMixin {
         if (this.formConfig.submitButton.id) {
             submitButton.setAttribute('id', this.formConfig.submitButton.id);
         }
+        const iconConfig = this.formConfig.submitButton.icon
+        if (iconConfig?.class && iconConfig?.position == 'start') {
+            this.appendIcon(submitButton, iconConfig.class)
+        }
         if (this.formConfig.submitButton.label) {
             submitButton.innerText = this.formConfig.submitButton.label;
         } else {
             submitButton.innerText = "Submit";
         }
+        if (iconConfig?.class && iconConfig?.position == 'end') {
+            this.appendIcon(submitButton, iconConfig.class)
+        }
         form.appendChild(submitButton);
 
         return form;
+    }
+
+    appendIcon(element, iconClass) {
+        const icon = document.createElement('i')
+        icon.setAttribute('class', iconClass)
+        element.appendChild(icon)
+    }
+
+    createActionButton(buttonConfig) {
+        const button = document.createElement('button');
+
     }
 
     // Method to create a basic input field (text, password, email, etc.)

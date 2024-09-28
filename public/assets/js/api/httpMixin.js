@@ -37,7 +37,7 @@ class HttpMixin {
 
   // GET method
   async getMixin(endpoint) {
-      return this._request('GET', endpoint);
+      return await this._request('GET', endpoint);
   }
 
   // POST method

@@ -41,13 +41,14 @@
         }
     }
 
+    // Gửi thông tin
     const registerForm = new FormMixin(formConfigs)
     registerForm.render("#register-form")
 
-    const httpMixin = new HttpMixin('<?php echo _WEB_ROOT ?>')
-
-    let url = '/app/apis/user.php'
     const handleSubmitForm = () => {
+        const httpMixin = new HttpMixin('<?php echo _WEB_ROOT ?>')
+
+        let url = '/app/apis/user.php'
         const usernameInput = document.getElementById("username").value
         const passwordInput = document.getElementById("password").value
         const confirmPasswordInput = document.getElementById("confirm_password").value

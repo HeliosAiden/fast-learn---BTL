@@ -1,9 +1,9 @@
 <?php
-require 'vendor/autoload.php';
+require_once './Api.php';
+require _DIR_ROOT . '/vendor/autoload.php';
 
 use \Firebase\JWT\JWT;
 
-require_once './Api.php';
 $api = new Api('User');
 
 global $jwt_config;
@@ -16,16 +16,18 @@ $expirationTime = $issuedAt + 3600;  // jwt valid for 1 hour
 // Get user credentials from request (POST method)
 $data = json_decode(file_get_contents("php://input"));
 
-if (isset($data->username) && isset($data->password)) {
+if (isset($data->username) && isset($data->password) && isset($data->role)) {
 
 
     $username = $data->username;
     $password = $data->password;
+    $role = $data->role;
 
-    $response = $api->get_controller()->login($username, $password);
+    $response = $api->get_controller()->perform_login($username, $password, $role);
 
     // Validate user credentials (query from DB)
-    if ($response) {
+    if ($response[1]) {
+        $user_data = $response[0];
         // Generate JWT token
         $payload = [
             'iss' => __URL_ORIGIN__,  // issuer
@@ -35,16 +37,18 @@ if (isset($data->username) && isset($data->password)) {
                 'username' => $username
             ]
         ];
-        if (isset($response['id']) ) {
-            $payload['data']['user_id'] = $response['id'];
+        if (isset($user_data['id']) ) {
+            $payload['data']['user_id'] = $user_data['id'];
         }
 
         // Encode JWT
         $jwt = JWT::encode($payload, $secretKey, 'HS256');
 
         // Send response
+        header('Content-Type: application/json');
         echo json_encode([
             'status' => 'success',
+            'message' => 'Obtain token successfully',
             'token' => $jwt
         ]);
     } else {

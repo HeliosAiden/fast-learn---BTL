@@ -35,17 +35,16 @@ class UserModel extends Model
         return $response;
     }
 
-    public function login($username, $password)
+    public function login($username, $password, $role)
     {
-        $condition = [
-            'username' => $username
-        ];
+        $condition = 'username = "' . $username . '" AND role = "' . $role . '"';
         $statement = $this->db->select($this->__table, $condition);
-        if ($statement[1] && password_verify($password, $statement[0]['password_hash'])) {
-            return $statement[0]; // Return user data if login is successful
+        $user = $statement[0][0];
+        if ($statement[1] && password_verify($password, $user['password_hash'])) {
+            return [$user, true]; // Return user data if login is successful
         }
 
-        return false; // Return false if credentials don't match
+        return [null, false]; // Return false if credentials don't match
     }
 
     public function get_detail($id, $details=[])
