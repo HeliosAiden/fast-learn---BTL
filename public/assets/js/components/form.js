@@ -5,15 +5,26 @@ class FormMixin {
 
     // Method to create a form dynamically
     createForm() {
-        const form = document.createElement('form');
+        const form = document.createElement('div');
         if (this.formConfig.class) {
             form.setAttribute('class', this.formConfig.class)
         }
 
         // Add title if provided
         if (this.formConfig.title) {
-            const title = document.createElement('h2');
-            title.innerText = this.formConfig.title;
+            const titleConfig = this.formConfig.title
+            let title
+            if (titleConfig.tag) {
+                title = document.createElement(titleConfig.tag);
+            } else {
+                title = document.createElement('h2');
+            }
+            if (titleConfig.class) {
+                title.setAttribute('class', titleConfig.class)
+            }
+            if (titleConfig.label) {
+                title.innerText = titleConfig.label;
+            }
             form.appendChild(title);
         }
 
@@ -60,26 +71,8 @@ class FormMixin {
             }
         });
 
-        // Create submit button
-        const submitButton = document.createElement('button');
-        submitButton.setAttribute('type', 'submit');
-        submitButton.classList.add('btn', 'btn-primary'); // Bootstrap styling
-        if (this.formConfig.submitButton.id) {
-            submitButton.setAttribute('id', this.formConfig.submitButton.id);
-        }
-        const iconConfig = this.formConfig.submitButton.icon
-        if (iconConfig?.class && iconConfig?.position == 'start') {
-            this.appendIcon(submitButton, iconConfig.class)
-        }
-        if (this.formConfig.submitButton.label) {
-            submitButton.innerText = this.formConfig.submitButton.label;
-        } else {
-            submitButton.innerText = "Submit";
-        }
-        if (iconConfig?.class && iconConfig?.position == 'end') {
-            this.appendIcon(submitButton, iconConfig.class)
-        }
-        form.appendChild(submitButton);
+        const buttonArea = this.createButtonArea(this.formConfig.buttonArea)
+        form.appendChild(buttonArea)
 
         return form;
     }
@@ -88,11 +81,6 @@ class FormMixin {
         const icon = document.createElement('i')
         icon.setAttribute('class', iconClass)
         element.appendChild(icon)
-    }
-
-    createActionButton(buttonConfig) {
-        const button = document.createElement('button');
-
     }
 
     // Method to create a basic input field (text, password, email, etc.)
@@ -180,6 +168,50 @@ class FormMixin {
         textarea.setAttribute('placeholder', field.placeholder || '');
         textarea.classList.add('form-control');
         return textarea;
+    }
+
+    createButtonArea(buttons) {
+        const buttonArea = document.createElement('div')
+        buttonArea.setAttribute('class', 'd-flex justify-content-center mt-4')
+        buttons.forEach(button => {
+            let newButton
+            if (button.tag) {
+                newButton = document.createElement(button.tag);
+            } else {
+                newButton = document.createElement('button');
+            }
+            if (button.type) {
+                newButton.setAttribute('type', button.type)
+            }
+            if (button.href) {
+                newButton.setAttribute('href', button.href)
+            }
+            if (button.target) {
+                newButton.setAttribute('target', button.target)
+            }
+            if (button.class) {
+                newButton.setAttribute('class', button.class)
+            } else {
+                newButton.classList.add('btn', 'btn-primary'); // Bootstrap styling
+            }
+            if (button.id) {
+                newButton.setAttribute('id', button.id);
+            }
+            const iconConfig = button.icon
+            if (iconConfig?.class && iconConfig?.position == 'start') {
+                this.appendIcon(newButton, iconConfig.class)
+            }
+            if (button.label) {
+                newButton.innerText = button.label;
+            } else {
+                newButton.innerText = "Submit";
+            }
+            if (iconConfig?.class && iconConfig?.position == 'end') {
+                this.appendIcon(newButton, iconConfig.class)
+            }
+            buttonArea.appendChild(newButton);
+        });
+        return buttonArea
     }
 
     // Method to render the form into a DOM element

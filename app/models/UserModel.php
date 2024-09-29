@@ -38,10 +38,14 @@ class UserModel extends Model
     public function login($username, $password, $role)
     {
         $condition = 'username = "' . $username . '" AND role = "' . $role . '"';
-        $statement = $this->db->select($this->__table, $condition);
-        $user = $statement[0][0];
-        if ($statement[1] && password_verify($password, $user['password_hash'])) {
-            return [$user, true]; // Return user data if login is successful
+        $response = $this->db->select($this->__table, $condition);
+        $data = $response[0];
+        $status = $response[1];
+        if ($status && !empty($data)) {
+            $user = $data[0]; // Select first user found
+            if ($user && password_verify($password, $user['password_hash'])) {
+                return [$user, true]; // Return user data if login is successful
+            }
         }
 
         return [null, false]; // Return false if credentials don't match

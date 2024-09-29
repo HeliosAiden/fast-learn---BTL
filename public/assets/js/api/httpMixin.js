@@ -24,10 +24,6 @@ class HttpMixin {
           const response = await fetch(`${this.baseURL}/${endpoint}`, options);
           const data = await response.json();
 
-          if (!response.ok) {
-              throw new Error(data.message || 'Request failed');
-          }
-
           return data;
       } catch (error) {
           console.error(`HTTP ${method} Error:`, error.message);

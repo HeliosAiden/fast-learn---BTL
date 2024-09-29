@@ -35,10 +35,29 @@
             placeholder: "Xác nhận mật khẩu của bạn"
             }
         ],
-        submitButton: {
-            id: "submitBtn",
-            label: "Gửi"
-        }
+        buttonArea: [
+            {
+                id: 'registerButton',
+                label: 'Đăng ký',
+                class: 'btn btn-primary mx-2',
+                icon: {
+                    class: 'fa-solid fa-user-plus me-2',
+                    position: 'start'
+                }
+            },
+            {
+                id: "loginPage",
+                label: "Trang đăng nhập",
+                class: 'btn btn-success mx-2',
+                tag: 'a',
+                href: '<?php echo _WEB_ROOT . '/user/login' ?>',
+                target: '_self',
+                icon: {
+                    class: 'fa-solid fa-user-plus me-2',
+                    position: 'start'
+                }
+            }
+        ]
     }
 
     // Gửi thông tin
@@ -59,6 +78,6 @@
         }
         httpMixin.postMixin(url, data)
     }
-    const submitButton = document.getElementById("submitBtn")
+    const submitButton = document.getElementById("registerButton")
     submitButton.addEventListener("click", handleSubmitForm)
 </script>
