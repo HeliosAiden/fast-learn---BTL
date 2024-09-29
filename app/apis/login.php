@@ -10,7 +10,7 @@ global $jwt_config;
 
 $secretKey = $jwt_config['secret_key'];
 $issuedAt = time();
-$expirationTime = $issuedAt + 3600;  // jwt valid for 1 hour
+$expirationTime = $issuedAt + $jwt_config['exp_time']; 
 
 
 // Get user credentials from request (POST method)

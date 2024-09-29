@@ -6,7 +6,7 @@ use \Firebase\JWT\Key;
 
 
 $headers = apache_request_headers(); // Get the headers
-$default_login_url = _WEB_ROOT . '/user/login';
+$default_login_url = _WEB_ROOT . '/dang-nhap';
 $default_home_url = _WEB_ROOT . '/';
 
 global $UNAUTHORIZED_URLS;

@@ -10,6 +10,6 @@
     let response = await httpMixin.getMixin(url)
     let data = response.data
 
-    const tableMixin = new TableMixin(data, 5);
+    const tableMixin = new TableMixin(data, 5, ['id', 'name']);
     tableMixin.render(document.getElementById('table-container'));
 </script>
