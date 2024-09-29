@@ -2,7 +2,7 @@
     <?php $this->render('blocks/test/test_header'); ?>
 
     <!-- Page Content -->
-    <div id="snackbar-container">
+    <div id="snackbar-container" style="width: 100%">
         <div id="content" class="p-4">
             <div id="mainContent">
                 <?php

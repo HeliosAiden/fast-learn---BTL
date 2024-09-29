@@ -6,15 +6,10 @@ use \Firebase\JWT\Key;
 
 
 $headers = apache_request_headers(); // Get the headers
-$default_login_uri = _WEB_ROOT . '/user/login';
-$default_home_uri = _WEB_ROOT . '/';
+$default_login_url = _WEB_ROOT . '/user/login';
+$default_home_url = _WEB_ROOT . '/';
 
-$ALLOWED_URLS = [
-    $default_login_uri,
-    _WEB_ROOT . '/user/register',
-    _WEB_ROOT . '/user/forgot-password'
-    // Add more URIs as needed
-];
+global $UNAUTHORIZED_URLS;
 
 function is_url_allowed($currentUri, $allowedUri) {
     return in_array($currentUri, $allowedUri);
@@ -37,8 +32,8 @@ if (isset($_COOKIE['jwtToken'])) {
         $userData = $decoded->data;
 
         // Redirect to home page already logged in
-        if (is_url_allowed($current_URL, $ALLOWED_URLS)) {
-            header("Location: $default_home_uri");
+        if (is_url_allowed($current_URL, $UNAUTHORIZED_URLS)) {
+            header("Location: $default_home_url");
             exit();
         }
 
@@ -46,13 +41,13 @@ if (isset($_COOKIE['jwtToken'])) {
         http_response_code(401);
         echo json_encode(['message' => 'Invalid token']);
         setcookie('jwtToken', '', time() - 3600, '/');  // Expire the cookie
-        header("Location: $default_login_uri");
+        header("Location: $default_login_url");
         exit();
     }
 } else {
-    if (!is_url_allowed($current_URL, $ALLOWED_URLS)) {
+    if (!is_url_allowed($current_URL, $UNAUTHORIZED_URLS)) {
         // Redirect to login page if the URI is not allowed
-        header("Location: $default_login_uri");
+        header("Location: $default_login_url");
         exit();
     }
 }

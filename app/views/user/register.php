@@ -2,6 +2,9 @@
 <script type="module">
     import HttpMixin from "<?php echo _WEB_ROOT . '/public/assets/js/api/httpMixin.js' ?>";
     import FormMixin from "<?php echo _WEB_ROOT . '/public/assets/js/components/form.js' ?>";
+    import SnackBarMixin from "<?php echo _WEB_ROOT . '/public/assets/js/components/snackBar.js' ?>";
+
+    const snackBar = new SnackBarMixin()
 
     const formConfigs = {
         title: "Đăng ký người dùng",
@@ -17,9 +20,9 @@
                 type: "select",
                 name: "role",
                 options: [
-                    { label: "Học sinh", value: "student" },
-                    { label: "Giáo viên", value: "teacher" },
-                    { label: "Admin", value: "admin" }
+                    { label: "Học sinh", value: "Student" },
+                    { label: "Giáo viên", value: "Teacher" },
+                    { label: "Admin", value: "Admin" }
                 ]
             },
             {
@@ -64,19 +67,27 @@
     const registerForm = new FormMixin(formConfigs)
     registerForm.render("#register-form")
 
-    const handleSubmitForm = () => {
+    const handleSubmitForm = async () => {
         const httpMixin = new HttpMixin('<?php echo _WEB_ROOT ?>')
 
         let url = '/app/apis/user.php'
         const usernameInput = document.getElementById("username").value
+        const roleSelectInput = document.getElementById("role").value
         const passwordInput = document.getElementById("password").value
         const confirmPasswordInput = document.getElementById("confirm_password").value
         const data = {
             username: usernameInput,
             password: passwordInput,
-            confirm_password: confirmPasswordInput
+            role: roleSelectInput
         }
-        httpMixin.postMixin(url, data)
+        if (passwordInput == confirmPasswordInput) {
+            const response = await httpMixin.postMixin(url, data)
+            if (response.status == 'success') {
+                snackBar.showMessage('Đăng ký thành công', 'success');
+            } else {
+                snackBar.showMessage('Đăng ký không công', 'danger');
+            }
+        }
     }
     const submitButton = document.getElementById("registerButton")
     submitButton.addEventListener("click", handleSubmitForm)

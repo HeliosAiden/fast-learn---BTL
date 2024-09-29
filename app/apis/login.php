@@ -40,6 +40,10 @@ if (isset($data->username) && isset($data->password) && isset($data->role)) {
         if (isset($user_data['id']) ) {
             $payload['data']['user_id'] = $user_data['id'];
         }
+        if (isset($user_data['role']) ) {
+            $payload['data']['user_role'] = $user_data['role'];
+        }
+        
 
         // Encode JWT
         $jwt = JWT::encode($payload, $secretKey, 'HS256');

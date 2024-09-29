@@ -10,9 +10,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo __URL_ORIGIN__ ?>/user/list/">Liệt kê</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo __URL_ORIGIN__ ?>/user/register/">Đăng ký</a>
-                    </li>
                 </ul>
             </li>
         </ul>

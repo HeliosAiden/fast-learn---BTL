@@ -31,7 +31,7 @@ class App
     }
 
     public function handle_auth() {
-        require_once _DIR_ROOT . '/app/middlewares/authenticate.php';
+        require_once _DIR_ROOT . '/app/middlewares/authentication.php';
     }
 
 
