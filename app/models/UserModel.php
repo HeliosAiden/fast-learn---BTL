@@ -12,14 +12,10 @@ class UserModel extends Model
         $this->hashing_config = $hashing_config;
     }
 
-    private function get_options() {
-        return ['cost' => $this->hashing_config['cost']];
-    }
-
     public function register($username, $password, $role='Student')
     {
         // Hash the password using bcrypt
-        $options = $this->get_options();
+        $options = ['cost' => $this->hashing_config['cost']];
         $hashedPassword = password_hash($password, constant($this->hashing_config['algorithm']), $options);
 
         $data = [
@@ -32,24 +28,27 @@ class UserModel extends Model
         if ($response) {
             $condition = $this -> init_condition($data);
 
-            $user = $this -> select($this->__table, $condition);
+            $user = $this -> db ->select($this->__table, $condition);
             return $user;
         }
 
         return $response;
     }
 
-    public function login($username, $password)
+    public function login($username, $password, $role)
     {
-        $condition = [
-            'username' => $username
-        ];
-        $user = $this->db->select($this->__table, $condition);
-        if ($user && password_verify($password, $user['password_hash'])) {
-            return $user; // Return user data if login is successful
+        $condition = 'username = "' . $username . '" AND role = "' . $role . '"';
+        $response = $this->db->select($this->__table, $condition);
+        $data = $response[0];
+        $status = $response[1];
+        if ($status && !empty($data)) {
+            $user = $data[0]; // Select first user found
+            if ($user && password_verify($password, $user['password_hash'])) {
+                return [$user, true]; // Return user data if login is successful
+            }
         }
 
-        return false; // Return false if credentials don't match
+        return [null, false]; // Return false if credentials don't match
     }
 
     public function get_detail($id, $details=[])

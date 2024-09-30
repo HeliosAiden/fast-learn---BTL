@@ -19,15 +19,15 @@ switch ($method) {
         break;
 
     case 'PUT':
-        $api-> get_controller() -> updateUser();
+        $api-> get_controller() -> update_user();
         break;
 
     case 'DELETE':
-        $api-> get_controller() -> deleteUser();
+        $api-> get_controller() -> delete_user();
         break;
 
     default:
         // Return an error for unsupported HTTP methods
-        $api-> get_controller() -> errorResponse('Failed creating user', 405);
+        $api-> get_controller() -> errorResponse('unsupported HTTP methods', 405);
         break;
 }

@@ -29,26 +29,29 @@ class User extends Controller
     public function register() {
         $page_dir = $this -> get_page_dir(__FUNCTION__);
         $page_data = $this -> get_page_data("Đăng ký người dùng mới", $page_dir);
-        $this -> render_layout('test', $page_data);
+        $this -> render_layout('test_blank', $page_data);
         return $page_data;
     }
 
-    public function login($username, $password) {
-        $data = $this->__model->login($username, $password);
-        echo "Bạn đã đăng nhập!";
-        echo "<br/>";
-        echo '<pre>';
-            print_r($data);
-        echo '</pre>';
+    public function login() {
+        $page_dir = $this -> get_page_dir(__FUNCTION__);
+        $page_data = $this -> get_page_data("Đăng nhập tài khoản", $page_dir);
+        $this -> render_layout('test_blank', $page_data);
+        return $page_data;
+    }
+
+    public function perform_login($username, $password, $role='Student') {
+        $response = $this -> __model -> login($username, $password, $role);
+        return $response;
     }
 
     public function create_user() {
         $data = $this->getInput();
-        if (!$data || !isset($data['username'], $data['password'])) {
+        if (!$data || !isset($data['username'], $data['password'], $data['role'])) {
             $this->errorResponse('Invalid input');
         }
 
-        $response = $this -> __model -> register($data['username'], $data['password']);
+        $response = $this -> __model -> register($data['username'], $data['password'], $data['role']);
         if ($response[1]) {
             $this->jsonResponse([
                 'status' => 'success',

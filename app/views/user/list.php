@@ -3,9 +3,10 @@
     <div id="table-container"></div>
 </div>
 <script type="module">
-    import httpMixin from "<?php echo _WEB_ROOT . '/public/assets/js/api/httpMixin.js' ?>";
+    import HttpMixin from "<?php echo _WEB_ROOT . '/public/assets/js/api/httpMixin.js' ?>";
     import TableMixin from "<?php echo _WEB_ROOT . '/public/assets/js/components/table.js' ?>";
-    let url = "<?php echo _WEB_ROOT . '/app/apis/user.php' ?>"
+    let url = '/app/apis/user.php'
+    const httpMixin = new HttpMixin('<?php echo _WEB_ROOT ?>')
     let response = await httpMixin.getMixin(url)
     let data = response.data
 

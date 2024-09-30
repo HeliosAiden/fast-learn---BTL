@@ -15,7 +15,9 @@ class App
         }
         $this->__action = 'index';
         $this->__params = [];
-        $this->handle_url();
+        // handle login from anonymous user here
+        $this -> handle_auth();
+        $this -> handle_url();
     }
 
     function get_url()
@@ -26,6 +28,10 @@ class App
             $url = '/';
         }
         return $url;
+    }
+
+    public function handle_auth() {
+        require_once _DIR_ROOT . '/app/middlewares/authentication.php';
     }
 
 

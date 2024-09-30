@@ -27,6 +27,15 @@ class Database
         $this->__last_insert_id = $last_insert_id;
     }
 
+    /**
+     * select data from table in mySQL database
+     *
+     * This function takes table's name and condition
+     *
+     * @param string $table The exact name of the table inside mySQL database.
+     * @param string $condition The condition to selected row(s).
+     * @return array The array consists of two value: [(string) $data, (bool) $status]
+     */
     function select($table, $condition = '')
     {
         try {
@@ -38,8 +47,7 @@ class Database
 
             $query = $this->query($sql);
             if ($query) {
-                $data = $query->fetchAll(PDO::FETCH_ASSOC);
-                return [$data, true];
+                return [$query->fetchAll(PDO::FETCH_ASSOC), true];
             } else {
                 return [null, false];
             }
@@ -55,7 +63,7 @@ class Database
      *
      * @param string $table The exact name of the table inside mySQL database.
      * @param associative_array $data The data array of key and value pairs.
-     * @return array The array consists of two value: [(array) $last_insert_id, (bool) $status]
+     * @return array The array consists of two value: [(string) $last_insert_id, (bool) $status]
      */
     function insert($table, $data)
     {
@@ -117,13 +125,22 @@ class Database
 
             $status = $this->query($sql);
             if ($status) {
-                return [$selected_id, true];
+                return [$selected_ids, true];
             }
 
             return [[], false];
         }
     }
 
+    /**
+     * delete data from table in mySQL database
+     *
+     * This function takes table's name and a condition
+     *
+     * @param string $table The exact name of the table inside mySQL database.
+     * @param string $condition The condition to select deleting row.
+     * @return bool $status The status of operation
+     */
     function delete($table, $condition = '')
     {
         if (!empty($condition)) {

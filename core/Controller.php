@@ -20,6 +20,9 @@ class Controller {
     public function render($view, $data = [])
     {
         extract($data);
+        // echo '<pre>';
+        // print_r($data);
+        // echo '</pre>';
 
         $view_url = _DIR_ROOT . '/app/views/' . $view . '.php';
         if (file_exists($view_url)) {

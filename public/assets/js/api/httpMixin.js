@@ -1,98 +1,113 @@
-const httpMixin = {
-    /**
-     * Make a GET request
-     * @param {string} url - The URL to send the request to
-     */
-    async getMixin(url) {
-      return fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        }
-      }).then(this.handleResponse)
-    },
-    /**
-     * Make a POST request
-     * @param {string} url - The URL to send the request to
-     * @param {Object} data - The data to send as the request body
-     */
-    async postMixin(url, data = {}) {
-      return fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      })
-        .then(this.handleResponse)
-        .then((result) => {
-          if (result.status === "success") {
-            alert(result.message); // User registered successfully
-          } else {
-            alert(result.message); // Display error message
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    },
+class HttpMixin {
+  constructor(baseURL) {
+    this.baseURL = baseURL;
+    // this.token = localStorage.getItem("jwtToken"); // Store JWT token in localStorage
+    this.token = this.setJwtToken()
+    this.inactivityTimeout = null; // To track inactivity timeout
+    this.inactivityLimit = 5 * 60 * 1000; // 5 minutes (in milliseconds)
+    this.logoutUrl = this.baseURL + "/dang-nhap";
+    this.refreshTokenEndpoint = '/app/apis/refresh_token.php'
+  }
 
-    /**
-     * Make a PUT request
-     * @param {string} url - The URL to send the request to
-     * @param {Object} data - The data to send as the request body
-     */
-    async putMixin(url, data = {}) {
-      return fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }).then(this.handleResponse);
-    },
+  // Private method to handle HTTP requests
+  async _request(method, endpoint, body = null) {
+    this.resetInactivityTimer();
 
-    /**
-     * Make a PATCH request
-     * @param {string} url - The URL to send the request to
-     * @param {Object} data - The data to send as the request body
-     */
-    async patchMixin(url, data = {}) {
-      return fetch(url, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }).then(this.handleResponse);
-    },
+    if (endpoint !== this.refreshTokenEndpoint) {
+      this.refreshToken()
+    }
 
-    /**
-     * Make a DELETE request
-     * @param {string} url - The URL to send the request to
-     * @param {Object} data - The data to send as the request body (if any)
-     */
-    async deleteMixin(url, data = {}) {
-      return fetch(url, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }).then(this.handleResponse);
-    },
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${this.token}`, // Add JWT token to request headers
+    };
 
-    /**
-     * Handle the response of an HTTP request
-     * @param {Response} response - The response object from fetch
-     * @returns {Promise<any>} - A promise that resolves to the response data or throws an error
-     */
-    handleResponse(response) {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    },
-  };
+    const options = {
+      method,
+      headers,
+    };
 
-  export default httpMixin;
+    if (body) {
+      options.body = JSON.stringify(body);
+    }
+
+    try {
+      const response = await fetch(`${this.baseURL}/${endpoint}`, options);
+      const data = await response.json();
+
+      return data;
+    } catch (error) {
+      console.error(`HTTP ${method} Error:`, error.message);
+      throw error;
+    }
+  }
+
+  // GET method
+  async getMixin(endpoint) {
+    return await this._request("GET", endpoint);
+  }
+
+  // POST method
+  async postMixin(endpoint, body) {
+    return this._request("POST", endpoint, body);
+  }
+
+  // PUT method
+  async putMixin(endpoint, body) {
+    return this._request("PUT", endpoint, body);
+  }
+
+  // PATCH method
+  async patchMixin(endpoint, body) {
+    return this._request("PATCH", endpoint, body);
+  }
+
+  // DELETE method
+  async deleteMixin(endpoint) {
+    return this._request("DELETE", endpoint);
+  }
+
+  setJwtCookie(token) {
+    const expiryDays = 1; // Cookie expiration time in days
+    const date = new Date();
+    date.setTime(date.getTime() + expiryDays * 24 * 60 * 60 * 1000); // Set expiry to 1 day later
+    const expires = "expires=" + date.toUTCString();
+
+    // Set the cookie with the JWT token
+    // When using HTTPS then use Secure option
+    // document.cookie = "jwtToken=" + token + ";" + expires + ";path=/;SameSite=Strict;Secure";
+    document.cookie =
+      "jwtToken=" + token + ";" + expires + ";path=/;SameSite=Strict";
+  }
+
+  async refreshToken() {
+    // console.log('refreshing new token...')
+    const token = await this.postMixin(this.refreshTokenEndpoint, null)
+    this.setJwtCookie(token)
+    this.setJwtToken()
+  }
+
+  setJwtToken() {
+    this.token = localStorage.getItem("jwtToken");
+  }
+
+  resetInactivityTimer() {
+    // Clear the existing timeout if any
+    if (this.inactivityTimeout) {
+      clearTimeout(this.inactivityTimeout);
+    }
+
+    // Set a new inactivity timeout for 5 minutes
+    this.inactivityTimeout = setTimeout(() => {
+      this.handleLogout();
+    }, this.inactivityLimit);
+  }
+
+  handleLogout() {
+    alert("Bạn đã đăng xuất do không hoạt động.");
+    this.jwtToken = ""; // Clear the JWT token (or clear session storage/local storage)
+    window.location.href = this.logoutUrl; // Redirect to login page or take appropriate logout action
+  }
+}
+
+export default HttpMixin;
