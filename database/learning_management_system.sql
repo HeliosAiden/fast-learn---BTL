@@ -2,6 +2,7 @@ CREATE TABLE `users` (
   `id` INT PRIMARY KEY AUTO_INCREMENT,
   `username` VARCHAR(255) UNIQUE NOT NULL,
   `password_hash` VARCHAR(255) UNIQUE NOT NULL,
+  `email` VARCHAR(255) UNIQUE NOT NULL,
   `role` ENUM ('Student', 'Teacher', 'Admin') DEFAULT 'Student',
   `user_info` INT,
   `state` ENUM ('Active', 'Inactive', 'Removed') DEFAULT 'Inactive'
@@ -12,7 +13,6 @@ CREATE TABLE `user_infos` (
   `firstname` VARCHAR(255),
   `lastname` VARCHAR(255),
   `fullname` VARCHAR(511),
-  `email` VARCHAR(255),
   `gender` ENUM ('Male', 'Female', 'Others'),
   `phone_number` VARCHAR(20),
   `date_of_birth` DATE
