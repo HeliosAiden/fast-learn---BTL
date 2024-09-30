@@ -6,11 +6,10 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
 $default_login_uri = __URL_ORIGIN__ . '/user/login';
-echo $default_login_uri;
-
 // Unset the JWT cookie by setting its expiration date in the past
 if (isset($_COOKIE['jwtToken'])) {
-    setcookie('jwtToken', '', time() - 3600, '/');  // Expire the cookie
+    global $jwt_config;
+    setcookie('jwtToken', '', time() - $jwt_config['exp_time'], '/');  // Expire the cookie
 }
 
 // Redirect to login page after logging out

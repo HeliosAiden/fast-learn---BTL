@@ -71,8 +71,8 @@ class TableMixin {
           td.classList.add("text-center"); // Center align the data
           tr.appendChild(td);
         });
+        tbody.appendChild(tr);
       });
-      tbody.appendChild(tr);
     }
 
     table.appendChild(tbody);

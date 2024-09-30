@@ -1,8 +1,5 @@
 <?php
-require 'vendor/autoload.php';
-
-use \Firebase\JWT\JWT;
-use \Firebase\JWT\Key;
+require_once _DIR_ROOT . '/app/utils/Jwt.php';
 
 
 $headers = apache_request_headers(); // Get the headers
@@ -21,17 +18,17 @@ $current_URL = _WEB_ROOT . $current_URI;
 
 if (isset($_COOKIE['jwtToken'])) {
     // Extract token from the Authorization header
-    global $jwt_config;
-    $secretKey = $jwt_config['secret_key'];
     $token = $_COOKIE['jwtToken'];
+
+    $JWT_Token = new JWTToken();
 
     try {
         // Decode the token
-        $decoded = JWT::decode($token, new Key($secretKey, 'HS256'));
+        $decoded_token = $JWT_Token -> decode_token($token);
         // Token is valid, you can access user data if needed
-        $userData = $decoded->data;
+        $userData = $decoded_token->data;
 
-        // Redirect to home page already logged in
+        // Redirect to home page if already logged in
         if (is_url_allowed($current_URL, $UNAUTHORIZED_URLS)) {
             header("Location: $default_home_url");
             exit();
@@ -40,7 +37,7 @@ if (isset($_COOKIE['jwtToken'])) {
     } catch (Exception $e) {
         http_response_code(401);
         echo json_encode(['message' => 'Invalid token']);
-        setcookie('jwtToken', '', time() - 3600, '/');  // Expire the cookie
+        setcookie('jwtToken', '', time() - $JWT_Token-> get_expiration_duration(), '/');  // Expire the cookie
         header("Location: $default_login_url");
         exit();
     }

@@ -13,7 +13,7 @@ class SnackBarMixin {
     }
   }
 
-  showMessage(message, type = "success") {
+  showMessage(message, type = "success", timeout = 3000) {
     // Create a Bootstrap alert element
     const alertDiv = document.createElement("div");
     alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
@@ -32,7 +32,7 @@ class SnackBarMixin {
       alertDiv.classList.remove("show");
       alertDiv.classList.add("fade");
       setTimeout(() => alertDiv.remove(), 500); // Allow fade out
-    }, 3000);
+    }, timeout);
   }
 }
 

@@ -65,18 +65,6 @@
 
     let url = '/app/apis/login.php'
 
-    function setJwtCookie(token) {
-        const expiryDays = 1; // Cookie expiration time in days
-        const date = new Date();
-        date.setTime(date.getTime() + (expiryDays * 24 * 60 * 60 * 1000));  // Set expiry to 1 day later
-        const expires = "expires=" + date.toUTCString();
-
-        // Set the cookie with the JWT token
-        // When using HTTPS then use Secure option
-        // document.cookie = "jwtToken=" + token + ";" + expires + ";path=/;SameSite=Strict;Secure";
-        document.cookie = "jwtToken=" + token + ";" + expires + ";path=/;SameSite=Strict";
-    }
-
     const handleLogin = async () => {
         const roleInput = document.getElementById("role").value
         const usernameInput = document.getElementById("username").value
@@ -96,7 +84,7 @@
             snackBar.showMessage('Đăng nhập thành công', 'success');
             // Store the JWT token in localStorage & cookie
             localStorage.setItem('jwtToken', response.token);
-            setJwtCookie(response.token)
+            httpMixin.setJwtCookie(response.token)
             window.location.replace('<?php echo _WEB_ROOT . '/user/list' ?>');
         } else {
             snackBar.showMessage('Đăng nhập không thành công', 'danger');

@@ -1,23 +1,13 @@
 <?php
 require_once './Api.php';
-require _DIR_ROOT . '/vendor/autoload.php';
-
-use \Firebase\JWT\JWT;
+require_once _DIR_ROOT . '/app/utils/Jwt.php';
 
 $api = new Api('User');
-
-global $jwt_config;
-
-$secretKey = $jwt_config['secret_key'];
-$issuedAt = time();
-$expirationTime = $issuedAt + $jwt_config['exp_time']; 
-
 
 // Get user credentials from request (POST method)
 $data = json_decode(file_get_contents("php://input"));
 
 if (isset($data->username) && isset($data->password) && isset($data->role)) {
-
 
     $username = $data->username;
     $password = $data->password;
@@ -28,32 +18,24 @@ if (isset($data->username) && isset($data->password) && isset($data->role)) {
     // Validate user credentials (query from DB)
     if ($response[1]) {
         $user_data = $response[0];
-        // Generate JWT token
-        $payload = [
-            'iss' => __URL_ORIGIN__,  // issuer
-            'iat' => $issuedAt,          // issued at time
-            'exp' => $expirationTime,    // expiration time
-            'data' => [
-                'username' => $username
-            ]
-        ];
-        if (isset($user_data['id']) ) {
-            $payload['data']['user_id'] = $user_data['id'];
-        }
-        if (isset($user_data['role']) ) {
-            $payload['data']['user_role'] = $user_data['role'];
-        }
-        
+        $data = ['username' => $username];
 
+        if (isset($user_data['id'])) {
+            $data['user_id'] = $user_data['id'];
+        }
+        if (isset($user_data['role'])) {
+            $data['user_role'] = $user_data['role'];
+        }
+
+        $JWTToken = new JWTToken();
         // Encode JWT
-        $jwt = JWT::encode($payload, $secretKey, 'HS256');
-
+        $token = $JWTToken->generate_token($data);
         // Send response
         header('Content-Type: application/json');
         echo json_encode([
             'status' => 'success',
             'message' => 'Obtain token successfully',
-            'token' => $jwt
+            'token' => $token
         ]);
     } else {
         http_response_code(401);
