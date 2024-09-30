@@ -1,44 +1,35 @@
 <?php
-require_once 'vendor/autoload.php'; 
+require_once _DIR_ROOT . '/app/utils/Jwt.php';
 
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
+$headers = apache_request_headers(); // Get the headers
+$default_login_url = _WEB_ROOT . '/dang-nhap';
+$default_home_url = _WEB_ROOT . '/';
 
-function checkPermission($requiredRole) {
-    global $jwt_config;
-    $secretKey = $jwt_config['secret_key'];
+if (isset($_COOKIE['jwtToken'])) {
+    // Extract token from the Authorization header
+    $token = $_COOKIE['jwtToken'];
 
-    // Check if the JWT token exists in the cookies
-    if (!isset($_COOKIE['jwt_token'])) {
-        header('HTTP/1.1 401 Unauthorized');
-        echo 'Unauthorized: No token provided';
-        exit;
-    }
-
-    // Get the JWT token from the cookie
-    $token = $_COOKIE['jwt_token'];
+    $JWT_Token = new JWTToken();
 
     try {
-        // Decode the JWT token
-        $decoded_token = JWT::decode($token, new Key($secretKey, 'HS256'));
+        // Decode the token
+        $decoded_token = $JWT_Token->decode_token($token);
+        // Token is valid, you can access user data if needed
 
-        // Retrieve the user role from the decoded token
         $userRole = $decoded_token->data->user_role ?? null;
-
-        // Check if the user's role matches the required role
-        if ($userRole && $userRole === $requiredRole) {
-            // Grant access
-            return true;
+        if ($userRole) {
+            // Do switch case to check permission here
         } else {
             // Deny access
             header('HTTP/1.1 403 Forbidden');
             echo 'Forbidden: You do not have permission to access this resource';
+            echo json_encode(['message' => 'Invalid token']);
             exit;
         }
     } catch (Exception $e) {
         // Handle invalid or expired JWT token
         header('HTTP/1.1 401 Unauthorized');
-        echo 'Unauthorized: ' . $e->getMessage();
+        echo 'Unauthorized: ' . 'Token is invalid or expired';
         exit;
     }
 }

@@ -29,7 +29,7 @@ class JWTToken {
 
     public function refresh_token($token) {
         $decoded_token = $this -> decode_token($token);
-        $data = $decoded_token['data'];
+        $data = $decoded_token -> data;
         return $this -> generate_token($data);
     }
 

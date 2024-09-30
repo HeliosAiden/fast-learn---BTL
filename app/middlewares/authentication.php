@@ -12,6 +12,10 @@ function is_url_allowed($currentUri, $allowedUri) {
     return in_array($currentUri, $allowedUri);
 }
 
+echo '<pre>';
+print_r($headers);
+echo '</pre>';
+
 $current_URI = str_replace(__URL_DIR__ . '/', '', $_SERVER['REQUEST_URI']);
 
 $current_URL = _WEB_ROOT . $current_URI;

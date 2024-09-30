@@ -1,15 +1,22 @@
 class HttpMixin {
   constructor(baseURL) {
     this.baseURL = baseURL;
-    this.token = localStorage.getItem("jwtToken"); // Store JWT token in localStorage
+    // this.token = localStorage.getItem("jwtToken"); // Store JWT token in localStorage
+    this.token = this.setJwtToken()
     this.inactivityTimeout = null; // To track inactivity timeout
     this.inactivityLimit = 5 * 60 * 1000; // 5 minutes (in milliseconds)
     this.logoutUrl = this.baseURL + "/dang-nhap";
+    this.refreshTokenEndpoint = '/app/apis/refresh_token.php'
   }
 
   // Private method to handle HTTP requests
   async _request(method, endpoint, body = null) {
     this.resetInactivityTimer();
+
+    if (endpoint !== this.refreshTokenEndpoint) {
+      this.refreshToken()
+    }
+
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${this.token}`, // Add JWT token to request headers
@@ -71,6 +78,17 @@ class HttpMixin {
     // document.cookie = "jwtToken=" + token + ";" + expires + ";path=/;SameSite=Strict;Secure";
     document.cookie =
       "jwtToken=" + token + ";" + expires + ";path=/;SameSite=Strict";
+  }
+
+  async refreshToken() {
+    // console.log('refreshing new token...')
+    const token = await this.postMixin(this.refreshTokenEndpoint, null)
+    this.setJwtCookie(token)
+    this.setJwtToken()
+  }
+
+  setJwtToken() {
+    this.token = localStorage.getItem("jwtToken");
   }
 
   resetInactivityTimer() {
