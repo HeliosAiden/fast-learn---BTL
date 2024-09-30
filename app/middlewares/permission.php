@@ -16,8 +16,8 @@ if (isset($_COOKIE['jwtToken'])) {
         $decoded_token = $JWT_Token->decode_token($token);
         // Token is valid, you can access user data if needed
 
-        $userRole = $decoded_token->data->user_role ?? null;
-        if ($userRole) {
+        $user_role = $decoded_token->data->user_role ?? null;
+        if ($user_role) {
             // Do switch case to check permission here
         } else {
             // Deny access

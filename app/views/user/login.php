@@ -1,9 +1,9 @@
 <div id="login-container" style="margin: auto; width: 20%" ></div>
 
 <script type="module">
+    import SnackBarMixin from "<?php echo _WEB_ROOT . '/public/assets/js/components/snackBar.js' ?>";
     import HttpMixin from "<?php echo _WEB_ROOT . '/public/assets/js/api/httpMixin.js' ?>";
     import FormMixin from "<?php echo _WEB_ROOT . '/public/assets/js/components/form.js' ?>";
-    import SnackBarMixin from "<?php echo _WEB_ROOT . '/public/assets/js/components/snackBar.js' ?>";
 
     const loginFormConfigs = {
         title: {

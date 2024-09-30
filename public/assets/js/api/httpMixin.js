@@ -1,7 +1,6 @@
 class HttpMixin {
   constructor(baseURL) {
     this.baseURL = baseURL;
-    // this.token = localStorage.getItem("jwtToken"); // Store JWT token in localStorage
     this.token = this.setJwtToken()
     this.inactivityTimeout = null; // To track inactivity timeout
     this.inactivityLimit = 5 * 60 * 1000; // 5 minutes (in milliseconds)
@@ -37,7 +36,7 @@ class HttpMixin {
 
       return data;
     } catch (error) {
-      console.error(`HTTP ${method} Error:`, error.message);
+      console.error(`HTTP ${method} Error:`, error.message ?? 'Something went wrong');
       throw error;
     }
   }
@@ -81,7 +80,6 @@ class HttpMixin {
   }
 
   async refreshToken() {
-    // console.log('refreshing new token...')
     const token = await this.postMixin(this.refreshTokenEndpoint, null)
     this.setJwtCookie(token)
     this.setJwtToken()
@@ -104,7 +102,6 @@ class HttpMixin {
   }
 
   handleLogout() {
-    alert("Bạn đã đăng xuất do không hoạt động.");
     this.jwtToken = ""; // Clear the JWT token (or clear session storage/local storage)
     window.location.href = this.logoutUrl; // Redirect to login page or take appropriate logout action
   }
