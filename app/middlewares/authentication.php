@@ -11,10 +11,10 @@ global $UNAUTHORIZED_URLS;
 function is_url_allowed($currentUri, $allowedUri) {
     return in_array($currentUri, $allowedUri);
 }
-
-echo '<pre>';
-print_r($headers);
-echo '</pre>';
+// 
+// echo '<pre>';
+// print_r($headers);
+// echo '</pre>';
 
 $current_URI = str_replace(__URL_DIR__ . '/', '', $_SERVER['REQUEST_URI']);
 

@@ -1,4 +1,50 @@
-<div id="login-container" style="margin: auto; width: 20%" ></div>
+<style>
+    .login-container {
+        max-width: 400px;
+        min-width: 250px;
+        margin: 50px auto;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-custom {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-custom:hover {
+        background-color: #218838;
+    }
+
+    .login-link,
+    .register-link {
+        color: #28a745;
+    }
+
+    .login-link:hover,
+    .register-link:hover {
+        text-decoration: underline;
+    }
+</style>
+<div class="login-container col-6 mx-auto paper">
+    <h3 class="text-center" style="margin-bottom: 32px">Đăng nhập</h3>
+    <form>
+        <div class="form-group">
+            <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập" required>
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu" required>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe">
+            <label class="form-check-label" for="rememberMe">Lưu thông tin đăng nhập</label>
+        </div>
+        <button type="submit" class="btn btn-custom btn-block mt-3">Đăng nhập</button>
+    </form>
+    <p class="text-center mt-3">Chưa có tài khoản ? <a href="register.php" class="register-link">Đăng ký ngay</a></p>
+</div>
 
 <script type="module">
     import HttpMixin from "<?php echo _WEB_ROOT . '/public/assets/js/api/httpMixin.js' ?>";
@@ -11,14 +57,21 @@
             class: 'mb-4',
             tag: 'h2'
         },
-        fields: [
-            {
+        fields: [{
                 type: "select",
                 name: "role",
-                options: [
-                    { label: "Sinh viên", value: "Student" },
-                    { label: "Giáo viên", value: "Teacher" },
-                    { label: "Quản trị hệ thống", value: "Admin" }
+                options: [{
+                        label: "Sinh viên",
+                        value: "Student"
+                    },
+                    {
+                        label: "Giáo viên",
+                        value: "Teacher"
+                    },
+                    {
+                        label: "Quản trị hệ thống",
+                        value: "Admin"
+                    }
                 ]
             },
             {
@@ -32,8 +85,7 @@
                 placeholder: "Nhập mật khẩu"
             }
         ],
-        buttonArea: [
-            {
+        buttonArea: [{
                 id: "loginBtn",
                 tag: 'button',
                 label: "Đăng nhập",
@@ -61,7 +113,7 @@
     }
 
     const loginForm = new FormMixin(loginFormConfigs)
-    loginForm.render('#login-container')
+    // loginForm.render('#login-container')
 
     let url = '/app/apis/login.php'
 
@@ -94,6 +146,4 @@
 
     const loginButton = document.getElementById('loginBtn')
     loginButton.addEventListener('click', handleLogin)
-
-
 </script>
