@@ -1,5 +1,5 @@
 class TableMixin {
-  constructor(data, rowsPerPage, defaultHeader = []) {
+  constructor(data, rowsPerPage, defaultHeaders = [], actions = []) {
     this.data = data; // Data to display in the table (array of objects)
     this.rowsPerPage = rowsPerPage; // Number of rows per page
     this.currentPage = 1; // Current page being displayed
@@ -7,7 +7,36 @@ class TableMixin {
 
     this.tableContainer = document.createElement("div"); // Container for the table
     this.paginationContainer = document.createElement("div"); // Container for pagination controls
-    this.defaultHeader = defaultHeader;
+    this.defaultHeaders = defaultHeaders;
+    this.actions = actions;
+  }
+
+  renderHeader() {
+    const thead = document.createElement("thead");
+    const headersRow = document.createElement("tr");
+
+    let headers = this.defaultHeaders;
+    if (this.data.length !== 0) {
+      headers = Object.keys(this.data[0]);
+      this.defaultHeaders = headers;
+    }
+
+    headers.forEach((header) => {
+      const th = document.createElement("th");
+      th.textContent = header.charAt(0).toUpperCase() + header.slice(1); // Capitalize headers
+      th.classList.add("text-center"); // Center align the headers
+      headersRow.appendChild(th);
+    });
+    // Add the "Actions" column if options.actions are provided
+    if (this.actions && this.actions.length > 0) {
+      const actionTh = document.createElement("th");
+      actionTh.textContent = "Actions";
+      headersRow.appendChild(actionTh);
+    }
+
+    thead.appendChild(headersRow);
+
+    return thead;
   }
 
   // Method to generate and display the table
@@ -25,21 +54,7 @@ class TableMixin {
     ); // Add Bootstrap table classes
 
     // Create table headers (from the keys of the first data object)
-    const thead = document.createElement("thead");
-    const headersRow = document.createElement("tr");
-
-    let headers = this.defaultHeader;
-    if (this.data.length !== 0) {
-      headers = Object.keys(this.data[0]);
-    }
-
-    headers.forEach((header) => {
-      const th = document.createElement("th");
-      th.textContent = header.charAt(0).toUpperCase() + header.slice(1); // Capitalize headers
-      th.classList.add("text-center"); // Center align the headers
-      headersRow.appendChild(th);
-    });
-    thead.appendChild(headersRow);
+    let thead = this.renderHeader();
     table.appendChild(thead);
 
     // Create table body
@@ -50,7 +65,7 @@ class TableMixin {
       const td = document.createElement("td");
       td.textContent = "No records found";
       td.classList.add("text-center");
-      td.setAttribute("colspan", this.defaultHeader.length);
+      td.setAttribute("colspan", this.defaultHeaders.length);
       tr.appendChild(td);
       tbody.appendChild(tr);
     } else {
@@ -65,12 +80,35 @@ class TableMixin {
       // Create rows for the current page data
       currentPageData.forEach((rowData) => {
         const tr = document.createElement("tr");
-        headers.forEach((header) => {
+        this.defaultHeaders.forEach((header) => {
           const td = document.createElement("td");
           td.textContent = rowData[header];
           td.classList.add("text-center"); // Center align the data
           tr.appendChild(td);
         });
+
+        if (this.actions && this.actions.length > 0) {
+          const actionTd = document.createElement("td");
+          const actionContainer = document.createElement("div");
+          actionContainer.classList.add("d-flex", "justify-content-between");
+
+          this.actions.forEach((action) => {
+            const button = document.createElement("button");
+            button.textContent = action.label;
+            button.classList.add(
+              "btn",
+              "btn-sm",
+              action.className || "btn-primary"
+            );
+
+            // Attach the event handler
+            button.addEventListener("click", () => action.handler(rowData));
+
+            actionContainer.appendChild(button);
+          });
+          actionTd.appendChild(actionContainer);
+          tr.appendChild(actionTd);
+        }
         tbody.appendChild(tr);
       });
     }

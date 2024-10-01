@@ -15,7 +15,7 @@ if (isset($_COOKIE['jwtToken'])) {
     } catch (Exception $e) {
         http_response_code(401);
         echo json_encode(['message' => 'Invalid token']);
-        setcookie('jwtToken', '', time() - $JWT_Token-> get_expiration_duration(), '/');  // Expire the cookie
+        setcookie('jwtToken', '', time() - 3600, '/');  // Expire the cookie
         header("Location: $default_login_url");
         exit();
     }

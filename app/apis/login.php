@@ -13,11 +13,10 @@ if (isset($data->username) && isset($data->password) && isset($data->role)) {
     $password = $data->password;
     $role = $data->role;
 
-    $response = $api->get_controller()->perform_login($username, $password, $role);
+    $user_data = $api->get_controller()->perform_login($username, $password, $role);
 
     // Validate user credentials (query from DB)
-    if ($response[1]) {
-        $user_data = $response[0];
+    if (!empty($user_data)) {
         $data = ['username' => $username];
 
         if (isset($user_data['id'])) {

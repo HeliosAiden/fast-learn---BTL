@@ -17,13 +17,16 @@ class Subject extends Controller {
 
     public function get_subject() {
         $response = $this -> __model -> select_all();
-        if ($response[1]) {
+        if ($response) {
             $this->jsonResponse([
                 'status' => 'success',
-                'data' => $response[0]
+                'data' => $response
             ]);
         } else {
-            $this -> errorResponse();
+            $this -> jsonResponse([
+                'status' => 'success',
+                'data' => []
+            ]);
         }
     }
 }

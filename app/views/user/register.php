@@ -26,6 +26,12 @@
                 ]
             },
             {
+            label: "Email",
+            type: "email",
+            name: "email",
+            placeholder: "Nhập email"
+            },
+            {
             label: "Mật khẩu",
             type: "password",
             name: "password",
@@ -73,19 +79,22 @@
         let url = '/app/apis/user.php'
         const usernameInput = document.getElementById("username").value
         const roleSelectInput = document.getElementById("role").value
+        const emailInput = document.getElementById("email").value
         const passwordInput = document.getElementById("password").value
         const confirmPasswordInput = document.getElementById("confirm_password").value
         const data = {
             username: usernameInput,
             password: passwordInput,
-            role: roleSelectInput
+            role: roleSelectInput,
+            email: emailInput
         }
         if (passwordInput == confirmPasswordInput) {
             const response = await httpMixin.postMixin(url, data)
             if (response.status == 'success') {
                 snackBar.showMessage('Đăng ký thành công', 'success');
+                httpMixin.handleLogout()
             } else {
-                snackBar.showMessage('Đăng ký không công', 'danger');
+                snackBar.showMessage('Đăng ký không thành công', 'danger');
             }
         }
     }

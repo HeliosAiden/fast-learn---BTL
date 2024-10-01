@@ -5,14 +5,17 @@ class HttpMixin {
     this.inactivityTimeout = null; // To track inactivity timeout
     this.inactivityLimit = 5 * 60 * 1000; // 5 minutes (in milliseconds)
     this.logoutUrl = this.baseURL + "/dang-nhap";
-    this.refreshTokenEndpoint = '/app/apis/refresh_token.php'
+    this.forbiddenEndpoints = [
+      '/app/apis/refresh_token.php',
+      '/app/apis/logout.php'
+    ]
   }
 
   // Private method to handle HTTP requests
   async _request(method, endpoint, body = null) {
     this.resetInactivityTimer();
 
-    if (endpoint !== this.refreshTokenEndpoint) {
+    if (!this.forbiddenEndpoints.includes(endpoint)) {
       this.refreshToken()
     }
 
@@ -32,9 +35,12 @@ class HttpMixin {
 
     try {
       const response = await fetch(`${this.baseURL}/${endpoint}`, options);
-      const data = await response.json();
-
-      return data;
+      if (!this.forbiddenEndpoints.includes(endpoint)) {
+        const data = await response.json();
+        if (data) {
+          return data
+        }
+      }
     } catch (error) {
       console.error(`HTTP ${method} Error:`, error.message ?? 'Something went wrong');
       throw error;
@@ -80,7 +86,7 @@ class HttpMixin {
   }
 
   async refreshToken() {
-    const token = await this.postMixin(this.refreshTokenEndpoint, null)
+    const token = await this.postMixin('/app/apis/refresh_token.php', null)
     this.setJwtCookie(token)
     this.setJwtToken()
   }
