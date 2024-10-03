@@ -1,23 +1,20 @@
 class HttpMixin {
   constructor(baseURL) {
     this.baseURL = baseURL;
-    this.token = this.setJwtToken()
+    this.token = localStorage.getItem("jwtToken");
     this.inactivityTimeout = null; // To track inactivity timeout
     this.inactivityLimit = 5 * 60 * 1000; // 5 minutes (in milliseconds)
     this.logoutUrl = this.baseURL + "/dang-nhap";
     this.forbiddenEndpoints = [
-      '/app/apis/refresh_token.php',
-      '/app/apis/logout.php'
-    ]
+      "/app/apis/refresh_token.php",
+      "/app/apis/logout.php",
+    ];
+    document.addEventListener("mousemove", this.resetInactivityTimer);
   }
 
   // Private method to handle HTTP requests
   async _request(method, endpoint, body = null) {
     this.resetInactivityTimer();
-
-    if (!this.forbiddenEndpoints.includes(endpoint)) {
-      this.refreshToken()
-    }
 
     const headers = {
       "Content-Type": "application/json",
@@ -35,14 +32,12 @@ class HttpMixin {
 
     try {
       const response = await fetch(`${this.baseURL}/${endpoint}`, options);
-      if (!this.forbiddenEndpoints.includes(endpoint)) {
-        const data = await response.json();
-        if (data) {
-          return data
-        }
-      }
+      return await response.json();
     } catch (error) {
-      console.error(`HTTP ${method} Error:`, error.message ?? 'Something went wrong');
+      console.error(
+        `HTTP ${method} Error:`,
+        error.message ?? "Something went wrong"
+      );
       throw error;
     }
   }
@@ -70,29 +65,6 @@ class HttpMixin {
   // DELETE method
   async deleteMixin(endpoint) {
     return this._request("DELETE", endpoint);
-  }
-
-  setJwtCookie(token) {
-    const expiryDays = 1; // Cookie expiration time in days
-    const date = new Date();
-    date.setTime(date.getTime() + expiryDays * 24 * 60 * 60 * 1000); // Set expiry to 1 day later
-    const expires = "expires=" + date.toUTCString();
-
-    // Set the cookie with the JWT token
-    // When using HTTPS then use Secure option
-    // document.cookie = "jwtToken=" + token + ";" + expires + ";path=/;SameSite=Strict;Secure";
-    document.cookie =
-      "jwtToken=" + token + ";" + expires + ";path=/;SameSite=Strict";
-  }
-
-  async refreshToken() {
-    const token = await this.postMixin('/app/apis/refresh_token.php', null)
-    this.setJwtCookie(token)
-    this.setJwtToken()
-  }
-
-  setJwtToken() {
-    this.token = localStorage.getItem("jwtToken");
   }
 
   resetInactivityTimer() {

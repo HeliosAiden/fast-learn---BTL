@@ -1,6 +1,6 @@
 <?php
 require_once './Api.php';
-require_once _DIR_ROOT . '/app/utils/Jwt.php';
+require_once _DIR_ROOT . '/app/middlewares/Jwt.php';
 
 $api = new Api('User');
 

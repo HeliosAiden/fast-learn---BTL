@@ -1,6 +1,5 @@
 <?php
-require_once _DIR_ROOT . '/app/utils/Jwt.php';
-
+require_once _DIR_ROOT . '/app/middlewares/Jwt.php';
 
 $headers = apache_request_headers(); // Get the headers
 $default_login_url = _WEB_ROOT . '/dang-nhap';
@@ -12,9 +11,9 @@ function is_url_allowed($currentUri, $allowedUri) {
     return in_array($currentUri, $allowedUri);
 }
 
-// echo '<pre>';
-// print_r($headers);
-// echo '</pre>';
+echo '<pre>';
+print_r($headers);
+echo '</pre>';
 
 $current_URI = str_replace(__URL_DIR__ . '/', '', $_SERVER['REQUEST_URI']);
 
@@ -31,9 +30,15 @@ if (isset($_COOKIE['jwtToken'])) {
         $decoded_token = $JWT_Token -> decode_token($token);
         // Token is valid, you can access user data if needed
         $userData = $decoded_token->data;
+        $exp = $decoded_token->exp;
 
         // Redirect to home page if already logged in
         if (is_url_allowed($current_URL, $UNAUTHORIZED_URLS)) {
+            header("Location: $default_home_url");
+            exit();
+        }
+        // Redirect to home page if token expored
+        if ($exp < time()) {
             header("Location: $default_home_url");
             exit();
         }

@@ -2,6 +2,7 @@
 class Controller {
 
     protected $__model;
+    protected $__permission;
 
     public function model($model)
     {
@@ -40,8 +41,6 @@ class Controller {
             require_once $view_url;
         }
     }
-
-    protected function serialize() {}
 
     protected function get_page_data($page_title, $dir, $data = [])
     {
@@ -83,8 +82,11 @@ class Controller {
         ], $status);
     }
 
-    public function get_permission() {
-        require_once _DIR_ROOT . '/app/middlewares/permission.php';
-        return $user_role;
+    public function get_permissions($user_role) {
+        global $permission_config;
+        if (!empty($permission_config[$user_role])) {
+            return $permission_config[$user_role];
+        }
+        return [];
     }
 }

@@ -27,4 +27,8 @@ class Api
     public function get_controller() {
         return $this -> __controller;
     }
+
+    public function get_user_permission($role) {
+        // $this -> __controller ->
+    }
 }

@@ -74,4 +74,11 @@ class User extends Controller
             $this -> errorResponse();
         }
     }
+
+    public function update_user() {
+        $data = $this->getInput();
+        if (!$data || !isset($data['id'], $data['username'], $data['email'], $data['role'])) {
+            $this->errorResponse('Invalid input');
+        }
+    }
 }

@@ -1,5 +1,5 @@
 <?php
-require_once _DIR_ROOT . '/app/utils/Jwt.php';
+require_once _DIR_ROOT . '/app/middlewares/Jwt.php';
 
 $headers = apache_request_headers(); // Get the headers
 $default_login_url = _WEB_ROOT . '/dang-nhap';
@@ -17,7 +17,7 @@ if (isset($_COOKIE['jwtToken'])) {
         // Token is valid, you can access user data if needed
 
         $user_role = $decoded_token->data->user_role ?? null;
-        if ($user_role) {
+        if ($user_role && $api -> get_user_permission($user_role)) {
             // Do switch case to check permission here
         } else {
             // Deny access

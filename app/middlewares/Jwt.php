@@ -28,8 +28,8 @@ class JWTToken {
     }
 
     public function refresh_token($token) {
-        $decoded_token = $this -> decode_token($token);
-        $data = $decoded_token -> data;
+        $payload = $this -> decode_token($token);
+        $data = $payload -> data;
         return $this -> generate_token($data);
     }
 
@@ -40,7 +40,7 @@ class JWTToken {
             $default_login_url = _WEB_ROOT . '/dang-nhap';
             http_response_code(401);
             echo json_encode(['message' => 'Invalid token']);
-            setcookie('jwtToken', '', time() - 3600, '/');  // Expire the cookie
+            setcookie('jwtToken', '', 0, '/');  // Expire the cookie
             header("Location: $default_login_url");
             exit();
         }
