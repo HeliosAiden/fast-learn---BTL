@@ -90,7 +90,7 @@ class TableMixin {
         if (this.actions && this.actions.length > 0) {
           const actionTd = document.createElement("td");
           const actionContainer = document.createElement("div");
-          actionContainer.classList.add("d-flex", "justify-content-between");
+          actionContainer.classList.add("d-flex", "justify-content-evenly");
 
           this.actions.forEach((action) => {
             const button = document.createElement("button");

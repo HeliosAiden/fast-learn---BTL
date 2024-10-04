@@ -1,20 +1,13 @@
 class HttpMixin {
   constructor(baseURL) {
     this.baseURL = baseURL;
-    this.token = localStorage.getItem("jwtToken");
+    this.token = localStorage.getItem("jwtToken")
     this.inactivityTimeout = null; // To track inactivity timeout
     this.inactivityLimit = 5 * 60 * 1000; // 5 minutes (in milliseconds)
-    this.logoutUrl = this.baseURL + "/dang-nhap";
-    this.forbiddenEndpoints = [
-      "/app/apis/refresh_token.php",
-      "/app/apis/logout.php",
-    ];
-    document.addEventListener("mousemove", this.resetInactivityTimer);
   }
 
   // Private method to handle HTTP requests
   async _request(method, endpoint, body = null) {
-    this.resetInactivityTimer();
 
     const headers = {
       "Content-Type": "application/json",
@@ -67,22 +60,19 @@ class HttpMixin {
     return this._request("DELETE", endpoint);
   }
 
-  resetInactivityTimer() {
-    // Clear the existing timeout if any
-    if (this.inactivityTimeout) {
-      clearTimeout(this.inactivityTimeout);
-    }
+  setJwtCookie(token) {
+    const expiryDays = 1; // Cookie expiration time in days
+    const date = new Date();
+    date.setTime(date.getTime() + expiryDays * 24 * 60 * 60 * 1000); // Set expiry to 1 day later
+    const expires = "expires=" + date.toUTCString();
 
-    // Set a new inactivity timeout for 5 minutes
-    this.inactivityTimeout = setTimeout(() => {
-      this.handleLogout();
-    }, this.inactivityLimit);
+    // Set the cookie with the JWT token
+    // When using HTTPS then use Secure option
+    // document.cookie = "jwtToken=" + token + ";" + expires + ";path=/;SameSite=Strict;Secure";
+    document.cookie =
+      "jwtToken=" + token + ";" + expires + ";path=/;SameSite=Strict";
   }
 
-  handleLogout() {
-    this.jwtToken = ""; // Clear the JWT token (or clear session storage/local storage)
-    window.location.href = this.logoutUrl; // Redirect to login page or take appropriate logout action
-  }
 }
 
 export default HttpMixin;
