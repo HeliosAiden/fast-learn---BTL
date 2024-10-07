@@ -23,11 +23,9 @@ class SnackBarMixin {
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       `;
 
-    // Append to snackbar container
     const container = document.getElementById("snackbar-container");
-    container.appendChild(alertDiv);
+    container.insertBefore(alertDiv, container.firstChild);
 
-    // Auto-dismiss after 3 seconds
     setTimeout(() => {
       alertDiv.classList.remove("show");
       alertDiv.classList.add("fade");

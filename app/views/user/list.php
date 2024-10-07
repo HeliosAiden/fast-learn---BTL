@@ -10,6 +10,23 @@
     let response = await httpMixin.getMixin(url)
     let data = response.data
 
-    const tableMixin = new TableMixin(data, 5);
+    const actions = [
+        {
+            label: 'Edit',
+            className: 'btn-warning',
+            handler: (rowData) => {
+                console.log(rowData.id)
+            }
+        },
+        {
+            label: 'Delete',
+            className: 'btn-danger',
+            handler: (rowData) => {
+                console.log(rowData.id)
+            }
+        }
+    ];
+
+    const tableMixin = new TableMixin(data, 5, [], actions);
     tableMixin.render(document.getElementById('table-container'));
 </script>

@@ -2,6 +2,7 @@
 class Controller {
 
     protected $__model;
+    protected $__permission;
 
     public function model($model)
     {
@@ -20,9 +21,6 @@ class Controller {
     public function render($view, $data = [])
     {
         extract($data);
-        // echo '<pre>';
-        // print_r($data);
-        // echo '</pre>';
 
         $view_url = _DIR_ROOT . '/app/views/' . $view . '.php';
         if (file_exists($view_url)) {
@@ -43,8 +41,6 @@ class Controller {
             require_once $view_url;
         }
     }
-
-    protected function serialize() {}
 
     protected function get_page_data($page_title, $dir, $data = [])
     {
@@ -79,10 +75,18 @@ class Controller {
     }
 
     // Method to handle errors
-    protected function errorResponse($message = 'Bad request', $status = 400) {
+    public function errorResponse($message = 'Bad request', $status = 400) {
         $this->jsonResponse([
             'status' => 'error',
             'message' => $message,
         ], $status);
+    }
+
+    public function get_permissions($user_role) {
+        global $permission_config;
+        if (!empty($permission_config[$user_role])) {
+            return $permission_config[$user_role];
+        }
+        return [];
     }
 }

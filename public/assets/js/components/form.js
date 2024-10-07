@@ -9,6 +9,9 @@ class FormMixin {
         if (this.formConfig.class) {
             form.setAttribute('class', this.formConfig.class)
         }
+        if (this.formConfig.id) {
+            form.setAttribute('id', this.formConfig.id)
+        }
 
         // Add title if provided
         if (this.formConfig.title) {
@@ -26,6 +29,11 @@ class FormMixin {
                 title.innerText = titleConfig.label;
             }
             form.appendChild(title);
+        }
+
+        if (this.targetId) {
+            const inputTarget = this.createInputTarget()
+            form.appendChild(inputTarget)
         }
 
         // Create form fields
@@ -71,8 +79,10 @@ class FormMixin {
             }
         });
 
-        const buttonArea = this.createButtonArea(this.formConfig.buttonArea)
-        form.appendChild(buttonArea)
+        if (this.formConfig.buttonArea) {
+            const buttonArea = this.createButtonArea(this.formConfig.buttonArea)
+            form.appendChild(buttonArea)
+        }
 
         return form;
     }
@@ -214,12 +224,27 @@ class FormMixin {
         return buttonArea
     }
 
+    createInputTarget() {
+        const inputTarget = document.createElement('input')
+        inputTarget.setAttribute('type', 'hidden')
+        inputTarget.setAttribute('id', 'input_target_id')
+        inputTarget.setAttribute('value', this.targetId)
+        return inputTarget
+    }
+
+    setInputTarget(id) {
+        this.targetId = id
+    }
+
     // Method to render the form into a DOM element
     render(selector) {
         const targetElement = document.querySelector(selector);
         if (targetElement) {
-            const formElement = this.createForm();
-            targetElement.appendChild(formElement);
+            const existingForm = targetElement.querySelector(`#${this.formConfig.id}` ?? `.${this.formConfig.class}`);
+            if (!existingForm) {
+                const formElement = this.createForm();
+                targetElement.appendChild(formElement);
+            }
         } else {
             console.error(`Element with selector ${selector} not found`);
         }

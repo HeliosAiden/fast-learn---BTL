@@ -62,6 +62,9 @@ if (!empty($config['hashing'])) {
 if (!empty($config['jwt'])) {
     $jwt_config = array_filter($config['jwt']);
 }
+if (!empty($config['permission'])) {
+    $permission_config = array_filter($config['permission']);
+}
 
 require_once 'core/Model.php'; // Load Base Model
 require_once 'core/Controller.php'; // Load Base Controller

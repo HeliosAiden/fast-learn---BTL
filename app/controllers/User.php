@@ -47,12 +47,12 @@ class User extends Controller
 
     public function create_user() {
         $data = $this->getInput();
-        if (!$data || !isset($data['username'], $data['password'], $data['role'])) {
+        if (!$data || !isset($data['username'], $data['password'], $data['email'], $data['role'])) {
             $this->errorResponse('Invalid input');
         }
 
-        $response = $this -> __model -> register($data['username'], $data['password'], $data['role']);
-        if ($response[1]) {
+        $user_data = $this -> __model -> register($data['username'], $data['password'], $data['email'], $data['role']);
+        if ($user_data) {
             $this->jsonResponse([
                 'status' => 'success',
                 'message' => 'User created successfully',
@@ -65,13 +65,20 @@ class User extends Controller
 
     public function get_user() {
         $response = $this -> __model -> select_all();
-        if ($response[1]) {
+        if ($response) {
             $this->jsonResponse([
                 'status' => 'success',
-                'data' => $response[0]
+                'data' => $response
             ]);
         } else {
             $this -> errorResponse();
+        }
+    }
+
+    public function update_user() {
+        $data = $this->getInput();
+        if (!$data || !isset($data['id'], $data['username'], $data['email'], $data['role'])) {
+            $this->errorResponse('Invalid input');
         }
     }
 }

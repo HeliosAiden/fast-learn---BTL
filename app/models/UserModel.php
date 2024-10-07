@@ -12,7 +12,7 @@ class UserModel extends Model
         $this->hashing_config = $hashing_config;
     }
 
-    public function register($username, $password, $role='Student')
+    public function register($username, $password, $email, $role='Student')
     {
         // Hash the password using bcrypt
         $options = ['cost' => $this->hashing_config['cost']];
@@ -21,49 +21,28 @@ class UserModel extends Model
         $data = [
             'username' => $username,
             'password_hash' => $hashedPassword,
-            'role' => $role
+            'email' => $email,
+            'role' => $role,
         ];
 
-        $response = $this -> db -> insert($this->__table, $data);
-        if ($response) {
-            $condition = $this -> init_condition($data);
-
-            $user = $this -> db ->select($this->__table, $condition);
-            return $user;
-        }
-
-        return $response;
+        return $this -> db -> insert($this->__table, $data);
     }
 
     public function login($username, $password, $role)
     {
-        $condition = 'username = "' . $username . '" AND role = "' . $role . '"';
-        $response = $this->db->select($this->__table, $condition);
-        $data = $response[0];
-        $status = $response[1];
-        if ($status && !empty($data)) {
-            $user = $data[0]; // Select first user found
+        $condition = [
+            'username' => $username,
+            'role' => $role,
+        ];
+        $rows = $this->db->select($this->__table, $condition);
+        if ($rows) {
+            $user = $rows[0]; // Select first user found
             if ($user && password_verify($password, $user['password_hash'])) {
-                return [$user, true]; // Return user data if login is successful
+                return $user;
             }
         }
 
-        return [null, false]; // Return false if credentials don't match
-    }
-
-    public function get_detail($id, $details=[])
-    {
-        $details = $this -> init_details($id, $details);
-        return $this -> detail($details);
-    }
-
-    public function search_user($details=[]) {
-        $details = $this -> init_details('', $details);
-        return $this -> detail($details);
-    }
-
-    public function delete_user() {
-
+        return null; // Return null if credentials don't match
     }
 
 }

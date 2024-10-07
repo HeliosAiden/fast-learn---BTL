@@ -9,7 +9,7 @@ $default_login_uri = __URL_ORIGIN__ . '/user/login';
 // Unset the JWT cookie by setting its expiration date in the past
 if (isset($_COOKIE['jwtToken'])) {
     global $jwt_config;
-    setcookie('jwtToken', '', time() - $jwt_config['exp_time'], '/');  // Expire the cookie
+    setcookie('jwtToken', '', 0, '/');  // Expire the cookie
 }
 
 // Redirect to login page after logging out

@@ -1,26 +1,22 @@
 class HttpMixin {
   constructor(baseURL) {
     this.baseURL = baseURL;
-    // this.token = localStorage.getItem("jwtToken"); // Store JWT token in localStorage
-    this.token = this.setJwtToken()
+    this.token = localStorage.getItem("jwtToken")
     this.inactivityTimeout = null; // To track inactivity timeout
     this.inactivityLimit = 5 * 60 * 1000; // 5 minutes (in milliseconds)
-    this.logoutUrl = this.baseURL + "/dang-nhap";
-    this.refreshTokenEndpoint = '/app/apis/refresh_token.php'
   }
 
   // Private method to handle HTTP requests
-  async _request(method, endpoint, body = null) {
-    this.resetInactivityTimer();
-
-    if (endpoint !== this.refreshTokenEndpoint) {
-      this.refreshToken()
-    }
+  async _request(method, endpoint, body = null, id = null) {
 
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${this.token}`, // Add JWT token to request headers
     };
+
+    if (id) {
+      headers['X-Subject-ID'] = id
+    }
 
     const options = {
       method,
@@ -33,11 +29,12 @@ class HttpMixin {
 
     try {
       const response = await fetch(`${this.baseURL}/${endpoint}`, options);
-      const data = await response.json();
-
-      return data;
+      return await response.json();
     } catch (error) {
-      console.error(`HTTP ${method} Error:`, error.message);
+      console.error(
+        `HTTP ${method} Error:`,
+        error.message ?? "Something went wrong"
+      );
       throw error;
     }
   }
@@ -53,18 +50,18 @@ class HttpMixin {
   }
 
   // PUT method
-  async putMixin(endpoint, body) {
-    return this._request("PUT", endpoint, body);
+  async putMixin(endpoint, body, id = null) {
+    return this._request("PUT", endpoint, body, id);
   }
 
   // PATCH method
-  async patchMixin(endpoint, body) {
-    return this._request("PATCH", endpoint, body);
+  async patchMixin(endpoint, body, id) {
+    return this._request("PATCH", endpoint, body, id);
   }
 
   // DELETE method
-  async deleteMixin(endpoint) {
-    return this._request("DELETE", endpoint);
+  async deleteMixin(endpoint, id) {
+    return this._request("DELETE", endpoint, null, id);
   }
 
   setJwtCookie(token) {
@@ -80,34 +77,6 @@ class HttpMixin {
       "jwtToken=" + token + ";" + expires + ";path=/;SameSite=Strict";
   }
 
-  async refreshToken() {
-    // console.log('refreshing new token...')
-    const token = await this.postMixin(this.refreshTokenEndpoint, null)
-    this.setJwtCookie(token)
-    this.setJwtToken()
-  }
-
-  setJwtToken() {
-    this.token = localStorage.getItem("jwtToken");
-  }
-
-  resetInactivityTimer() {
-    // Clear the existing timeout if any
-    if (this.inactivityTimeout) {
-      clearTimeout(this.inactivityTimeout);
-    }
-
-    // Set a new inactivity timeout for 5 minutes
-    this.inactivityTimeout = setTimeout(() => {
-      this.handleLogout();
-    }, this.inactivityLimit);
-  }
-
-  handleLogout() {
-    alert("Bạn đã đăng xuất do không hoạt động.");
-    this.jwtToken = ""; // Clear the JWT token (or clear session storage/local storage)
-    window.location.href = this.logoutUrl; // Redirect to login page or take appropriate logout action
-  }
 }
 
 export default HttpMixin;

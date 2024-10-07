@@ -2,7 +2,7 @@
 class Database
 {
 
-    private $__connection, $__last_insert_id;
+    private $__connection;
 
     function __construct()
     {
@@ -10,21 +10,25 @@ class Database
         $this->__connection = DB_Connection::get_instance($db_config);
     }
 
-    function query($sql)
-    {
-        $statement = $this->__connection->prepare($sql);
-        $statement->execute();
-        return $statement;
+    function query($sql, $params = []) {
+        try {
+
+            $stmt = $this->__connection->prepare($sql);
+            foreach ($params as $key => $value) {
+                $stmt->bindValue(':' . $key, $value);
+            }
+            $stmt->execute();
+            return $stmt;
+        } catch (PDOException $e) {
+            // Handle the exception, for example, log it or rethrow it
+            throw new Exception("Database query error: " . $e->getMessage());
+        }
     }
 
-    protected function last_insert_id()
-    {
-        return $this->__last_insert_id;
-    }
-
-    protected function set_last_insert_id($last_insert_id)
-    {
-        $this->__last_insert_id = $last_insert_id;
+    private function getLastInsertId($table, $primaryKey = 'id') {
+        $sql = "SELECT MAX($primaryKey) as last_id FROM $table";
+        $result = $this->query($sql)->fetch(PDO::FETCH_ASSOC);
+        return $result['last_id'] ?? null;
     }
 
     /**
@@ -36,24 +40,15 @@ class Database
      * @param string $condition The condition to selected row(s).
      * @return array The array consists of two value: [(string) $data, (bool) $status]
      */
-    function select($table, $condition = '')
-    {
-        try {
-            if (!empty($condition)) {
-                $sql = "SELECT * FROM $table WHERE $condition";
-            } else {
-                $sql = "SELECT * FROM $table";
-            }
-
-            $query = $this->query($sql);
-            if ($query) {
-                return [$query->fetchAll(PDO::FETCH_ASSOC), true];
-            } else {
-                return [null, false];
-            }
-        } catch (PDOException $exception) {
-            die('Query failed: ' . $exception->getMessage());
+    public function select($table, $conditions = []) {
+        $sql = "SELECT * FROM $table";
+        if (!empty($conditions)) {
+            $sql .= ' WHERE ' . implode(' AND ', array_map(function ($key) {
+                return "$key = :$key";
+            }, array_keys($conditions)));
         }
+        $stmt = $this->query($sql, $conditions);
+        return $stmt->rowCount() > 0 ? $stmt->fetchAll(PDO::FETCH_ASSOC) : null;  // Fetch the results
     }
 
     /**
@@ -62,31 +57,17 @@ class Database
      * This function takes table's name and new data
      *
      * @param string $table The exact name of the table inside mySQL database.
-     * @param associative_array $data The data array of key and value pairs.
-     * @return array The array consists of two value: [(string) $last_insert_id, (bool) $status]
+     * @param array $data The data array of key and value pairs.
+     * @return bool $status The status of operation
      */
-    function insert($table, $data)
-    {
-        if (!empty($data)) {
-            $fieldStr = '';
-            $valueStr = '';
-            foreach ($data as $key => $value) {
-                $fieldStr .= $key . ',';
-                $valueStr .= "'" . $value . "',";
-            }
-            $fieldStr = rtrim($fieldStr, ',');
-            $valueStr = rtrim($valueStr, ',');
+    function insert($table, $data, $primaryKey = 'id') {
+        $columns = implode(',', array_keys($data));
+        $placeholders = ':' . implode(', :', array_keys($data));
+        $sql = "INSERT INTO $table ($columns) VALUES ($placeholders)";
 
-            $sql = "INSERT INTO $table($fieldStr) VALUES ($valueStr)";
+        $stmt = $this->query($sql, $data);
 
-            $status = $this->query($sql);
-            if ($status) {
-                $this->set_last_insert_id($this->__connection->lastInsertId());
-                return [$this->last_insert_id(), true];
-            }
-        } else {
-            return [null, false];
-        }
+        return $stmt->rowCount() > 0 ? $this->getLastInsertId($table, $primaryKey) : null;;
     }
 
     /**
@@ -95,41 +76,30 @@ class Database
      * This function takes table's name, new data and one or multiple ids to update
      *
      * @param string $table The exact name of the table inside mySQL database.
-     * @param associative_array $data The data array of key and value pairs.
-     * @param array $id The array contains one or multiple ids.
+     * @param array $data The data array of key and value pairs.
+     * @param array $conditions The array contains one or multiple conditions to select update.
      * @return array The array consists of two value: [(array) $selected_id, (bool) $status]
      */
-    function update($table, $data, $id)
-    {
-        if (!empty($data)) {
-            $updateStr = '';
-            foreach ($data as $key => $value) {
-                $updateStr .= "$key='$value'";
-            }
-            $updateStr = rtrim($updateStr, ',');
+    function update($table, $data, $conditions) {
+        $setClause = implode(', ', array_map(function ($key) {
+            return "$key = :$key";
+        }, array_keys($data)));
 
-            if (count($id) > 1) {
-                $selected_ids = $id;
-                $condition = '( ';
-                foreach ($id as $selected_id) {
-                    $condition .= $selected_id . ', ';
-                }
-                $condition = rtrim($condition, ', ') . ' )';
-                $sql = "UPDATE $table SET $updateStr WHERE id IN $condition";
-            }
-            if (count($id) == 1) {
-                $selected_id = $id[0];
-                $selected_ids = [$selected_id];
-                $sql = "UPDATE $table SET $updateStr WHERE id IN $selected_id";
-            }
+        $conditionClause = implode(' AND ', array_map(function ($key) {
+            return "$key = :cond_$key";
+        }, array_keys($conditions)));
 
-            $status = $this->query($sql);
-            if ($status) {
-                return [$selected_ids, true];
-            }
+        $sql = "UPDATE $table SET $setClause WHERE $conditionClause";
 
-            return [[], false];
-        }
+        // Combine data and conditions in a single array
+        $params = array_merge($data, array_combine(
+            array_map(fn($key) => "cond_$key", array_keys($conditions)),
+            array_values($conditions)
+        ));
+
+        $stmt = $this->query($sql, $params);
+
+        return $stmt->rowCount() > 0 ? $stmt->rowCount() : null;// Return affected rows
     }
 
     /**
@@ -139,21 +109,16 @@ class Database
      *
      * @param string $table The exact name of the table inside mySQL database.
      * @param string $condition The condition to select deleting row.
-     * @return bool $status The status of operation
+     * @return int $status The status of operation
      */
-    function delete($table, $condition = '')
-    {
-        if (!empty($condition)) {
-            $sql = "DELETE FROM $table WHERE $condition";
-        } else {
-            $sql = "DELETE FROM $table";
-        }
+    public function delete($table, $conditions) {
+        $conditionClause = implode(' AND ', array_map(function ($key) {
+            return "$key = :$key";
+        }, array_keys($conditions)));
 
-        $status = $this->query($sql);
-        if ($status) {
-            return true;
-        }
+        $sql = "DELETE FROM $table WHERE $conditionClause";
 
-        return false;
+        $stmt = $this->query($sql, $conditions);
+        return $stmt->rowCount() > 0 ? $stmt->rowCount() : null; // Return affected rows
     }
 }
