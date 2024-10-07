@@ -16,7 +16,7 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label for="add-name"  class="form-label">Name<noscript></noscript></label>
+                    <label for="add-name" class="form-label">Name<noscript></noscript></label>
                     <input type="text" class="form-control" id="add-name">
                 </div>
             </div>
@@ -37,7 +37,7 @@
                 <button type="button" class="btn-close close-edit-modal"></button>
             </div>
             <div class="modal-body">
-                <input type="hidden" id="edit-id">
+                <input type="hidden" id="edit-form-id">
                 <div class="mb-3">
                     <label for="edit-name" class="form-label">Name<noscript></noscript></label>
                     <input type="text" class="form-control" id="edit-name">
@@ -45,7 +45,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary close-edit-modal">Close</button>
-                <button type="button" id='submit-edit' class="btn btn-primary">Save changes</button>
+                <button type="button" id='edit-subject-btn' class="btn btn-primary">Save changes</button>
             </div>
         </div>
     </div>
@@ -83,21 +83,21 @@
     }
 
     // ** Add Modal Form ** //
-    const nameInputId = 'add-name'
+    const nameCreateInputId = 'add-name'
 
     function checkAddForm() {
-        const name = document.getElementById(nameInputId).value.trim();
+        const name = document.getElementById(nameCreateInputId).value.trim();
         document.getElementById('add-subject-btn').disabled = !name;
     }
 
     function openAddModal() {
-        document.getElementById(nameInputId).value = '';
+        document.getElementById(nameCreateInputId).value = '';
 
         // Disable the "Add Student" button initially
         document.getElementById('add-subject-btn').disabled = true;
 
         // Add event listeners to track changes
-        document.getElementById(nameInputId).addEventListener('input', checkAddForm);
+        document.getElementById(nameCreateInputId).addEventListener('input', checkAddForm);
 
         var addModal = new bootstrap.Modal(document.getElementById('addModal'));
         addModal.show();
@@ -109,7 +109,7 @@
     }
 
     const submitCreateSubject = async () => {
-        let subjectName = document.getElementById(nameInputId).value;
+        let subjectName = document.getElementById(nameCreateInputId).value;
 
         var data = {
             name: subjectName,
@@ -136,10 +136,45 @@
 
     // ** Edit Modal Form ** //
 
+    const nameEditInputId = 'edit-name'
+
+    function openEditModal(subject) {
+        document.getElementById(nameEditInputId).value = subject.name;
+        document.getElementById('edit-form-id').value = subject.id
+
+        // Disable the "edit Student" button initially
+        document.getElementById('edit-subject-btn').disabled = true;
+
+        const initialData = {
+            name: subject.name
+        };
+
+        // edit event listeners to track changes
+        document.getElementById(nameEditInputId).addEventListener('change', () => {
+
+            const currentData = {
+                name: document.getElementById(nameEditInputId).value
+            };
+
+            // Compare current form data with initial data
+            const dataChanged = JSON.stringify(currentData) !== JSON.stringify(initialData);
+
+            // Enable the "Save Changes" button if data has changed
+            document.getElementById('edit-subject-btn').disabled = !dataChanged;
+        });
+
+        var editModal = new bootstrap.Modal(document.getElementById('editModal'));
+        editModal.show();
+    }
+
+    function closeEditModal() {
+        var addModal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
+        addModal.hide();
+    }
+
     const submitEditSubject = async () => {
-        console.log('triggered submitEditSubject')
-        let id = document.getElementById('input_target_id').value;
-        let subjectName = document.getElementById('edit_name').value;
+        let id = document.getElementById('edit-form-id').value;
+        let subjectName = document.getElementById(nameEditInputId).value;
 
         var data = {
             id: id,
@@ -148,24 +183,27 @@
 
         let endpoint = 'app/apis/subject.php'
         response = await httpMixin.putMixin(endpoint, data)
-        if (response.status == 'succsess') {
-            snackBar.showMessage('Thêm môn học thành công')
+        if (response.status == 'success') {
+            snackBar.showMessage('Thêm môn học thành công', response.status)
         } else {
             snackBar.showMessage(response.message ?? 'Thêm môn học thất bại', 'danger')
         }
     }
 
+    document.querySelectorAll('.close-edit-modal').forEach(btn => {
+        btn.addEventListener('click', closeEditModal)
+    })
+    document.getElementById('edit-subject-btn').addEventListener('click', () => {
+        closeEditModal()
+        submitEditSubject()
+    })
 
-
-    const testEdit = () => {
-        console.log('testing...')
-    }
 
     const actions = [{
             label: 'Edit',
             className: 'btn-warning',
             handler: (rowData) => {
-                console.log(rowData.id)
+                openEditModal(rowData)
             }
         },
         {

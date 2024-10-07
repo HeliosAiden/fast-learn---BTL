@@ -52,4 +52,44 @@ class Subject extends Controller
             $this->errorResponse();
         }
     }
+
+    public function update_subject() {
+        $data = $this->getInput();
+        if (!$data || !isset($data['name']) || !isset($data['id'])) {
+            $this->errorResponse();
+        }
+
+        $subject_data = $this->__model->update_subject($data['id'], $data['name']);
+        if ($subject_data) {
+            $this->jsonResponse(
+                [
+                    'status' => 'success',
+                    'message' => 'Subject edit successfully',
+                    'data' => $subject_data
+                ]
+            );
+        } else {
+            $this->errorResponse();
+        }
+    }
+
+    public function delete_subject() {
+        $data = $this->getInput();
+        if (!$data || !isset($data['id'])) {
+            $this->errorResponse();
+        }
+
+        $subject_data = $this->__model->delete_subject($data['id']);
+        if ($subject_data) {
+            $this->jsonResponse(
+                [
+                    'status' => 'success',
+                    'message' => 'Delete subject successfully',
+                    'data' => $subject_data
+                ]
+            );
+        } else {
+            $this->errorResponse();
+        }
+    }
 }

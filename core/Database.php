@@ -77,7 +77,7 @@ class Database
      *
      * @param string $table The exact name of the table inside mySQL database.
      * @param array $data The data array of key and value pairs.
-     * @param array $id The array contains one or multiple ids.
+     * @param array $conditions The array contains one or multiple conditions to select update.
      * @return array The array consists of two value: [(array) $selected_id, (bool) $status]
      */
     function update($table, $data, $conditions) {

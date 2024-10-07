@@ -14,4 +14,18 @@ class SubjectModel extends Model
         ];
         return $this -> db -> insert($this->__table, $data);
     }
+
+    function update_subject($id, $name) {
+        $data = [
+            'name' => $name
+        ];
+        $condition = [
+            'id' => $id
+        ];
+        return $this -> db -> update($this -> __table, $data, $condition);
+    }
+
+    function delete_subject($id) {
+        return $this -> db -> delete($this -> __table, ['id' => $id]);
+    }
 }
