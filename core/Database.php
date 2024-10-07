@@ -4,9 +4,11 @@ class Database
 
     private $__connection;
 
-    function __construct()
+    function __construct($db_config = null)
     {
-        global $db_config;
+        if (!$db_config) {
+            global $db_config;
+        }
         $this->__connection = DB_Connection::get_instance($db_config);
     }
 
