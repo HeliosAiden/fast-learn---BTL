@@ -109,7 +109,7 @@ class Database
      *
      * @param string $table The exact name of the table inside mySQL database.
      * @param string $condition The condition to select deleting row.
-     * @return bool $status The status of operation
+     * @return int $status The status of operation
      */
     public function delete($table, $conditions) {
         $conditionClause = implode(' AND ', array_map(function ($key) {

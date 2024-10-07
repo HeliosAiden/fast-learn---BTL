@@ -7,12 +7,16 @@ class HttpMixin {
   }
 
   // Private method to handle HTTP requests
-  async _request(method, endpoint, body = null) {
+  async _request(method, endpoint, body = null, id = null) {
 
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${this.token}`, // Add JWT token to request headers
     };
+
+    if (id) {
+      headers['X-Subject-ID'] = id
+    }
 
     const options = {
       method,
@@ -46,18 +50,18 @@ class HttpMixin {
   }
 
   // PUT method
-  async putMixin(endpoint, body) {
-    return this._request("PUT", endpoint, body);
+  async putMixin(endpoint, body, id = null) {
+    return this._request("PUT", endpoint, body, id);
   }
 
   // PATCH method
-  async patchMixin(endpoint, body) {
-    return this._request("PATCH", endpoint, body);
+  async patchMixin(endpoint, body, id) {
+    return this._request("PATCH", endpoint, body, id);
   }
 
   // DELETE method
-  async deleteMixin(endpoint) {
-    return this._request("DELETE", endpoint);
+  async deleteMixin(endpoint, id) {
+    return this._request("DELETE", endpoint, null, id);
   }
 
   setJwtCookie(token) {

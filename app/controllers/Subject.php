@@ -73,13 +73,12 @@ class Subject extends Controller
         }
     }
 
-    public function delete_subject() {
-        $data = $this->getInput();
-        if (!$data || !isset($data['id'])) {
+    public function delete_subject($id) {
+        if (!isset($id)) {
             $this->errorResponse();
         }
 
-        $subject_data = $this->__model->delete_subject($data['id']);
+        $subject_data = $this->__model->delete_subject($id);
         if ($subject_data) {
             $this->jsonResponse(
                 [

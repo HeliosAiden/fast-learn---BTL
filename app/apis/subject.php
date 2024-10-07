@@ -24,7 +24,12 @@ switch ($method) {
         break;
 
     case 'DELETE':
-        $api-> get_controller() -> delete_subject();
+        $subject_uuid = $_SERVER['HTTP_X_SUBJECT_ID'] ?? null;
+        if (!$subject_uuid) {
+            $api-> get_controller() -> errorResponse('Missing subject ID in header', 400);
+            exit;
+        }
+        $api-> get_controller() -> delete_subject($subject_uuid);
         break;
 
     default:
