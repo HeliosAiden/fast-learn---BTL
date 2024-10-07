@@ -18,7 +18,7 @@ if (isset($_COOKIE['jwtToken'])) {
 
         $user_role = $decoded_token->data->user_role ?? null;
         if ($user_role && $api -> get_user_permission($user_role)) {
-            // Do switch case to check permission here
+            
         } else {
             // Deny access
             header('HTTP/1.1 403 Forbidden');

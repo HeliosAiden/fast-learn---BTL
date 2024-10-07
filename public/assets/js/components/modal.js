@@ -43,7 +43,6 @@ class ModalMixin {
 
         // Add event listener to trigger HTTP action
         document.getElementById('modalActionBtn').addEventListener('click', () => {
-            console.log('triggered HTTP action')
             this.httpAction()
             const modal = bootstrap.Modal.getInstance(document.getElementById(this.modalId));
             modal.hide();

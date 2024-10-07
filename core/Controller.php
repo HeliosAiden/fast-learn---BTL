@@ -75,7 +75,7 @@ class Controller {
     }
 
     // Method to handle errors
-    protected function errorResponse($message = 'Bad request', $status = 400) {
+    public function errorResponse($message = 'Bad request', $status = 400) {
         $this->jsonResponse([
             'status' => 'error',
             'message' => $message,
