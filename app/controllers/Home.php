@@ -12,10 +12,12 @@ class Home extends Controller
 
     public function index()
     {
+        // Phân quyền trang dựa trên user permission
         $page_action = __FUNCTION__;
         $page_dir = $this -> get_page_dir($page_action);
         $page_data = $this -> get_page_data("Trang chủ", $page_dir);
         $this -> render_layout('test', $page_data);
+        return $page_data;
     }
 
     public function detail($id) {

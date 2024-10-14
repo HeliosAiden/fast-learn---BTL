@@ -12,6 +12,8 @@
         _WEB_ROOT . '/user/login',
         _WEB_ROOT . '/user/register',
         _WEB_ROOT . '/user/forgot-password',
+        _WEB_ROOT . '/',
+        _WEB_ROOT . '/home'
         // Add more URls as needed
     ];
 
@@ -20,7 +22,9 @@
     }
 
     foreach($UNAUTHORIZED_URLS as $value) {
-        array_push($UNAUTHORIZED_URLS, $value . '/');
+        if ($value !== _WEB_ROOT . '/') {
+            array_push($UNAUTHORIZED_URLS, $value . '/');
+        }
     }
 
 ?>

@@ -1,5 +1,5 @@
 <?php
-require_once _DIR_ROOT . '/app/middlewares/Jwt.php';
+require_once _DIR_ROOT . '/core/Jwt.php';
 
 $headers = apache_request_headers(); // Get the headers
 $default_login_url = _WEB_ROOT . '/dang-nhap';
@@ -34,6 +34,10 @@ if (isset($_COOKIE['jwtToken'])) {
 
         // Redirect to home page if already logged in
         if (is_url_allowed($current_URL, $UNAUTHORIZED_URLS)) {
+            if (isset($_SERVER['HTTP_REFERER'])) {
+                $lastUrl = $_SERVER['HTTP_REFERER'];
+                $default_home_url = $lastUrl;
+            }
             header("Location: $default_home_url");
             exit();
         }
@@ -52,7 +56,11 @@ if (isset($_COOKIE['jwtToken'])) {
     }
 } else {
     if (!is_url_allowed($current_URL, $UNAUTHORIZED_URLS)) {
-        // Redirect to login page if the URI is not allowed
+        // Redirect to login page if the URL is not allowed
+        if (isset($_SERVER['HTTP_REFERER'])) {
+            $lastUrl = $_SERVER['HTTP_REFERER'];
+            $default_login_url = $lastUrl;
+        }
         header("Location: $default_login_url");
         exit();
     }

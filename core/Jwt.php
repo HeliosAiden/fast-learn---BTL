@@ -17,6 +17,26 @@ class JWTToken {
         $this -> expiration_time = $this -> issued_at + $jwt_config['exp_time'];
     }
 
+    public function get_token() {
+        if (isset($_COOKIE['jwtToken'])) {
+            $token = $_COOKIE['jwtToken'];
+            return $token;
+        }
+        return null;
+    }
+
+    public function get_user_role() {
+        $token = $this -> get_token();
+        if (isset($token)) {
+            $payload = $this -> decode_token($token);
+            $data = $payload['data'];
+            if (!empty($data) && isset($data['user_role'])) {
+                return $data['user_role'];
+            }
+        }
+        return null;
+    }
+
     public function generate_token($data = []) {
         $payload = [
             'iss' => $this -> issuer,

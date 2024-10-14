@@ -81,13 +81,13 @@
         const snackBar = new SnackBarMixin();
 
         if (response.status == 'success') {
-            snackBar.showMessage('Đăng nhập thành công', 'success');
+            snackBar.showMessage('Đăng nhập thành công', response.status);
             // Store the JWT token in localStorage & cookie
             localStorage.setItem('jwtToken', response.token);
             httpMixin.setJwtCookie(response.token)
             window.location.replace('<?php echo _WEB_ROOT . '/user/list' ?>');
         } else {
-            snackBar.showMessage('Đăng nhập không thành công', 'danger');
+            snackBar.showMessage(response.message ?? 'Đăng nhập không thành công', 'danger');
         }
     }
 

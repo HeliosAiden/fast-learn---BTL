@@ -1,7 +1,8 @@
 <?php
 require_once './Api.php';
 
-$api = new Api('User');
+$model = 'User';
+$api = new Api($model);
 
 header("Content-Type: application/json");
 
@@ -11,6 +12,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 // Route the request based on the HTTP method
 switch ($method) {
     case 'GET':
+        $api -> check_user_permission($model, 'select');
         $api -> get_controller() -> get_user();
         break;
 

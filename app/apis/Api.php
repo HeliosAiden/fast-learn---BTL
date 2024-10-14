@@ -1,6 +1,6 @@
 <?php
 require_once str_replace("\\", '/', dirname(__DIR__, 2)) . "/bootstrap.php";
-require_once _DIR_ROOT . '/app/middlewares/Jwt.php';
+require_once _DIR_ROOT . '/core/Jwt.php';
 
 class Api
 {
