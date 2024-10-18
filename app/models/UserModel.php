@@ -55,4 +55,14 @@ class UserModel extends Model
         return $this -> db -> update($this -> __table, $data, $condition);
     }
 
+    public function active_user($user_id) {
+        $data = [
+            'state' => 'Active'
+        ];
+        $condition = [
+            'id' => $user_id
+        ];
+        return $this -> db -> update($this -> __table, $data, $condition);
+    }
+
 }

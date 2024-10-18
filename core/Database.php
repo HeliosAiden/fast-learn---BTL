@@ -27,10 +27,10 @@ class Database
         }
     }
 
-    private function getLastInsertId($table, $primaryKey = 'id') {
-        $sql = "SELECT MAX($primaryKey) as last_id FROM $table";
+    private function getLastInsertId($table, $priority = 'created_at', $id = 'id') {
+        $sql = "SELECT * FROM $table ORDER BY $priority DESC LIMIT 1;";
         $result = $this->query($sql)->fetch(PDO::FETCH_ASSOC);
-        return $result['last_id'] ?? null;
+        return $result[$id] ?? null;
     }
 
     /**

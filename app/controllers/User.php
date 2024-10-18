@@ -51,8 +51,11 @@ class User extends Controller
             $this->errorResponse('Invalid input');
         }
 
-        $user_data = $this -> __model -> register($data['username'], $data['password'], $data['email'], $data['role']);
-        if ($user_data) {
+        $user_id = $this -> __model -> register($data['username'], $data['password'], $data['email'], $data['role']);
+        if ($user_id) {
+            if ($data['role'] == 'Student') {
+                $this -> active_user($user_id);
+            }
             $this->jsonResponse([
                 'status' => 'success',
                 'message' => 'User created successfully',
@@ -93,5 +96,9 @@ class User extends Controller
         }
         $user_id = $this -> get_user_id();
         return $this -> __model -> update_user_info($user_id, $user_info_id);
+    }
+
+    public function active_user($user_id) {
+        return $this -> __model -> active_user($user_id);
     }
 }
