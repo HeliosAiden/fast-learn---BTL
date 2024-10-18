@@ -10,8 +10,6 @@
 <?php require_once __DIR__ . '/modals/edit_modal.php' ?>
 <?php require_once __DIR__ . '/modals/delete_modal.php' ?>
 
-
-
 <script type="module">
     import HttpMixin from "<?php echo _WEB_ROOT . '/public/assets/js/api/httpMixin.js' ?>";
     import TableMixin from "<?php echo _WEB_ROOT . '/public/assets/js/components/table.js' ?>";

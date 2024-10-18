@@ -32,7 +32,7 @@ http_response_code(404);
     <div class="container">
         <div class="error-message">404 Not Found</div>
         <p>Sorry, the page you are looking for does not exist.</p>
-        <a href="/" class="btn btn-primary">Go to Homepage</a>
+        <a href="<?php echo _WEB_ROOT ?>" class="btn btn-primary">Go to Homepage</a>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

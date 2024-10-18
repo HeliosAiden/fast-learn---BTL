@@ -33,7 +33,7 @@
     const submitDeleteSubject = async () => {
         const id = document.getElementById('delete-id').value
         let endpoint = `app/apis/course.php`
-        response = await httpMixin.deleteMixin(endpoint, id)
+        const response = await httpMixin.deleteMixin(endpoint, id)
         if (response.status == 'success') {
             snackBar.showMessage('Xóa môn học thành công', response.status)
         } else {

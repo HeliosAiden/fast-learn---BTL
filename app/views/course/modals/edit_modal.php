@@ -61,8 +61,6 @@
 
         let endpoint = 'app/apis/course.php'
         const response = await httpMixin.putMixin(endpoint, data, id)
-        console.log('response')
-        console.log(response)
 
         if (response.status == 'success') {
             snackBar.showMessage('Thay đổi khóa học thành công', response.status)

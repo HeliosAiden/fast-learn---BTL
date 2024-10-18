@@ -81,4 +81,17 @@ class User extends Controller
             $this->errorResponse('Invalid input');
         }
     }
+
+    public function retrieve_user($user_id) {
+        $response = $this -> __model -> select_all($user_id);
+    }
+
+    public function update_user_info($user_info_id) {
+        $user_info = $this -> get_user_info();
+        if (isset($user_info)) {
+            exit;
+        }
+        $user_id = $this -> get_user_id();
+        return $this -> __model -> update_user_info($user_id, $user_info_id);
+    }
 }

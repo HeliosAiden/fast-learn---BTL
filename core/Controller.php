@@ -42,7 +42,7 @@ class Controller {
         }
     }
 
-    protected function get_page_data($page_title, $dir, $data = [])
+    public function get_page_data($page_title, $dir, $data = [])
     {
         $page_data = ['page_title' => $page_title, 'dir' => $dir, 'controller' => $this];
         if (!empty($data)) {
@@ -53,7 +53,7 @@ class Controller {
         return $page_data;
     }
 
-    protected function get_page_dir($page_action)
+    public function get_page_dir($page_action)
     {
         $page_controller = get_class($this);
         $page_controller = strtolower($page_controller);
@@ -62,7 +62,7 @@ class Controller {
     }
 
     // Method to send JSON response
-    protected function jsonResponse($data, $status = 200) {
+    public function jsonResponse($data, $status = 200) {
         header("Content-Type: application/json");
         http_response_code($status);
         echo json_encode($data);
@@ -70,7 +70,7 @@ class Controller {
     }
 
     // Method to get input data from request (JSON)
-    protected function getInput() {
+    public function getInput() {
         return json_decode(file_get_contents('php://input'), true);
     }
 
@@ -102,9 +102,6 @@ class Controller {
 
     public function get_id_from_header() {
         $headers = getallheaders();
-        // echo '<pre>';
-        // print_r($headers);
-        // echo '</pre>';
         if (isset($headers['X-Object-Id'])) {
             return $headers['X-Object-Id'];
         }
@@ -154,6 +151,14 @@ class Controller {
         $user_data = $this -> get_user_data();
         if (isset($user_data)) {
             return $user_data -> user_id;
+        }
+        return null;
+    }
+
+    public function get_user_info() {
+        $user_data = $this -> get_user_data();
+        if (isset($user_data)) {
+            return $user_data -> user_info;
         }
         return null;
     }

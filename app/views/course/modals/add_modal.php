@@ -127,11 +127,11 @@
         };
 
         let endpoint = 'app/apis/course.php'
-        response = await httpMixin.postMixin(endpoint, data)
+        const response = await httpMixin.postMixin(endpoint, data)
         if (response.status == 'success') {
-            snackBar.showMessage('Thêm môn học thành công')
+            snackBar.showMessage('Thêm khóa học thành công')
         } else {
-            snackBar.showMessage(response.message ?? 'Thêm môn học thất bại', 'danger')
+            snackBar.showMessage(response.message ?? 'Thêm khóa học thất bại', 'danger')
         }
     }
 

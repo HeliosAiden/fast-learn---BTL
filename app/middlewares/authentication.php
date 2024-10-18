@@ -34,16 +34,12 @@ if (isset($_COOKIE['jwtToken'])) {
 
         // Redirect to home page if already logged in
         if (is_url_allowed($current_URL, $UNAUTHORIZED_URLS)) {
-            if (isset($_SERVER['HTTP_REFERER'])) {
-                $lastUrl = $_SERVER['HTTP_REFERER'];
-                $default_home_url = $lastUrl;
-            }
-            header("Location: $default_home_url");
+            header("Location: $default_login_url");
             exit();
         }
         // Redirect to home page if token expored
         if ($exp < time()) {
-            header("Location: $default_home_url");
+            header("Location: $default_login_url");
             exit();
         }
 
@@ -51,16 +47,6 @@ if (isset($_COOKIE['jwtToken'])) {
         http_response_code(401);
         echo json_encode(['message' => 'Invalid token']);
         setcookie('jwtToken', '', time() - $JWT_Token-> get_expiration_duration(), '/');  // Expire the cookie
-        header("Location: $default_login_url");
-        exit();
-    }
-} else {
-    if (!is_url_allowed($current_URL, $UNAUTHORIZED_URLS)) {
-        // Redirect to login page if the URL is not allowed
-        if (isset($_SERVER['HTTP_REFERER'])) {
-            $lastUrl = $_SERVER['HTTP_REFERER'];
-            $default_login_url = $lastUrl;
-        }
         header("Location: $default_login_url");
         exit();
     }

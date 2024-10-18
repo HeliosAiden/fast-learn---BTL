@@ -23,6 +23,11 @@
                 <a class="nav-link" href="<?php echo __URL_ORIGIN__ ?>/course/"><i class="fa-solid fa-book me-2"></i>Khóa học</a>
             </li>
         </ul>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="<?php echo __URL_ORIGIN__ ?>/userinfo/"><i class="fa-solid fa-book me-2"></i>Thông tin người dùng</a>
+            </li>
+        </ul>
     </div>
     <div class="p-3">
         <button id="logoutButton" type="submit" class="btn btn-danger w-100">Logout</button>

@@ -6,6 +6,7 @@
     $routes['dang-ky'] = 'user/register';
     $routes['mon-hoc'] = 'subject/index';
     $routes['khoa-hoc'] = 'course/index';
+    $routes['user-info'] = 'userinfo';
 
     // $routes['tin-tuc/(.+)'] = 'news/category/$1'; // tin-tuc/1
     // $routes['tin-tuc/.+-(\d+).html'] = 'news/category/$1'; // tin-tuc/1
@@ -18,10 +19,11 @@
         _WEB_ROOT . '/home'
         // Add more URls as needed
     ];
+    $routes['unauthorized'] = $UNAUTHORIZED_URLS;
 
-    foreach($routes as $key => $value) {
-        array_push($UNAUTHORIZED_URLS, _WEB_ROOT . '/' . $key);
-    }
+    // foreach($routes as $key => $value) {
+    //     array_push($UNAUTHORIZED_URLS, _WEB_ROOT . '/' . $key);
+    // }
 
     foreach($UNAUTHORIZED_URLS as $value) {
         if ($value !== _WEB_ROOT . '/') {

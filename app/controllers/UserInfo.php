@@ -16,8 +16,16 @@ class UserInfo extends Controller
         return $page_data;
     }
 
+    public function retrieve_user_info($user_info_id) {
+        return $this -> __model -> retrieve_user_info($user_info_id);
+    }
+
     public function get_user_info()
     {
+        // If user role is admin then select_all()
+        // If not, return $user -> user_info as $id
+        $role = $this -> get_user_role();
+
         $data = $this->__model->select_all();
         if ($data) {
             $this->jsonResponse([
@@ -36,32 +44,21 @@ class UserInfo extends Controller
     {
         $data = $this->getInput();
         $user_id = $this->get_user_id();
-        if (!$data || !isset($data['name']) || !isset($data['subject_id'])) {
-            $this->errorResponse();
-        }
         if (!isset($user_id)) {
             $this->errorResponse('Bad request: no user ID found');
         }
 
-        $user_info_data = $this->__model->create_user_info(
-            $data['name'],
-            $data['subject_id'],
-            $user_id,
-            $data['description'],
-            $data['fee'],
-            $data['start_date'],
-            $data['end_date'],
+        $user_info_id = $this->__model->create_user_info(
+            $data['firstname'] ?? '',
+            $data['lastname'] ?? '',
+            $data['gender'] ?? null,
+            $data['phone_number'] ?? '',
+            $data['date_of_birth'] ?? null,
         );
-        if ($user_info_data) {
-            $this->jsonResponse(
-                [
-                    'status' => 'success',
-                    'message' => 'user_info created successfully',
-                    'data' => $user_info_data
-                ]
-            );
+        if ($user_info_id) {
+            return $user_info_id;
         } else {
-            $this->errorResponse('Create new user_info fail');
+            $this->errorResponse('Create new user info fail');
         }
     }
 

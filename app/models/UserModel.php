@@ -45,4 +45,14 @@ class UserModel extends Model
         return null; // Return null if credentials don't match
     }
 
+    public function update_user_info($user_id, $user_info_id) {
+        $data = [
+            'user_info' => $user_info_id
+        ];
+        $condition = [
+            'id' => $user_id
+        ];
+        return $this -> db -> update($this -> __table, $data, $condition);
+    }
+
 }

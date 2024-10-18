@@ -23,9 +23,14 @@ class UserInfoModel extends Model
             $data['phone_number'] = $phone_number;
         }
         if (isset($dob)) {
-            $data['dob'] = $dob;
+            $data['date_of_birth'] = $dob;
         }
         return $this -> db -> insert($this->__table, $data);
+    }
+
+    function retrieve_user_info($id) {
+        $condition = ['id' => $id];
+        return $this -> db -> select($this -> __table, $condition);
     }
 
     function update_user_info($id, $firstname=null, $lastname=null, $gender=null, $phone_number=null, $dob=null) {
