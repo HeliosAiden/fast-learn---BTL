@@ -20,8 +20,8 @@ class Home extends Controller
         if ($role == 'Guest') {
             $this -> render_layout('guest', $page_data);
         }
-        if ($role == 'Admin') {
-            $this -> render_layout('test', $page_data);
+        if ($role !== 'Guest') {
+            $this -> render_layout('admin', $page_data);
         }
         return $page_data;
     }

@@ -32,11 +32,6 @@ if (isset($_COOKIE['jwtToken'])) {
         $userData = $decoded_token->data;
         $exp = $decoded_token->exp;
 
-        // Redirect to home page if already logged in
-        if (is_url_allowed($current_URL, $UNAUTHORIZED_URLS)) {
-            header("Location: $default_login_url");
-            exit();
-        }
         // Redirect to home page if token expored
         if ($exp < time()) {
             header("Location: $default_login_url");
