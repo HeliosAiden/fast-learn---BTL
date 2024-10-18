@@ -44,5 +44,6 @@ $config['permission'] = [
         'CourseQuestion' => $__SELECT_ONLY,
         'Answer' => $__SELECT_ONLY,
         'Subject' => $__SELECT_ONLY,
+        'User' => $__INSERT_ONLY,
     ]
 ];

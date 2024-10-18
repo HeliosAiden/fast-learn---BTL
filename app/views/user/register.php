@@ -21,8 +21,7 @@
                 name: "role",
                 options: [
                     { label: "Học sinh", value: "Student" },
-                    { label: "Giáo viên", value: "Teacher" },
-                    { label: "Admin", value: "Admin" }
+                    { label: "Giáo viên", value: "Teacher" }
                 ]
             },
             {

@@ -55,6 +55,8 @@ class FormMixin {
                 case 'text':
                 case 'password':
                 case 'email':
+                case 'number':
+                case 'date':
                     inputElement = this.createInputField(field);
                     break;
                 case 'select':

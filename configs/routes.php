@@ -4,6 +4,8 @@
     $routes['trang-chu'] = 'home';
     $routes['dang-nhap'] = 'user/login';
     $routes['dang-ky'] = 'user/register';
+    $routes['mon-hoc'] = 'subject/index';
+    $routes['khoa-hoc'] = 'course/index';
 
     // $routes['tin-tuc/(.+)'] = 'news/category/$1'; // tin-tuc/1
     // $routes['tin-tuc/.+-(\d+).html'] = 'news/category/$1'; // tin-tuc/1

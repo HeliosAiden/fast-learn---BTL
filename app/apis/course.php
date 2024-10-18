@@ -1,7 +1,7 @@
 <?php
-require_once './Api.php';
 
-$model = 'User';
+require_once './Api.php';
+$model = 'Course';
 $api = new Api($model);
 
 header("Content-Type: application/json");
@@ -13,22 +13,22 @@ $method = $_SERVER['REQUEST_METHOD'];
 switch ($method) {
     case 'GET':
         $api -> check_user_permission($model, 'select');
-        $api -> get_controller() -> get_user();
+        $api -> get_controller() -> get_course();
         break;
 
     case 'POST':
         $api -> check_user_permission($model, 'insert');
-        $api -> get_controller() -> create_user();
+        $api -> get_controller() -> create_course();
         break;
 
     case 'PUT':
         $api -> check_user_permission($model, 'update');
-        $api-> get_controller() -> update_user();
+        $api-> get_controller() -> update_course();
         break;
 
     case 'DELETE':
         $api -> check_user_permission($model, 'delete');
-        $api-> get_controller() -> delete_user();
+        $api-> get_controller() -> delete_course();
         break;
 
     default:
@@ -36,3 +36,5 @@ switch ($method) {
         $api-> get_controller() -> errorResponse('unsupported HTTP methods', 405);
         break;
 }
+
+?>
