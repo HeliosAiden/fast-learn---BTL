@@ -36,9 +36,8 @@ if (isset($data->username) && isset($data->password) && isset($data->role)) {
         if (isset($user_data['email'])) {
             $data['user_email'] = $user_data['email'];
         }
-        if (isset($user_data['user_info'])) {
-            $user_info_id = $user_data['user_info'];
-            $user_info = $user_info_api -> get_controller() -> retrieve_user_info($user_info_id);
+        $user_info = $user_info_api -> get_controller() -> retrieve_user_info($user_data['id']);
+        if (isset($user_info)) {
             $data['user_info'] = $user_info;
         }
 

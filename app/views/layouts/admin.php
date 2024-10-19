@@ -38,7 +38,21 @@
   <div class="wrapper">
     <?php
     $this->render('blocks/admin/sidebar', $data);
-    $this->render('blocks/admin/main_panel', $data);
+    ?>
+    <!-- $this->render('blocks/admin/main_panel', $data); -->
+    <div class="main-panel">
+      <?php $this -> render('blocks/admin/main_header') ?>
+      <?php
+      if ($data['dir'] == 'home/index') {
+        $this -> render('blocks/admin/main_container');
+      } else {
+        $this->render($data['dir'], $data);
+
+      };
+      ?>
+      <?php $this -> render('blocks/admin/main_footer') ?>
+    </div>
+    <?php
     $this->render('blocks/admin/utils', $data);
     ?>
   </div>

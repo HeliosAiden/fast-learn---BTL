@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th10 07, 2024 lúc 10:23 AM
+-- Thời gian đã tạo: Th10 19, 2024 lúc 11:29 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -31,7 +31,9 @@ CREATE TABLE `answers` (
   `id` varchar(36) NOT NULL DEFAULT uuid(),
   `replier_id` varchar(36) NOT NULL,
   `answer` text NOT NULL,
-  `question_id` varchar(36) NOT NULL
+  `question_id` varchar(36) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -48,7 +50,9 @@ CREATE TABLE `courses` (
   `subject_id` varchar(36) NOT NULL,
   `teacher_id` varchar(36) NOT NULL,
   `start_date` date DEFAULT NULL,
-  `end_date` date DEFAULT NULL
+  `end_date` date DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -77,7 +81,9 @@ CREATE TABLE `course_feedbacks` (
   `student_id` varchar(36) NOT NULL,
   `feedback` text DEFAULT NULL,
   `rating` int(11) DEFAULT NULL,
-  `feedback_date` date DEFAULT NULL
+  `feedback_date` date DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -109,7 +115,9 @@ CREATE TABLE `course_materials` (
   `name` varchar(255) DEFAULT NULL,
   `content` text DEFAULT NULL,
   `link` varchar(511) DEFAULT NULL,
-  `state` enum('Creating','Hidden','Visible') DEFAULT 'Creating'
+  `state` enum('Creating','Hidden','Visible') DEFAULT 'Creating',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -123,7 +131,9 @@ CREATE TABLE `course_questions` (
   `student_id` varchar(36) NOT NULL,
   `course_id` varchar(36) NOT NULL,
   `question` text NOT NULL,
-  `state` enum('Open','Closed','Hidden') DEFAULT 'Open'
+  `state` enum('Open','Closed','Hidden') DEFAULT 'Open',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -140,7 +150,9 @@ CREATE TABLE `files` (
   `file_type` varchar(50) NOT NULL,
   `file_size` int(11) NOT NULL,
   `file_path` varchar(511) NOT NULL,
-  `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -168,7 +180,9 @@ CREATE TABLE `posts` (
 
 CREATE TABLE `post_categories` (
   `id` varchar(36) NOT NULL DEFAULT uuid(),
-  `name` varchar(255) NOT NULL
+  `name` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -179,19 +193,21 @@ CREATE TABLE `post_categories` (
 
 CREATE TABLE `subjects` (
   `id` varchar(36) NOT NULL DEFAULT uuid(),
-  `name` varchar(255) NOT NULL
+  `name` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `subjects`
 --
 
-INSERT INTO `subjects` (`id`, `name`) VALUES
-('236ad464-8479-11ef-9863-c018035abcac', 'Giải thuật 2'),
-('4a3ebeee-8240-11ef-b317-c018035abcac', 'An toàn thông tin'),
-('66414321-8232-11ef-b317-c018035abcac', 'Giáo dục quốc phòng'),
-('ee622ab3-8201-11ef-9b9e-c018035abcac', 'Cấu trúc dữ liệu & giải thuật'),
-('ef6c0383-81ff-11ef-9b9e-c018035abcac', 'Vật lí nâng cao');
+INSERT INTO `subjects` (`id`, `name`, `created_at`, `updated_at`) VALUES
+('236ad464-8479-11ef-9863-c018035abcac', 'Giải thuật 2', '2024-10-19 02:13:41', '2024-10-19 09:13:41'),
+('4a3ebeee-8240-11ef-b317-c018035abcac', 'An toàn thông tin', '2024-10-19 02:13:41', '2024-10-19 09:13:41'),
+('66414321-8232-11ef-b317-c018035abcac', 'Giáo dục quốc phòng', '2024-10-19 02:13:41', '2024-10-19 09:13:41'),
+('ee622ab3-8201-11ef-9b9e-c018035abcac', 'Cấu trúc dữ liệu & giải thuật', '2024-10-19 02:13:41', '2024-10-19 09:13:41'),
+('ef6c0383-81ff-11ef-9b9e-c018035abcac', 'Vật lí nâng cao', '2024-10-19 02:13:41', '2024-10-19 09:13:41');
 
 -- --------------------------------------------------------
 
@@ -205,18 +221,18 @@ CREATE TABLE `users` (
   `password_hash` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `role` enum('Student','Teacher','Admin') DEFAULT 'Student',
-  `user_info` varchar(36) DEFAULT NULL,
-  `state` enum('Active','Inactive','Removed','Locked') DEFAULT 'Inactive'
+  `state` enum('Active','Inactive','Removed','Locked') DEFAULT 'Inactive',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password_hash`, `email`, `role`, `user_info`, `state`) VALUES
-('502cb25b-8194-11ef-8e7a-c018035abcac', 'user_1', '$2y$05$T4mlOWCxjtCA2aVrrHHJN.E9.oUX5RBMMYekCWiZOYYe5qM1FubFm', 'user_1@school.com', 'Student', NULL, 'Inactive'),
-('87c0b5ac-819d-11ef-8e7a-c018035abcac', 'helios_aiden', '$2y$05$nyMG9W5ybuUb8ZJbV063z.Uc0NLUoKqPb6cda5Zxyi3M6SjYgVoBu', 'heliosaidenismyname@gmail.com', 'Teacher', NULL, 'Inactive'),
-('d041aae8-8482-11ef-9863-c018035abcac', 'helios_aiden_admin', '$2y$05$qTgYleQ1Wo5OehFFSjTmA.lniDYIgkZumhh.zSxjk9CQDul5/urBm', 'admin@fast_learn.com', 'Admin', NULL, 'Inactive');
+INSERT INTO `users` (`id`, `username`, `password_hash`, `email`, `role`, `state`, `created_at`, `updated_at`) VALUES
+('67ea2e25-8dc0-11ef-bde4-c018035abcac', 'admin', '$2y$05$rmzaOWhS9EmHEQWzGYgwNe1nAh.hs4HOJ7jdmQy0hCMzvYedf9R8m', 'admin@example.com', 'Admin', 'Active', '2024-10-19 02:18:18', '2024-10-19 09:18:18'),
+('86aff704-8dc0-11ef-bde4-c018035abcac', 'student_1', '$2y$05$bh/ZmiUIdrpzcD/mgjI8/uU5CnWKZ0Fxa8NpkzmfDJcIeMEODqzP2', 'student2school.com', 'Student', 'Active', '2024-10-19 02:19:10', '2024-10-19 09:19:10');
 
 -- --------------------------------------------------------
 
@@ -230,7 +246,11 @@ CREATE TABLE `user_infos` (
   `lastname` varchar(255) DEFAULT NULL,
   `gender` enum('Male','Female','Others') DEFAULT NULL,
   `phone_number` varchar(20) DEFAULT NULL,
-  `date_of_birth` date DEFAULT NULL
+  `date_of_birth` date DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `about` text DEFAULT NULL,
+  `user_id` char(36) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -326,14 +346,14 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `username` (`username`),
   ADD UNIQUE KEY `password_hash` (`password_hash`),
-  ADD UNIQUE KEY `email` (`email`),
-  ADD KEY `fk_user_info` (`user_info`);
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- Chỉ mục cho bảng `user_infos`
 --
 ALTER TABLE `user_infos`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_user_id` (`user_id`);
 
 --
 -- Các ràng buộc cho các bảng đã đổ
@@ -401,10 +421,10 @@ ALTER TABLE `posts`
   ADD CONSTRAINT `posts_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
--- Các ràng buộc cho bảng `users`
+-- Các ràng buộc cho bảng `user_infos`
 --
-ALTER TABLE `users`
-  ADD CONSTRAINT `fk_user_info` FOREIGN KEY (`user_info`) REFERENCES `user_infos` (`id`);
+ALTER TABLE `user_infos`
+  ADD CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

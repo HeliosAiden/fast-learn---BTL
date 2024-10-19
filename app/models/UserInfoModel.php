@@ -8,7 +8,35 @@ class UserInfoModel extends Model
         $this->init_table_id();
     }
 
-    function create_user_info($firstname=null, $lastname=null, $gender=null, $phone_number=null, $dob=null) {
+    function create_user_info($user_id, $firstname='', $lastname='', $gender=null, $phone_number='', $dob=null, $about='') {
+        $data = ['user_id' => $user_id];
+        if (isset($firstname)) {
+            $data['firstname'] = $firstname;
+        }
+        if (isset($lastname)) {
+            $data['lastname'] = $lastname;
+        }
+        if (isset($gender)) {
+            $data['gender'] = $gender;
+        }
+        if (isset($phone_number)) {
+            $data['phone_number'] = $phone_number;
+        }
+        if (isset($dob)) {
+            $data['date_of_birth'] = $dob;
+        }
+        if (isset($about)) {
+            $data['about'] = $about;
+        }
+        return $this -> db -> insert($this->__table, $data);
+    }
+
+    function retrieve_user_info($id) {
+        $condition = ['user_id' => $id];
+        return $this -> db -> select($this -> __table, $condition)[0];
+    }
+
+    function update_user_info($id, $firstname='', $lastname='', $gender=null, $phone_number='', $dob=null, $about='') {
         $data = [];
         if (isset($firstname)) {
             $data['firstname'] = $firstname;
@@ -25,30 +53,8 @@ class UserInfoModel extends Model
         if (isset($dob)) {
             $data['date_of_birth'] = $dob;
         }
-        return $this -> db -> insert($this->__table, $data);
-    }
-
-    function retrieve_user_info($id) {
-        $condition = ['id' => $id];
-        return $this -> db -> select($this -> __table, $condition);
-    }
-
-    function update_user_info($id, $firstname=null, $lastname=null, $gender=null, $phone_number=null, $dob=null) {
-        $data = [];
-        if (isset($firstname)) {
-            $data['firstname'] = $firstname;
-        }
-        if (isset($lastname)) {
-            $data['lastname'] = $lastname;
-        }
-        if (isset($gender)) {
-            $data['gender'] = $gender;
-        }
-        if (isset($phone_number)) {
-            $data['phone_number'] = $phone_number;
-        }
-        if (isset($dob)) {
-            $data['dob'] = $dob;
+        if (isset($about)) {
+            $data['about'] = $about;
         }
         $condition = [
             'id' => $id

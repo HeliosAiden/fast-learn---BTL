@@ -20,15 +20,6 @@ switch ($method) {
     case 'POST':
         $api -> check_user_permission($model, 'insert');
         $user_info_id = $api -> get_controller() -> create_user_info();
-        $response = $user_api -> get_controller() -> update_user_info($user_info_id);
-        if (isset($response)) {
-            $api -> get_controller() -> jsonResponse([
-                'status' => 'success',
-                'message' => 'Create & update user info successfully'
-            ]);
-        } else {
-            $api -> get_controller() -> errorResponse('Something went wrong', 500);
-        }
         break;
 
     case 'PUT':

@@ -63,7 +63,9 @@ class Controller {
 
     // Method to send JSON response
     public function jsonResponse($data, $status = 200) {
-        header("Content-Type: application/json");
+        if (!headers_sent()) {
+            header("Content-Type: application/json");
+        }
         http_response_code($status);
         echo json_encode($data);
         exit;
@@ -155,10 +157,34 @@ class Controller {
         return null;
     }
 
+    public function get_user_email() {
+        $user_data = $this -> get_user_data();
+        if (isset($user_data)) {
+            return $user_data -> user_email;
+        }
+        return null;
+    }
+
     public function get_user_info() {
         $user_data = $this -> get_user_data();
         if (isset($user_data)) {
             return $user_data -> user_info;
+        }
+        return null;
+    }
+
+    public function get_user_name() {
+        $user_data = $this -> get_user_data();
+        if (isset($user_data)) {
+            return $user_data -> username;
+        }
+        return null;
+    }
+
+    public function get_user_state() {
+        $user_data = $this -> get_user_data();
+        if (isset($user_data)) {
+            return $user_data -> user_state;
         }
         return null;
     }
