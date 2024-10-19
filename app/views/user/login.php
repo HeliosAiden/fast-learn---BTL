@@ -64,6 +64,7 @@
 
         const httpMixin = new HttpMixin('<?php echo _WEB_ROOT ?>')
         const response = await httpMixin.postMixin(url, data)
+        console.log(response)
 
         if (response.status == 'success') {
             swal({

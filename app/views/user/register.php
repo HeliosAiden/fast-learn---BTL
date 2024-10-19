@@ -58,9 +58,7 @@
 
 <script type="module">
     import HttpMixin from "<?php echo _WEB_ROOT . '/public/assets/js/api/httpMixin.js' ?>";
-    import SnackBarMixin from "<?php echo _WEB_ROOT . '/public/assets/js/components/snackBar.js' ?>";
 
-    const snackBar = new SnackBarMixin()
 
     const handleSubmitForm = async () => {
         const httpMixin = new HttpMixin('<?php echo _WEB_ROOT ?>')
@@ -80,7 +78,7 @@
         if (passwordInput == confirmPasswordInput) {
             const response = await httpMixin.postMixin(url, data)
             if (response.status == 'success') {
-                swal("Đăng ký thành công!", {
+                swal("Đăng ký tài khoản thành công!", {
                     buttons: {
                         confirm: {
                             className: "btn btn-success",
@@ -99,6 +97,16 @@
                     },
                 });
             }
+        } else {
+            swal('Mật khẩu xác thực phải trùng với mật khẩu!', {
+                    buttons: {
+                        cancel: {
+                            className: "btn btn-danger",
+                            visible: true,
+                            text: 'close'
+                        },
+                    },
+                });
         }
     }
     const submitButton = document.getElementById("register_btn")

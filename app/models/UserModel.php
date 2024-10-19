@@ -45,6 +45,18 @@ class UserModel extends Model
         return null; // Return null if credentials don't match
     }
 
+    public function change_password($new_password, $user_id) {
+        $options = ['cost' => $this->hashing_config['cost']];
+        $hashedPassword = password_hash($new_password, constant($this->hashing_config['algorithm']), $options);
+        $data = [
+           'password_hash' => $hashedPassword,
+        ];
+        $condition = [
+            'id' => $user_id
+        ];
+        return $this -> db -> update($this -> __table, $data, $condition);
+    }
+
     public function update_user_info($user_id, $user_info_id) {
         $data = [
             'user_info' => $user_info_id
@@ -63,6 +75,12 @@ class UserModel extends Model
             'id' => $user_id
         ];
         return $this -> db -> update($this -> __table, $data, $condition);
+    }
+
+    public function get_current_user_password_hash($user_id) {
+        $user_data = $this -> db -> select($this -> __table, ['id' => $user_id])[0];
+        $password_hash = $user_data['password_hash'];
+        return $password_hash;
     }
 
 }

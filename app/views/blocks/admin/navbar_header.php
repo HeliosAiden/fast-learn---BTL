@@ -306,7 +306,7 @@
                         <li>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="<?php echo _WEB_ROOT ?>/user-info/">Thông tin cá nhân</a>
-                            <a class="dropdown-item" href="<?php echo _WEB_ROOT ?>/reset-password/">Quên mật khẩu</a>
+                            <a class="dropdown-item" href="<?php echo _WEB_ROOT ?>/reset-password/">Đổi mật khẩu</a>
                             <a class="dropdown-item" href="#">Inbox</a>
                             <a class="dropdown-item" id="logout_btn">Đăng xuất</a>
                         </li>

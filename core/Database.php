@@ -101,7 +101,7 @@ class Database
 
         $stmt = $this->query($sql, $params);
 
-        return $stmt->rowCount() > 0 ? $stmt->rowCount() : null;// Return affected rows
+        return $stmt->rowCount() > 0 ? $stmt->rowCount() : null;// Return number of affected rows
     }
 
     /**

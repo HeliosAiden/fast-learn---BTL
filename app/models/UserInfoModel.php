@@ -33,7 +33,10 @@ class UserInfoModel extends Model
 
     function retrieve_user_info($id) {
         $condition = ['user_id' => $id];
-        return $this -> db -> select($this -> __table, $condition)[0];
+        $user_infos = $this -> db -> select($this -> __table, $condition);
+        if (!empty($user_infos)) {
+            return $user_infos[0];
+        }
     }
 
     function update_user_info($id, $firstname='', $lastname='', $gender=null, $phone_number='', $dob=null, $about='') {

@@ -227,6 +227,7 @@ switch ($user_state) {
                         },
                     },
                 });
+                window.location.reload()
             } else {
                 swal(response.message ?? "Something went wrong!", {
                     icon: "error",

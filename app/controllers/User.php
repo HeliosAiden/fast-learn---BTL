@@ -40,9 +40,35 @@ class User extends Controller
         return $page_data;
     }
 
+    public function reset_password() {
+        $page_dir = $this -> get_page_dir(__FUNCTION__);
+        $page_data = $this -> get_page_data("Cài lại mật khẩu", $page_dir);
+        $this -> render_layout('test_blank', $page_data);
+        return $page_data;
+    }
+
     public function perform_login($username, $password, $role='Student') {
         $response = $this -> __model -> login($username, $password, $role);
         return $response;
+    }
+
+    public function perform_change_password($current_password, $new_password, $confirm_new_password) {
+        $password_hash = $this -> get_current_user_password_hash();
+
+        if (!password_verify($current_password, $password_hash)) {
+            $this -> errorResponse(`$password_hash khác $current_password`);
+            return null;
+        }
+        if ($new_password !== $confirm_new_password) {
+            $this -> errorResponse('Mật mới không trùng với mật khẩu xác thực');
+            return null;
+        }
+        if ($current_password === $new_password) {
+            $this -> errorResponse('Mật mới không trùng với mật khẩu cũ');
+            return null;
+        }
+        $user_id = $this -> get_user_id();
+        return $this -> __model -> change_password($new_password, $user_id);
     }
 
     public function create_user() {
@@ -100,5 +126,10 @@ class User extends Controller
 
     public function active_user($user_id) {
         return $this -> __model -> active_user($user_id);
+    }
+
+    protected function get_current_user_password_hash() {
+        $user_id = $this -> get_user_id();
+        return $this -> __model -> get_current_user_password_hash($user_id);
     }
 }

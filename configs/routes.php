@@ -7,6 +7,8 @@
     $routes['mon-hoc'] = 'subject/index';
     $routes['khoa-hoc'] = 'course/index';
     $routes['user-info'] = 'userinfo';
+    $routes['reset-password'] = 'user/reset_password';
+    $routes['doi-mat-khau'] = 'user/reset_password';
 
     // $routes['tin-tuc/(.+)'] = 'news/category/$1'; // tin-tuc/1
     // $routes['tin-tuc/.+-(\d+).html'] = 'news/category/$1'; // tin-tuc/1
