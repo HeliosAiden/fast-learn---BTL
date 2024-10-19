@@ -39,8 +39,6 @@
 </div>
 <script type="module">
     import HttpMixin from "<?php echo _WEB_ROOT . '/public/assets/js/api/httpMixin.js' ?>";
-    const user_id = '<?php echo $this->get_user_id() ?>';
-
 
     const handleChangePassword = async () => {
         const httpMixin = new HttpMixin('<?php echo _WEB_ROOT ?>')
@@ -77,7 +75,7 @@
                 },
             });
         }
-        const response = await httpMixin.patchMixin(url, data, user_id)
+        const response = await httpMixin.postMixin(url, data)
         if (response.status == 'success') {
             swal("Đổi mật khẩu thành công!", {
                 buttons: {

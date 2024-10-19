@@ -30,7 +30,6 @@
             <ul class="nav nav-secondary">
                 <li class="nav-item active">
                     <a
-                        data-bs-toggle="collapse"
                         href="<?php echo _WEB_ROOT ?>/"
                         class="collapsed"
                         aria-expanded="false">
@@ -54,6 +53,35 @@
                     </span>
                     <h4 class="text-section">Components</h4>
                 </li>
+                <?php
+                $role = $this -> get_user_role();
+                if ($role == 'Admin') {
+                    echo '<li class="nav-item">
+                    <a data-bs-toggle="collapse" href="#charts">
+                        <i class="fas fa-user-friends"></i>
+                        <p>Người dùng</p>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse" id="charts">
+                        <ul class="nav nav-collapse">
+                            <li>
+                                <a href="' . _WEB_ROOT .'/hoc-sinh">
+                                    <span class="sub-item">Học sinh</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="' . _WEB_ROOT .'/giao-vien">
+                                    <span class="sub-item">Giáo viên</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>';
+                } else {
+
+                }
+                ?>
+
                 <li class="nav-item">
                     <a data-bs-toggle="collapse" href="#base">
                         <i class="fas fa-layer-group"></i>

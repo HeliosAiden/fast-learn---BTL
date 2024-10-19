@@ -9,6 +9,8 @@
     $routes['user-info'] = 'userinfo';
     $routes['reset-password'] = 'user/reset_password';
     $routes['doi-mat-khau'] = 'user/reset_password';
+    $routes['hoc-sinh'] = 'user/students';
+    $routes['giao-vien'] = 'user/teachers';
 
     // $routes['tin-tuc/(.+)'] = 'news/category/$1'; // tin-tuc/1
     // $routes['tin-tuc/.+-(\d+).html'] = 'news/category/$1'; // tin-tuc/1

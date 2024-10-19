@@ -15,4 +15,8 @@ if (isset($data->current_password) && isset($data->new_password) && isset($data-
     if (!$user_data) {
         $api -> get_controller() -> errorResponse('Thay mật khẩu thất bại');
     }
+    echo json_encode([
+        'status' => 'success',
+        'message' => 'Thay đổi mật khẩu thành công'
+    ]);
 }
