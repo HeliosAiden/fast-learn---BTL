@@ -67,6 +67,16 @@ class UserModel extends Model
         return $this -> db -> update($this -> __table, $data, $condition);
     }
 
+    public function update_user_state($user_id, $state) {
+        $data = [
+            'state' => $state
+        ];
+        $condition = [
+            'id' => $user_id
+        ];
+        return $this -> db -> update($this -> __table, $data, $condition);
+    }
+
     public function active_user($user_id) {
         $data = [
             'state' => 'Active'
@@ -74,7 +84,10 @@ class UserModel extends Model
         $condition = [
             'id' => $user_id
         ];
-        return $this -> db -> update($this -> __table, $data, $condition);
+        $response = $this -> db -> update($this -> __table, $data, $condition);
+        if (!$response) {
+            echo 'Activate user failed!';
+        }
     }
 
     public function get_current_user_password_hash($user_id) {

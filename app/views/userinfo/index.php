@@ -185,9 +185,6 @@ switch ($user_state) {
         });
     }
 
-    console.log(user_info)
-
-
     const handleSaveButton = async () => {
         let firstName = document.getElementById('firstname').value
         let lastName = document.getElementById('lastname').value
@@ -242,7 +239,6 @@ switch ($user_state) {
             }
         } else {
             const response = await httpMixin.postMixin(url, data)
-            console.log(response)
             if (response.status == 'success') {
                 swal({
                     title: "Cập nhật thông tin thành công!",

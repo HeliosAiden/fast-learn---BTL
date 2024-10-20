@@ -44,9 +44,9 @@ class Model extends Database
         return $this->db->select($this->__table);
     }
 
-    public function select_condition($condition = '')
+    public function select_condition($condition = [], $keys = [], $exeption = [])
     {
-        return $this->db->select($this->__table, $condition);
+        return $this->db->select($this->__table, $condition, $keys, $exeption);
     }
 
     public function detail($details = [])

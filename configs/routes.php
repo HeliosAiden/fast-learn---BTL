@@ -25,10 +25,6 @@
     ];
     $routes['unauthorized'] = $UNAUTHORIZED_URLS;
 
-    // foreach($routes as $key => $value) {
-    //     array_push($UNAUTHORIZED_URLS, _WEB_ROOT . '/' . $key);
-    // }
-
     foreach($UNAUTHORIZED_URLS as $value) {
         if ($value !== _WEB_ROOT . '/') {
             array_push($UNAUTHORIZED_URLS, $value . '/');

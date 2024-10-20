@@ -10,11 +10,9 @@
                         <!-- Role Field -->
                         <div class="mb-3">
                             <label for="role" class="form-label">Quyền</label>
-                            <select class="form-select" id="role" name="role" required>
-                                <option value="">Chọn quyền của mình</option>
-                                <option value="Admin">Quản trị viên</option>
-                                <option value="Teacher">Giáo viên</option>
+                            <select class="form-select" id="role" name="role" required value="Student">
                                 <option value="Student">Học sinh</option>
+                                <option value="Teacher">Giáo viên</option>
                             </select>
                         </div>
 

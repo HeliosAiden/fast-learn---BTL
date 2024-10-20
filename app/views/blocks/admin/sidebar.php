@@ -54,7 +54,7 @@
                     <h4 class="text-section">Components</h4>
                 </li>
                 <?php
-                $role = $this -> get_user_role();
+                $role = $this->get_user_role();
                 if ($role == 'Admin') {
                     echo '<li class="nav-item">
                     <a data-bs-toggle="collapse" href="#charts">
@@ -65,22 +65,31 @@
                     <div class="collapse" id="charts">
                         <ul class="nav nav-collapse">
                             <li>
-                                <a href="' . _WEB_ROOT .'/hoc-sinh">
+                                <a href="' . _WEB_ROOT . '/hoc-sinh">
                                     <span class="sub-item">Học sinh</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="' . _WEB_ROOT .'/giao-vien">
+                                <a href="' . _WEB_ROOT . '/giao-vien">
                                     <span class="sub-item">Giáo viên</span>
                                 </a>
                             </li>
                         </ul>
                     </div>
                 </li>';
-                } else {
-
                 }
                 ?>
+                <li class="nav-item">
+                    <a href="<?php echo _WEB_ROOT ?>/khoa-hoc">
+                        <i class="fas fa-book-open"></i>
+                        <?php if ($this->get_user_role() == 'Admin') {
+                            echo '<p>Quản lí khóa học</p>';
+                        } else {
+                            echo '<p>Khóa học của tôi</p>';
+                        } ?>
+
+                    </a>
+                </li>
 
                 <li class="nav-item">
                     <a data-bs-toggle="collapse" href="#base">

@@ -37,6 +37,9 @@
 <body>
   <div class="wrapper">
     <?php
+    $this->render('blocks/admin/utils', $data);
+    ?>
+    <?php
     $this->render('blocks/admin/sidebar', $data);
     ?>
     <!-- $this->render('blocks/admin/main_panel', $data); -->
@@ -52,9 +55,6 @@
       ?>
       <?php $this -> render('blocks/admin/main_footer') ?>
     </div>
-    <?php
-    $this->render('blocks/admin/utils', $data);
-    ?>
   </div>
 </body>
 
