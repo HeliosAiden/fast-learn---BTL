@@ -38,7 +38,7 @@ class User extends Controller
     public function students()
     {
         $page_dir = $this->get_page_dir(__FUNCTION__);
-        $page_data = $this->get_page_data("Đăng ký người dùng mới", $page_dir);
+        $page_data = $this->get_page_data("Trang học sinh", $page_dir);
         $this->render_layout('admin', $page_data);
         return $page_data;
     }
@@ -46,7 +46,7 @@ class User extends Controller
     public function teachers()
     {
         $page_dir = $this->get_page_dir(__FUNCTION__);
-        $page_data = $this->get_page_data("Đăng ký người dùng mới", $page_dir);
+        $page_data = $this->get_page_data("Trang giáo viên", $page_dir);
         $this->render_layout('admin', $page_data);
         return $page_data;
     }

@@ -7,6 +7,7 @@
     name="viewport" />
   <!-- Fonts and icons -->
   <script src="<?php echo _WEB_ROOT ?>/public/assets/admin/js/plugin/webfont/webfont.min.js"></script>
+  <title><?php echo (!empty($page_title)) ? $page_title : 'Fast learn' ?></title>
   <script>
     WebFont.load({
       google: {

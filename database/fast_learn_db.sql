@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th10 19, 2024 lúc 11:29 AM
+-- Thời gian đã tạo: Th10 20, 2024 lúc 05:15 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -46,7 +46,7 @@ CREATE TABLE `courses` (
   `id` varchar(36) NOT NULL DEFAULT uuid(),
   `name` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
-  `fee` decimal(10,2) DEFAULT 0.00,
+  `fee` int(11) DEFAULT NULL,
   `subject_id` varchar(36) NOT NULL,
   `teacher_id` varchar(36) NOT NULL,
   `start_date` date DEFAULT NULL,
@@ -54,6 +54,13 @@ CREATE TABLE `courses` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `courses`
+--
+
+INSERT INTO `courses` (`id`, `name`, `description`, `fee`, `subject_id`, `teacher_id`, `start_date`, `end_date`, `created_at`, `updated_at`) VALUES
+('44e37b72-8ef5-11ef-958c-c018035abcac', 'An toàn mạng máy tính', '', 356000, '4a3ebeee-8240-11ef-b317-c018035abcac', '6243879d-8ef3-11ef-958c-c018035abcac', '2024-10-19', '2024-10-30', '2024-10-20 15:09:20', '2024-10-20 22:09:20');
 
 -- --------------------------------------------------------
 
@@ -117,7 +124,8 @@ CREATE TABLE `course_materials` (
   `link` varchar(511) DEFAULT NULL,
   `state` enum('Creating','Hidden','Visible') DEFAULT 'Creating',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `file_id` varchar(36) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -164,25 +172,11 @@ CREATE TABLE `files` (
 CREATE TABLE `posts` (
   `id` varchar(36) NOT NULL DEFAULT uuid(),
   `title` varchar(255) NOT NULL,
-  `user_id` varchar(36) NOT NULL,
+  `author_id` varchar(36) DEFAULT NULL,
   `description` text DEFAULT NULL,
-  `category_id` varchar(36) NOT NULL,
   `file_id` varchar(36) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `post_categories`
---
-
-CREATE TABLE `post_categories` (
-  `id` varchar(36) NOT NULL DEFAULT uuid(),
-  `name` varchar(255) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -231,8 +225,12 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password_hash`, `email`, `role`, `state`, `created_at`, `updated_at`) VALUES
-('67ea2e25-8dc0-11ef-bde4-c018035abcac', 'admin', '$2y$05$rmzaOWhS9EmHEQWzGYgwNe1nAh.hs4HOJ7jdmQy0hCMzvYedf9R8m', 'admin@example.com', 'Admin', 'Active', '2024-10-19 02:18:18', '2024-10-19 09:18:18'),
-('86aff704-8dc0-11ef-bde4-c018035abcac', 'student_1', '$2y$05$bh/ZmiUIdrpzcD/mgjI8/uU5CnWKZ0Fxa8NpkzmfDJcIeMEODqzP2', 'student2school.com', 'Student', 'Active', '2024-10-19 02:19:10', '2024-10-19 09:19:10');
+('01af8c3b-8e96-11ef-958c-c018035abcac', 'student_1', '$2y$05$gEbTQj/nH/gHfqc7QUoBXexpfwMJUQqw45w4WVLE5rpHE2d2QVWIq', 'student@school.com', 'Student', 'Active', '2024-10-20 03:47:24', '2024-10-20 18:09:50'),
+('6243879d-8ef3-11ef-958c-c018035abcac', 'teacher_1', '$2y$05$az.3B4CL5ddTp7/Cl4lIm.J5.u5FC5l1H5QBAAw4a4eNvZdJ4MJvm', 'teacher@school.com', 'Teacher', 'Active', '2024-10-20 14:55:50', '2024-10-20 21:57:38'),
+('67ea2e25-8dc0-11ef-bde4-c018035abcac', 'admin', '$2y$05$siswox6x6zmNy4s6FO2TF.2yCWXpsDtq5JATyC9xlL/jJqXeF4zqW', 'admin@example.com', 'Admin', 'Active', '2024-10-19 02:18:18', '2024-10-19 21:55:51'),
+('6ecb6640-8ef3-11ef-958c-c018035abcac', 'teacher_2', '$2y$05$fIthE1.sWcQLMUTHWqdu3uHGmYUtru4YAgmuaIXDvJORkmMk7mFHC', 'teacher2@school.com', 'Teacher', 'Active', '2024-10-20 14:56:11', '2024-10-20 21:57:42'),
+('7b1d5cd4-8e96-11ef-958c-c018035abcac', 'student_2', '$2y$05$pnqjomO8aoHtN1yOQ4/5XOn34ta.ioGIHTXo33UcF49bqozcfyizi', 'student2@school.com', 'Student', 'Active', '2024-10-20 03:50:48', '2024-10-20 18:13:40'),
+('9119cc60-8e96-11ef-958c-c018035abcac', 'student_3', '$2y$05$Vsh22wjXH5Ebv6R4nsIOeuEvuFlqrvJZAAwaNqMLi0xU7PVY253ym', 'student_3@school.com', 'Student', 'Active', '2024-10-20 03:51:25', '2024-10-20 10:51:25');
 
 -- --------------------------------------------------------
 
@@ -252,6 +250,14 @@ CREATE TABLE `user_infos` (
   `about` text DEFAULT NULL,
   `user_id` char(36) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `user_infos`
+--
+
+INSERT INTO `user_infos` (`id`, `firstname`, `lastname`, `gender`, `phone_number`, `date_of_birth`, `created_at`, `updated_at`, `about`, `user_id`) VALUES
+('4475060f-8e0f-11ef-958c-c018035abcac', 'Nhật Anh', 'Nguyễn', 'Male', '+84377079042', '2004-03-02', '2024-10-19 11:42:49', '2024-10-19 22:04:28', 'Tôi là 1 lập trình viên php cơ bản thôi', '67ea2e25-8dc0-11ef-bde4-c018035abcac'),
+('b5ea94d9-8e96-11ef-958c-c018035abcac', 'Marry', 'Jane', 'Male', '01112222333', '2003-11-04', '2024-10-20 03:52:26', '2024-10-20 10:54:14', '', '01af8c3b-8e96-11ef-958c-c018035abcac');
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -301,7 +307,8 @@ ALTER TABLE `course_lessons`
 --
 ALTER TABLE `course_materials`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_course_material_course_id` (`course_id`);
+  ADD KEY `fk_course_material_course_id` (`course_id`),
+  ADD KEY `fk_file_id` (`file_id`);
 
 --
 -- Chỉ mục cho bảng `course_questions`
@@ -323,15 +330,8 @@ ALTER TABLE `files`
 --
 ALTER TABLE `posts`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `category_id` (`category_id`),
   ADD UNIQUE KEY `file_id` (`file_id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Chỉ mục cho bảng `post_categories`
---
-ALTER TABLE `post_categories`
-  ADD PRIMARY KEY (`id`);
+  ADD KEY `user_id` (`author_id`);
 
 --
 -- Chỉ mục cho bảng `subjects`
@@ -397,7 +397,8 @@ ALTER TABLE `course_lessons`
 -- Các ràng buộc cho bảng `course_materials`
 --
 ALTER TABLE `course_materials`
-  ADD CONSTRAINT `fk_course_material_course_id` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`);
+  ADD CONSTRAINT `fk_course_material_course_id` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`),
+  ADD CONSTRAINT `fk_file_id` FOREIGN KEY (`file_id`) REFERENCES `files` (`id`) ON DELETE CASCADE;
 
 --
 -- Các ràng buộc cho bảng `course_questions`
@@ -417,8 +418,7 @@ ALTER TABLE `files`
 --
 ALTER TABLE `posts`
   ADD CONSTRAINT `fk_posts_file_id` FOREIGN KEY (`file_id`) REFERENCES `files` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `post_categories` (`id`),
-  ADD CONSTRAINT `posts_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `posts_ibfk_2` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`);
 
 --
 -- Các ràng buộc cho bảng `user_infos`

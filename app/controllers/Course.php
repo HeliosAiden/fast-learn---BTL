@@ -1,5 +1,9 @@
 <?php
 
+// If $role == 'Admin' show full course table
+// If $role !== 'Admin' && $role == 'Student' || 'Teacher'
+// show $courses
+
 class Course extends Controller
 {
     public function __construct()
@@ -12,7 +16,15 @@ class Course extends Controller
         $all_courses = $this->__model->select_all();
         $page_dir = $this->get_page_dir(__FUNCTION__);
         $page_data = $this->get_page_data("Tất cả các khóa học hiện tại", $page_dir, ['all_courses' => $all_courses]);
-        $this->render_layout('test', $page_data);
+        $this->render_layout('admin', $page_data);
+        return $page_data;
+    }
+
+    public function detail($id = '') {
+        $all_courses = $this->__model->select_all();
+        $page_dir = $this->get_page_dir(__FUNCTION__);
+        $page_data = $this->get_page_data("Chi tiết khóa học.", $page_dir, ['all_courses' => $all_courses]);
+        $this->render_layout('admin', $page_data);
         return $page_data;
     }
 
@@ -35,18 +47,15 @@ class Course extends Controller
     public function create_course()
     {
         $data = $this->getInput();
-        $user_id = $this->get_user_id();
-        if (!$data || !isset($data['name']) || !isset($data['subject_id'])) {
+        if (!$data || !isset($data['name']) || !isset($data['subject_id']) || !isset($data['teacher_id'])) {
             $this->errorResponse();
         }
-        if (!isset($user_id)) {
-            $this->errorResponse('Bad request: no user ID found');
-        }
+
 
         $course_data = $this->__model->create_course(
             $data['name'],
             $data['subject_id'],
-            $user_id,
+            $data['teacher_id'],
             $data['description'],
             $data['fee'],
             $data['start_date'],
@@ -100,5 +109,9 @@ class Course extends Controller
         } else {
             $this->errorResponse();
         }
+    }
+
+    public function get_all_courses() {
+        return $this -> __model -> select_all();
     }
 }

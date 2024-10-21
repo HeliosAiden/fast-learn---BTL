@@ -91,4 +91,8 @@ class Subject extends Controller
             $this->errorResponse();
         }
     }
+
+    public function get_all_subjects () {
+        return $this->__model->select_all();
+    }
 }

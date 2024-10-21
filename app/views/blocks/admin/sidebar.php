@@ -35,17 +35,7 @@
                         aria-expanded="false">
                         <i class="fas fa-home"></i>
                         <p>Trang chủ</p>
-                        <!-- <span class="caret"></span> -->
                     </a>
-                    <!-- <div class="collapse" id="dashboard">
-                        <ul class="nav nav-collapse">
-                            <li>
-                                <a href="../demo1/index.html">
-                                    <span class="sub-item">Dashboard 1</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div> -->
                 </li>
                 <li class="nav-section">
                     <span class="sidebar-mini-icon">
@@ -80,15 +70,57 @@
                 }
                 ?>
                 <li class="nav-item">
-                    <a href="<?php echo _WEB_ROOT ?>/khoa-hoc">
-                        <i class="fas fa-book-open"></i>
-                        <?php if ($this->get_user_role() == 'Admin') {
-                            echo '<p>Quản lí khóa học</p>';
-                        } else {
-                            echo '<p>Khóa học của tôi</p>';
-                        } ?>
 
-                    </a>
+                    <?php if ($this->get_user_role() == 'Admin') {
+                        echo '
+                            <a href="' . _WEB_ROOT . '/khoa-hoc">
+                                <i class="fas fa-book-open"></i>
+                                <p>Quản lí khóa học</p>
+                            </a>
+                            ';
+                    } else {
+                        echo '
+                            <a data-bs-toggle="collapse" href="#course">
+                                <i class="fas fa-book-open"></i>
+                                <p>Khóa học</p>
+                                <span class="caret"></span>
+                            </a>
+                            ';
+                    } ?>
+
+                    <?php if ($this->get_user_role() !== 'Admin') {
+                        if ($this->get_user_role() == 'Student') {
+                            echo '
+                            <div class="collapse" id="course">
+                                <ul class="nav nav-collapse">
+                                    <li>
+                                        <a href="' . _WEB_ROOT . '/khoa-hoc">
+                                            <span class="sub-item">Tất cả các khóa học</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="' . _WEB_ROOT . '/khoa-hoc/da-dang-ky">
+                                            <span class="sub-item">Khóa học đã đăng ký</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            ';
+                        }
+                        if ($this->get_user_role() == 'Teacher') {
+                            echo '
+                            <div class="collapse" id="course">
+                                <ul class="nav nav-collapse">
+                                    <li>
+                                        <a href="' . _WEB_ROOT . '/khoa-hoc/quan-ly">
+                                            <span class="sub-item">Khóa học giảng dạy</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            ';
+                        }
+                    } ?>
                 </li>
 
                 <li class="nav-item">

@@ -11,6 +11,9 @@
     $routes['doi-mat-khau'] = 'user/reset_password';
     $routes['hoc-sinh'] = 'user/students';
     $routes['giao-vien'] = 'user/teachers';
+    $routes['khoa-hoc/da-dang-ky'] = 'course/registered';
+    $routes['khoa-hoc/quan-ly'] = 'course/registered';
+    $routes['khoa-hoc/chi-tiet'] = 'course/detail';
 
     // $routes['tin-tuc/(.+)'] = 'news/category/$1'; // tin-tuc/1
     // $routes['tin-tuc/.+-(\d+).html'] = 'news/category/$1'; // tin-tuc/1
