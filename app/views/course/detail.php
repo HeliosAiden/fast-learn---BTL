@@ -46,8 +46,8 @@ foreach ($subjects as $subject) {
                         </div>
                     </div>
                     <div class="tab-content mt-4 mb-3" id="pills-without-border-tabContent">
-                        <?php require_once __DIR__ . '/tabs/info_tab.php' ?>
-                        <?php require_once __DIR__ . '/tabs/feedback_tab.php' ?>
+                        <?php require __DIR__ . '/tabs/info_tab.php' ?>
+                        <?php require __DIR__ . '/tabs/feedback_tab.php' ?>
 
                     </div>
                 </div>
@@ -57,7 +57,6 @@ foreach ($subjects as $subject) {
                     <div class="card-body">
                         <div class="position-relative overflow-hidden">
                             <img class="img-fluid" src="<?php echo _WEB_ROOT ?>/app/uploads/images/courses/default.png" alt="default-image" style="object-fit:cover; width:100%">
-
                         </div>
                         <div class="text-center p-4 pb-0">
                             <h3 class="mb-0"><?php echo number_format($current_course['fee'], 0, '.', ',') ?> VNĐ</h3>
@@ -83,13 +82,13 @@ foreach ($subjects as $subject) {
                                 <div class="number">30</div>
                                 <div class="title">Người đăng ký học</div>
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 <script type="module">
     import HttpMixin from "<?php echo _WEB_ROOT . '/public/assets/js/api/httpMixin.js' ?>"

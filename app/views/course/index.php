@@ -30,7 +30,7 @@ $unregistered_courses = array_filter($courses, function($course) use ($enrolled_
 });
 
 if (empty($filtered_enrollments)) {
-    $unregistered_courses = $courses; 
+    $unregistered_courses = $courses;
 }
 
 
