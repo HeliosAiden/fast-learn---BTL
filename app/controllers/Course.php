@@ -1,9 +1,5 @@
 <?php
 
-// If $role == 'Admin' show full course table
-// If $role !== 'Admin' && $role == 'Student' || 'Teacher'
-// show $courses
-
 class Course extends Controller
 {
     public function __construct()
@@ -23,7 +19,21 @@ class Course extends Controller
     public function detail($id = '') {
         $all_courses = $this->__model->select_all();
         $page_dir = $this->get_page_dir(__FUNCTION__);
-        $page_data = $this->get_page_data("Chi tiết khóa học.", $page_dir, ['all_courses' => $all_courses]);
+        $current_course = null;
+        foreach ($all_courses as $course) {
+            if ($course['id'] == $id) {
+                $current_course = $course;
+            }
+        }
+        $page_data = $this->get_page_data("Chi tiết khóa học.", $page_dir, ['all_courses' => $all_courses, 'current_course' => $current_course]);
+        $this->render_layout('admin', $page_data);
+        return $page_data;
+    }
+
+    public function registered() {
+        $all_courses = $this->__model->select_all();
+        $page_dir = $this->get_page_dir(__FUNCTION__);
+        $page_data = $this->get_page_data("Khóa học của tôi.", $page_dir, ['all_courses' => $all_courses]);
         $this->render_layout('admin', $page_data);
         return $page_data;
     }

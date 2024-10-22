@@ -21,12 +21,14 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p class="small">
+                <p>
                     Bạn chuẩn bị xóa người dùng sau:
                 </p>
-                <p>Username: <span id="remove-modal-value-username"></span></p>
-                <p>Email: <span id="remove-modal-value-email"></span></p>
-                <p class="small">
+                <br/>
+                <p class="small" >Username: <span id="remove-modal-value-username"></span></p>
+                <p class="small">Email: <span id="remove-modal-value-email"></span></p>
+                <br/>
+                <p>
                     Bạn có muốn tiếp tục ?
                 </p>
             </div>

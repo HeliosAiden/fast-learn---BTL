@@ -1,3 +1,34 @@
+<?php
+require_once _DIR_ROOT . '/app/apis/Api.php';
+
+$teacher_api = new Api('User');
+$subject_api = new Api('Subject');
+
+// echo '<pre>';
+// print_r($data['current_course']);
+// echo '</pre>';
+$current_course = $data['current_course'];
+
+$subjects = $subject_api->get_controller()->get_all_subjects();
+
+$teachers = $teacher_api->get_controller()->get_users_with_condition(['role' => 'Teacher'], ['id', 'username', 'email', 'state'], ['state' => 'Removed']);
+
+$teacher_name = '';
+$teacher_email = '';
+foreach ($teachers as $teacher) {
+    if ($teacher['id'] == $current_course['teacher_id']) {
+        $teacher_name = $teacher['username'];
+        $teacher_email = $teacher['email'];
+    }
+}
+$subject_name = '';
+foreach ($subjects as $subject) {
+    if ($subject['id'] == $current_course['subject_id']) {
+        $subject_name = $subject['name'];
+    }
+}
+?>
+
 <div class="container">
     <div class="page-inner">
         <h3 class="fw-bold mb-3">Thông tin khóa học</h3>
@@ -7,118 +38,20 @@
                     <div class="card-header">
                         <div class="row row-nav-line">
                             <ul class="nav nav-tabs nav-line nav-color-secondary w-100 ps-4" role="tablist">
-                                <li class="nav-item submenu" role="presentation"> <a class="nav-link show active" data-bs-toggle="tab" href="#home" role="tab" aria-selected="true">Giới thiệu</a> </li>
+                                <li class="nav-item submenu" role="presentation"> <a class="nav-link show active" data-bs-toggle="tab" href="#info-tab" id="li-info-tab" role="tab" aria-selected="true">Giới thiệu</a> </li>
+                                <li class="nav-item submenu" role="presentation"> <a class="nav-link" data-bs-toggle="tab" href="#feedback-tab" role="tab" id="li-feedback-tab" aria-selected="false" tabindex="-1">Đánh giá</a> </li>
                                 <li class="nav-item submenu" role="presentation"> <a class="nav-link" data-bs-toggle="tab" href="#profile" role="tab" aria-selected="false" tabindex="-1">Bài học</a> </li>
                                 <li class="nav-item submenu" role="presentation"> <a class="nav-link" data-bs-toggle="tab" href="#settings" role="tab" aria-selected="false" tabindex="-1">Tài liệu</a> </li>
                             </ul>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <div class="form-group form-group-default">
-                                    <label>Name</label>
-                                    <input type="text" class="form-control" name="name" placeholder="Name" value="Hizrian">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group form-group-default">
-                                    <label>Email</label>
-                                    <input type="email" class="form-control" name="email" placeholder="Name" value="hello@example.com">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-md-4">
-                                <div class="form-group form-group-default">
-                                    <label>Birth Date</label>
-                                    <input type="text" class="form-control" id="datepicker" name="datepicker" value="03/21/1998" placeholder="Birth Date">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group form-group-default">
-                                    <label>Gender</label>
-                                    <select class="form-select" id="gender">
-                                        <option>Male</option>
-                                        <option>Female</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group form-group-default">
-                                    <label>Phone</label>
-                                    <input type="text" class="form-control" value="+62008765678" name="phone" placeholder="Phone">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-md-12">
-                                <div class="form-group form-group-default">
-                                    <label>Address</label>
-                                    <input type="text" class="form-control" value="st Merdeka Putih, Jakarta Indonesia" name="address" placeholder="Address">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mt-3 mb-1">
-                            <div class="col-md-12">
-                                <div class="form-group form-group-default">
-                                    <label>About Me</label>
-                                    <textarea class="form-control" name="about" placeholder="About Me" rows="3">A man who hates loneliness</textarea>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="tab-content mt-4 mb-3" id="pills-without-border-tabContent">
+                        <?php require_once __DIR__ . '/tabs/info_tab.php' ?>
+                        <?php require_once __DIR__ . '/tabs/feedback_tab.php' ?>
 
                     </div>
                 </div>
             </div>
-            <!-- <div class="col-md-4">
-							<div class="card card-profile">
-								<div class="card-header" style="background-image: url('assets/img/blogpost.jpg')">
-									<div class="profile-picture">
-										<div class="avatar avatar-xl">
-											<img src="assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
-										</div>
-									</div>
-								</div>
-								<div class="card-body">
-									<div class="user-profile text-center">
-										<div class="name">Hizrian, 19</div>
-										<div class="job">Frontend Developer</div>
-										<div class="desc">A man who hates loneliness</div>
-										<div class="social-media">
-											<a class="btn btn-info btn-twitter btn-sm btn-link" href="#">
-												<span class="btn-label just-icon"><i class="icon-social-twitter"></i> </span>
-											</a>
-											<a class="btn btn-primary btn-sm btn-link" rel="publisher" href="#">
-												<span class="btn-label just-icon"><i class="icon-social-facebook"></i> </span>
-											</a>
-											<a class="btn btn-danger btn-sm btn-link" rel="publisher" href="#">
-												<span class="btn-label just-icon"><i class="icon-social-instagram"></i> </span>
-											</a>
-										</div>
-										<div class="view-profile">
-											<a href="#" class="btn btn-secondary w-100">View Full Profile</a>
-										</div>
-									</div>
-								</div>
-								<div class="card-footer">
-									<div class="row user-stats text-center">
-										<div class="col">
-											<div class="number">125</div>
-											<div class="title">Post</div>
-										</div>
-										<div class="col">
-											<div class="number">25K</div>
-											<div class="title">Followers</div>
-										</div>
-										<div class="col">
-											<div class="number">134</div>
-											<div class="title">Following</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div> -->
             <div class="col-md-4 mb-4">
                 <div class="card">
                     <div class="card-body">
@@ -127,7 +60,7 @@
 
                         </div>
                         <div class="text-center p-4 pb-0">
-                            <h3 class="mb-0">300 000 VNĐ</h3>
+                            <h3 class="mb-0"><?php echo number_format($current_course['fee'], 0, '.', ',') ?> VNĐ</h3>
                             <div class="mb-3">
                                 <small class="fa fa-star text-primary"></small>
                                 <small class="fa fa-star text-primary"></small>
@@ -136,9 +69,9 @@
                                 <small class="fa fa-star text-primary"></small>
                                 <small>(123)</small>
                             </div>
-                            <h5 class="mb-4">tên khóa học</h5>
+                            <h5 class="mb-4"><?php echo $current_course['name'] ?></h5>
                         </div>
-                        <a href="#" class="btn btn-secondary w-100">Đăng ký khóa học</a>
+                        <button id="course-enroll-btn" class="btn btn-secondary w-100">Đăng ký khóa học</button>
                     </div>
                     <div class="card-footer">
                         <div class="row user-stats text-center">
@@ -158,3 +91,48 @@
         </div>
     </div>
 </div>
+<script type="module">
+    import HttpMixin from "<?php echo _WEB_ROOT . '/public/assets/js/api/httpMixin.js' ?>"
+    const httpMixin = new HttpMixin('<?php echo _WEB_ROOT ?>')
+
+    const handleEnrollment = async () => {
+        let url = 'app/apis/course_enrollment.php'
+        let student_id = '<?php echo $this->get_user_id() ?>';
+        let course_id = '<?php echo $current_course['id'] ?>';
+        let data = {
+            student_id: student_id,
+            course_id: course_id
+        }
+        const response = await httpMixin.postMixin(url, data)
+        if (response.status == 'success') {
+            swal({
+                title: "Đăng ký khoa học thành công!",
+                icon: "success",
+                buttons: {
+                    confirm: {
+                        text: "Xác nhận",
+                        value: true,
+                        visible: true,
+                        className: "btn btn-success",
+                        closeModal: true,
+                    },
+                },
+            });
+        } else {
+            swal(response.message ?? "Đăng ký khóa học thất bại!", {
+                icon: "error",
+                buttons: {
+                    confirm: {
+                        className: "btn btn-danger",
+                        closeModal: true,
+                        visible: true
+                    },
+                },
+            });
+        }
+    }
+
+    $(document).ready(function() {
+        document.getElementById('course-enroll-btn').addEventListener('click', handleEnrollment)
+    });
+</script>

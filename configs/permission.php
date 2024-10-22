@@ -19,7 +19,7 @@ $config['permission'] = [
         'CourseMaterial' => $__ALL_PERMISSION,
         'Post' => $__ALL_PERMISSION,
         'Notification' => $__ALL_PERMISSION,
-        'Enrollment' => $__ALL_PERMISSION
+        'CourseEnrollment' => $__NO_INSERT
     ],
     'Teacher' => [
         'Course' => $__ALL_PERMISSION,
@@ -35,7 +35,8 @@ $config['permission'] = [
         'UserInfo' => $__NO_DELETE,
         'CourseQuestion' => $__SELECT_ONLY,
         'Subject' => $__SELECT_ONLY,
-        'Post' => $__SELECT_ONLY
+        'Post' => $__SELECT_ONLY,
+        'CourseEnrollment' => $__NO_DELETE,
     ],
     'Guest' => [
         'CourseFeedback' => $__SELECT_ONLY,
