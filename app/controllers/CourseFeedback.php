@@ -9,11 +9,12 @@ class CourseFeedback extends Controller
 
     public function create_course_feedback() {
         $data = $this->getInput();
-        if (!$data || !isset($data['student_id']) || !isset($data['course_id'])) {
+        $user_id = $this -> get_user_id();
+        if (!$data || !isset($data['course_id'])) {
             $this->errorResponse();
         }
         $course_feedback = $this -> __model -> create_course_feedback(
-            $data['student_id'],
+            $user_id,
             $data['course_id'],
             $data['feedback'] ?? '',
             $data['rating'] ?? 0
@@ -36,11 +37,14 @@ class CourseFeedback extends Controller
     }
 
     public function get_course_feedback_from_user($current_course_id) {
-        $user_id = $this -> get_user_id();
+        $student_id = $this -> get_user_id();
         $condition = [
-            'user_id' => $user_id,
+            'student_id' => $student_id,
             'course_id' => $current_course_id
         ];
-        return $this -> __model -> select_condition($condition);
+        $response = $this -> __model -> select_condition($condition);
+        if (!empty($response)) {
+            return $response[0];
+        }
     }
 }
