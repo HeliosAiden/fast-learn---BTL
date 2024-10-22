@@ -1,8 +1,9 @@
 <?php
 require_once './Api.php';
-require_once _DIR_ROOT . '/app/middlewares/Jwt.php';
+require_once _DIR_ROOT . '/core/Jwt.php';
 
 $api = new Api('User');
+$user_info_api = new API('UserInfo');
 
 // Get user credentials from request (POST method)
 $data = json_decode(file_get_contents("php://input"));
@@ -24,6 +25,20 @@ if (isset($data->username) && isset($data->password) && isset($data->role)) {
         }
         if (isset($user_data['role'])) {
             $data['user_role'] = $user_data['role'];
+        }
+        if (isset($user_data['state'])) {
+            if ($user_data['state'] == 'Active') {
+                $data['user_state'] = $user_data['state'];
+            } else {
+                $api-> get_controller() -> errorResponse('User is not active.', 403);
+            }
+        }
+        if (isset($user_data['email'])) {
+            $data['user_email'] = $user_data['email'];
+        }
+        $user_info = $user_info_api -> get_controller() -> retrieve_user_info($user_data['id']);
+        if (isset($user_info)) {
+            $data['user_info'] = $user_info;
         }
 
         $JWTToken = new JWTToken();

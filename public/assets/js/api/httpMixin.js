@@ -14,14 +14,14 @@ class HttpMixin {
       Authorization: `Bearer ${this.token}`, // Add JWT token to request headers
     };
 
-    if (id) {
-      headers['X-Subject-ID'] = id
-    }
-
     const options = {
       method,
       headers,
-    };
+    }
+
+    if (id) {
+      headers['X-Object-Id'] = id
+    }
 
     if (body) {
       options.body = JSON.stringify(body);
@@ -50,7 +50,7 @@ class HttpMixin {
   }
 
   // PUT method
-  async putMixin(endpoint, body, id = null) {
+  async putMixin(endpoint, body, id) {
     return this._request("PUT", endpoint, body, id);
   }
 

@@ -115,6 +115,6 @@ class App
 
     public function load_errors($name = '404')
     {
-        require_once 'errors/' . $name . '.php';
+        require_once 'views/' . $name . '.php';
     }
 }

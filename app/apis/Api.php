@@ -1,6 +1,6 @@
 <?php
 require_once str_replace("\\", '/', dirname(__DIR__, 2)) . "/bootstrap.php";
-require_once _DIR_ROOT . '/app/middlewares/Jwt.php';
+require_once _DIR_ROOT . '/core/Jwt.php';
 
 class Api
 {
@@ -56,7 +56,7 @@ class Api
 
             try {
                 $decoded_token = $JWT_Token->decode_token($token);
-                return $decoded_token->data->user_role ?? null;
+                return $decoded_token->data->user_role ?? 'Guest';
 
             } catch (Exception $e) {
                 // Handle invalid or expired JWT token
@@ -65,6 +65,6 @@ class Api
                 exit;
             }
         }
-        return null;
+        return 'Guest';
     }
 }

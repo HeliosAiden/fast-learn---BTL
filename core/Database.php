@@ -4,9 +4,11 @@ class Database
 
     private $__connection;
 
-    function __construct()
+    function __construct($db_config = null)
     {
-        global $db_config;
+        if (!$db_config) {
+            global $db_config;
+        }
         $this->__connection = DB_Connection::get_instance($db_config);
     }
 
@@ -25,10 +27,10 @@ class Database
         }
     }
 
-    private function getLastInsertId($table, $primaryKey = 'id') {
-        $sql = "SELECT MAX($primaryKey) as last_id FROM $table";
+    private function getLastInsertId($table, $priority = 'created_at', $id = 'id') {
+        $sql = "SELECT * FROM $table ORDER BY $priority DESC LIMIT 1;";
         $result = $this->query($sql)->fetch(PDO::FETCH_ASSOC);
-        return $result['last_id'] ?? null;
+        return $result[$id] ?? null;
     }
 
     /**
@@ -37,17 +39,38 @@ class Database
      * This function takes table's name and condition
      *
      * @param string $table The exact name of the table inside mySQL database.
-     * @param string $condition The condition to selected row(s).
-     * @return array The array consists of two value: [(string) $data, (bool) $status]
+     * @param array $condition The condition to get selected row(s).
+     * @param array $keys The selected keys for query row(s).
+     * @param array $exeption The exeption to not get selected row(s).
+     * @return array Rows selected
      */
-    public function select($table, $conditions = []) {
+    public function select($table, $conditions = [], $keys = [], $exeption = []) {
         $sql = "SELECT * FROM $table";
+        if (!empty($keys)) {
+            $key_str = '';
+            foreach($keys as $key) {
+                $key_str .= $key . ', ';
+            }
+            $key_str = rtrim($key_str, ', ');
+            $sql = "SELECT $key_str FROM $table";
+        }
         if (!empty($conditions)) {
             $sql .= ' WHERE ' . implode(' AND ', array_map(function ($key) {
                 return "$key = :$key";
             }, array_keys($conditions)));
         }
-        $stmt = $this->query($sql, $conditions);
+        if (!empty($exeption)) {
+            if (!empty($conditions)) {
+                $sql .= ' AND ';
+            } else {
+                $sql .= ' WHERE ';
+
+            }
+            $sql .= implode(' AND ', array_map(function ($key) {
+                return "$key != :$key";
+            }, array_keys($exeption)));
+        }
+        $stmt = $this->query($sql, array_merge($conditions, $exeption));
         return $stmt->rowCount() > 0 ? $stmt->fetchAll(PDO::FETCH_ASSOC) : null;  // Fetch the results
     }
 
@@ -58,7 +81,7 @@ class Database
      *
      * @param string $table The exact name of the table inside mySQL database.
      * @param array $data The data array of key and value pairs.
-     * @return bool $status The status of operation
+     * @return string The uuid of the last insert element
      */
     function insert($table, $data, $primaryKey = 'id') {
         $columns = implode(',', array_keys($data));
@@ -78,7 +101,7 @@ class Database
      * @param string $table The exact name of the table inside mySQL database.
      * @param array $data The data array of key and value pairs.
      * @param array $conditions The array contains one or multiple conditions to select update.
-     * @return array The array consists of two value: [(array) $selected_id, (bool) $status]
+     * @return int The number of affect rows
      */
     function update($table, $data, $conditions) {
         $setClause = implode(', ', array_map(function ($key) {
@@ -99,7 +122,7 @@ class Database
 
         $stmt = $this->query($sql, $params);
 
-        return $stmt->rowCount() > 0 ? $stmt->rowCount() : null;// Return affected rows
+        return $stmt->rowCount() > 0 ? $stmt->rowCount() : null;// Return number of affected rows
     }
 
     /**
@@ -109,7 +132,7 @@ class Database
      *
      * @param string $table The exact name of the table inside mySQL database.
      * @param string $condition The condition to select deleting row.
-     * @return int $status The status of operation
+     * @return int The number of affect rows
      */
     public function delete($table, $conditions) {
         $conditionClause = implode(' AND ', array_map(function ($key) {

@@ -52,8 +52,8 @@ require_once 'app/App.php'; // Load Apps
 if (!empty($config['database'])) {
     $db_config = array_filter($config['database']);
     if (!empty($db_config)) {
-        require 'core/Connection.php';
-        require 'core/Database.php';
+        require _DIR_ROOT . '/core/Connection.php';
+        require _DIR_ROOT . '/core/Database.php';
     }
 }
 if (!empty($config['hashing'])) {

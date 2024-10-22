@@ -42,7 +42,7 @@ class Controller {
         }
     }
 
-    protected function get_page_data($page_title, $dir, $data = [])
+    public function get_page_data($page_title, $dir, $data = [])
     {
         $page_data = ['page_title' => $page_title, 'dir' => $dir, 'controller' => $this];
         if (!empty($data)) {
@@ -53,7 +53,7 @@ class Controller {
         return $page_data;
     }
 
-    protected function get_page_dir($page_action)
+    public function get_page_dir($page_action)
     {
         $page_controller = get_class($this);
         $page_controller = strtolower($page_controller);
@@ -62,15 +62,17 @@ class Controller {
     }
 
     // Method to send JSON response
-    protected function jsonResponse($data, $status = 200) {
-        header("Content-Type: application/json");
+    public function jsonResponse($data, $status = 200) {
+        if (!headers_sent()) {
+            header("Content-Type: application/json");
+        }
         http_response_code($status);
         echo json_encode($data);
         exit;
     }
 
     // Method to get input data from request (JSON)
-    protected function getInput() {
+    public function getInput() {
         return json_decode(file_get_contents('php://input'), true);
     }
 
@@ -82,11 +84,108 @@ class Controller {
         ], $status);
     }
 
-    public function get_permissions($user_role) {
+    public function check_user_permission($model, $action) {
         global $permission_config;
-        if (!empty($permission_config[$user_role])) {
-            return $permission_config[$user_role];
+        $role = $this -> get_user_role();
+        if (empty($permission_config[$role])) {
+            $this -> errorResponse('No role found for the user', 403);
+            exit;
         }
-        return [];
+        if (empty($permission_config[$role][$model])){
+            $this -> errorResponse('You do not have permission to access this resource', 403);
+            exit;
+        }
+        if (!str_contains($permission_config[$role][$model][0], $action)) {
+            $this -> errorResponse('You do not have permission to perform this action', 403);
+            exit;
+        }
+        return true;
+    }
+
+    public function get_id_from_header() {
+        $headers = getallheaders();
+        if (isset($headers['X-Object-Id'])) {
+            return $headers['X-Object-Id'];
+        }
+        $this -> errorResponse('Bad request: No Id provided');
+    }
+
+    private function get_jwt_payload() {
+        if (isset($_COOKIE['jwtToken'])) {
+            // Extract token from the Authorization header
+            $token = $_COOKIE['jwtToken'];
+
+            $JWT_Token = new JWTToken();
+
+            try {
+                $payload = $JWT_Token->decode_token($token);
+                return $payload;
+
+            } catch (Exception $e) {
+                // Handle invalid or expired JWT token
+                header('HTTP/1.1 401 Unauthorized');
+                echo 'Unauthorized: ' . 'Token is invalid or expired';
+                exit;
+            }
+        }
+        return null;
+    }
+
+    private function get_user_data() {
+        $jwt_payload = $this -> get_jwt_payload();
+
+        if (isset($jwt_payload)) {
+            $user_data = $jwt_payload -> data;
+            return $user_data;
+        }
+        return null;
+    }
+
+    public function get_user_role() {
+        $user_data = $this -> get_user_data();
+        if (isset($user_data)) {
+            return $user_data -> user_role;
+        }
+        return 'Guest';
+    }
+
+    public function get_user_id() {
+        $user_data = $this -> get_user_data();
+        if (isset($user_data)) {
+            return $user_data -> user_id;
+        }
+        return null;
+    }
+
+    public function get_user_email() {
+        $user_data = $this -> get_user_data();
+        if (isset($user_data)) {
+            return $user_data -> user_email;
+        }
+        return null;
+    }
+
+    public function get_user_info() {
+        $user_data = $this -> get_user_data();
+        if (isset($user_data)) {
+            return $user_data -> user_info;
+        }
+        return null;
+    }
+
+    public function get_user_name() {
+        $user_data = $this -> get_user_data();
+        if (isset($user_data)) {
+            return $user_data -> username;
+        }
+        return null;
+    }
+
+    public function get_user_state() {
+        $user_data = $this -> get_user_data();
+        if (isset($user_data)) {
+            return $user_data -> user_state;
+        }
+        return null;
     }
 }

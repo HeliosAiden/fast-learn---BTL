@@ -1,5 +1,5 @@
 <?php
-require_once _DIR_ROOT . '/app/middlewares/Jwt.php';
+require_once _DIR_ROOT . '/core/Jwt.php';
 
 $headers = apache_request_headers(); // Get the headers
 $default_login_url = _WEB_ROOT . '/dang-nhap';
@@ -32,14 +32,9 @@ if (isset($_COOKIE['jwtToken'])) {
         $userData = $decoded_token->data;
         $exp = $decoded_token->exp;
 
-        // Redirect to home page if already logged in
-        if (is_url_allowed($current_URL, $UNAUTHORIZED_URLS)) {
-            header("Location: $default_home_url");
-            exit();
-        }
         // Redirect to home page if token expored
         if ($exp < time()) {
-            header("Location: $default_home_url");
+            header("Location: $default_login_url");
             exit();
         }
 
@@ -47,12 +42,6 @@ if (isset($_COOKIE['jwtToken'])) {
         http_response_code(401);
         echo json_encode(['message' => 'Invalid token']);
         setcookie('jwtToken', '', time() - $JWT_Token-> get_expiration_duration(), '/');  // Expire the cookie
-        header("Location: $default_login_url");
-        exit();
-    }
-} else {
-    if (!is_url_allowed($current_URL, $UNAUTHORIZED_URLS)) {
-        // Redirect to login page if the URI is not allowed
         header("Location: $default_login_url");
         exit();
     }

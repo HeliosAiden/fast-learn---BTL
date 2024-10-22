@@ -1,67 +1,53 @@
-<div id="login-container" style="margin: auto; width: 20%" ></div>
+<div id="login-container" style="margin: auto; width: 80%">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h3>Đăng nhập</h3>
+                    </div>
+                    <div class="card-body">
 
+                        <!-- Role Field -->
+                        <div class="mb-3">
+                            <label for="role" class="form-label">Quyền</label>
+                            <select class="form-select" id="role" name="role" required>
+                                <option value="">Chọn quyền của mình</option>
+                                <option value="Admin">Quản trị viên</option>
+                                <option value="Teacher">Giáo viên</option>
+                                <option value="Student">Học sinh</option>
+                            </select>
+                        </div>
+
+                        <!-- Username Field -->
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Tên người dùng</label>
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Mật khẩu</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid">
+                            <button id="login_btn" class="btn btn-success my-2">Đăng nhập</button>
+                            <a href="<?php echo _WEB_ROOT ?>/dang-ky" class="btn btn-primary my-2">Trang đăng ký</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper">
+
+</div>
 <script type="module">
-    import SnackBarMixin from "<?php echo _WEB_ROOT . '/public/assets/js/components/snackBar.js' ?>";
     import HttpMixin from "<?php echo _WEB_ROOT . '/public/assets/js/api/httpMixin.js' ?>";
-    import FormMixin from "<?php echo _WEB_ROOT . '/public/assets/js/components/form.js' ?>";
 
-    const loginFormConfigs = {
-        title: {
-            label: 'Đăng nhập tài khoản',
-            class: 'mb-4',
-            tag: 'h2'
-        },
-        fields: [
-            {
-                type: "select",
-                name: "role",
-                options: [
-                    { label: "Sinh viên", value: "Student" },
-                    { label: "Giáo viên", value: "Teacher" },
-                    { label: "Quản trị hệ thống", value: "Admin" }
-                ]
-            },
-            {
-                type: "text",
-                name: "username",
-                placeholder: "Tài khoản"
-            },
-            {
-                type: "password",
-                name: "password",
-                placeholder: "Nhập mật khẩu"
-            }
-        ],
-        buttonArea: [
-            {
-                id: "loginBtn",
-                tag: 'button',
-                label: "Đăng nhập",
-                type: 'submit',
-                class: 'btn btn-primary mx-2',
-                icon: {
-                    class: 'fa-solid fa-door-open me-2',
-                    position: 'start'
-                }
-            },
-            {
-                id: "registerBtn",
-                label: "Trang đăng ký",
-                class: 'btn btn-success mx-2',
-                tag: 'a',
-                href: '<?php echo _WEB_ROOT . '/user/register' ?>',
-                target: '_self',
-                icon: {
-                    class: 'fa-solid fa-user-plus me-2',
-                    position: 'start'
-                }
-            }
-        ],
-        class: 'text-center'
-    }
-
-    const loginForm = new FormMixin(loginFormConfigs)
-    loginForm.render('#login-container')
 
     let url = '/app/apis/login.php'
 
@@ -78,22 +64,41 @@
 
         const httpMixin = new HttpMixin('<?php echo _WEB_ROOT ?>')
         const response = await httpMixin.postMixin(url, data)
-        const snackBar = new SnackBarMixin();
+        console.log(response)
 
         if (response.status == 'success') {
-            snackBar.showMessage('Đăng nhập thành công', 'success');
+            swal({
+              title: "Đăng nhập thành công!",
+              icon: "success",
+              buttons: {
+                confirm: {
+                  text: "Xác nhận",
+                  value: true,
+                  visible: true,
+                  className: "btn btn-success",
+                  closeModal: true,
+                },
+              },
+            });
             // Store the JWT token in localStorage & cookie
             localStorage.setItem('jwtToken', response.token);
             httpMixin.setJwtCookie(response.token)
-            window.location.replace('<?php echo _WEB_ROOT . '/user/list' ?>');
+            window.location.replace('<?php echo _WEB_ROOT . '/' ?>');
         } else {
-            snackBar.showMessage('Đăng nhập không thành công', 'danger');
+            swal(response.message ?? "Something went wrong!", {
+              icon: "error",
+              buttons: {
+                confirm: {
+                  className: "btn btn-danger",
+                  closeModal: true,
+                  visible: true
+                },
+              },
+            });
         }
     }
 
 
-    const loginButton = document.getElementById('loginBtn')
+    const loginButton = document.getElementById('login_btn')
     loginButton.addEventListener('click', handleLogin)
-
-
 </script>
