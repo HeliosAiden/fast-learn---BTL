@@ -10,7 +10,6 @@ class HttpMixin {
   async _request(method, endpoint, body = null, id = null) {
 
     const headers = {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${this.token}`, // Add JWT token to request headers
     };
 
@@ -23,7 +22,11 @@ class HttpMixin {
       headers['X-Object-Id'] = id
     }
 
-    if (body) {
+    if (body instanceof FormData) {
+      options.body = body;
+      delete headers["Content-Type"];
+    } else if (body) {
+      headers["Content-Type"] = "application/json";
       options.body = JSON.stringify(body);
     }
 

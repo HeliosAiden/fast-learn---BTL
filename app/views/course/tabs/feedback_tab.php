@@ -149,7 +149,6 @@ $students_course_feedbacks = array_slice($students_course_feedbacks, 0, 5)
 
     // Handle star rating click event
     document.querySelectorAll('.star-rating .star.user-select').forEach(star => {
-        console.log(star)
         star.addEventListener('click', function() {
             const ratingValue = this.getAttribute('data-value');
 

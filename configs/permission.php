@@ -27,7 +27,8 @@ $config['permission'] = [
         'UserInfo' => $__NO_DELETE,
         'Answer' => $__ALL_PERMISSION,
         'Subject' => $__NO_DELETE,
-        'Post' => $__SELECT_ONLY
+        'Post' => $__SELECT_ONLY,
+        'CourseLesson' => $__ALL_PERMISSION
     ],
     'Student' => [
         'Course' => $__SELECT_ONLY,

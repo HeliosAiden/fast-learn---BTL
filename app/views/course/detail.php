@@ -40,7 +40,7 @@ foreach ($subjects as $subject) {
                             <ul class="nav nav-tabs nav-line nav-color-secondary w-100 ps-4" role="tablist">
                                 <li class="nav-item submenu" role="presentation"> <a class="nav-link show active" data-bs-toggle="tab" href="#info-tab" id="li-info-tab" role="tab" aria-selected="true">Giới thiệu</a> </li>
                                 <li class="nav-item submenu" role="presentation"> <a class="nav-link" data-bs-toggle="tab" href="#feedback-tab" role="tab" id="li-feedback-tab" aria-selected="false" tabindex="-1">Đánh giá</a> </li>
-                                <li class="nav-item submenu" role="presentation"> <a class="nav-link" data-bs-toggle="tab" href="#profile" role="tab" aria-selected="false" tabindex="-1">Bài học</a> </li>
+                                <li class="nav-item submenu" role="presentation"> <a class="nav-link" data-bs-toggle="tab" href="#lesson-tab" role="tab" id="li-lesson-tab" aria-selected="false" tabindex="-1">Bài học</a> </li>
                                 <li class="nav-item submenu" role="presentation"> <a class="nav-link" data-bs-toggle="tab" href="#settings" role="tab" aria-selected="false" tabindex="-1">Tài liệu</a> </li>
                             </ul>
                         </div>
@@ -48,6 +48,7 @@ foreach ($subjects as $subject) {
                     <div class="tab-content mt-4 mb-3" id="pills-without-border-tabContent">
                         <?php require __DIR__ . '/tabs/info_tab.php' ?>
                         <?php require __DIR__ . '/tabs/feedback_tab.php' ?>
+                        <?php require __DIR__ . '/tabs/lesson_tab.php' ?>
 
                     </div>
                 </div>

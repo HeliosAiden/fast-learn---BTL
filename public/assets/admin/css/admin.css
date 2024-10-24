@@ -1,0 +1,26 @@
+/********** Template CSS **********/
+:root {
+    --primary: #6861CE;
+    --light: #F0FBFC;
+    --dark: #1A2035;
+}
+
+/* Override primary button */
+.btn-primary {
+    background-color: var(--primary) !important;  /* Example: "tomato" color */
+    border-color: var(--primary) !important;
+}
+
+/* Override primary background color */
+.bg-primary {
+    background-color: var(--primary) !important;
+}
+
+/* Override primary text color */
+.text-primary {
+    color: var(--primary) !important;
+}
+
+.btn-link {
+    color: var(--primary) !important;
+}
