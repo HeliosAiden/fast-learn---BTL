@@ -1,5 +1,6 @@
 <?php
-class Controller {
+class Controller
+{
 
     protected $__model;
     protected $__permission;
@@ -62,7 +63,8 @@ class Controller {
     }
 
     // Method to send JSON response
-    public function jsonResponse($data, $status = 200) {
+    public function jsonResponse($data, $status = 200)
+    {
         if (!headers_sent()) {
             header("Content-Type: application/json");
         }
@@ -72,12 +74,14 @@ class Controller {
     }
 
     // Method to get input data from request (JSON)
-    public function getInput() {
+    public function getInput()
+    {
         return json_decode(file_get_contents('php://input'), true);
     }
 
-    public function createFile() {
-        if (isset($_FILES['uploaded_file']) && $_FILES['uploaded_file']['error'] === UPLOAD_ERR_OK){
+    public function createFile()
+    {
+        if (isset($_FILES['uploaded_file']) && $_FILES['uploaded_file']['error'] === UPLOAD_ERR_OK) {
             $file_temporal_path = $_FILES['uploaded_file']['tmp_name'];
             $file_name = $_FILES['uploaded_file']['name'];
             $file_size = $_FILES['uploaded_file']['size'];
@@ -87,7 +91,6 @@ class Controller {
             $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt'];
 
             if (in_array($file_extension, $allowedExtensions)) {
-                // Determine file type category based on file extension
                 $file_category = 'others';
 
                 switch ($file_extension) {
@@ -137,46 +140,57 @@ class Controller {
                 ];
                 return $file_data;
             }
-
         }
-        $this -> errorResponse('Can not access to $_FILES');
+        $this->errorResponse('Can not access to $_FILES');
+    }
+
+    public function deleteFile($file_path)
+    {
+        $file_path = _DIR_ROOT . $file_path;
+        if (file_exists($file_path)) {
+            unlink($file_path);
+        }
     }
 
     // Method to handle errors
-    public function errorResponse($message = 'Bad request', $status = 400) {
+    public function errorResponse($message = 'Bad request', $status = 400)
+    {
         $this->jsonResponse([
             'status' => 'error',
             'message' => $message,
         ], $status);
     }
 
-    public function check_user_permission($model, $action) {
+    public function check_user_permission($model, $action)
+    {
         global $permission_config;
-        $role = $this -> get_user_role();
+        $role = $this->get_user_role();
         if (empty($permission_config[$role])) {
-            $this -> errorResponse('No role found for the user', 403);
+            $this->errorResponse('No role found for the user', 403);
             exit;
         }
-        if (empty($permission_config[$role][$model])){
-            $this -> errorResponse('You do not have permission to access this resource', 403);
+        if (empty($permission_config[$role][$model])) {
+            $this->errorResponse('You do not have permission to access this resource', 403);
             exit;
         }
         if (!str_contains($permission_config[$role][$model][0], $action)) {
-            $this -> errorResponse('You do not have permission to perform this action', 403);
+            $this->errorResponse('You do not have permission to perform this action', 403);
             exit;
         }
         return true;
     }
 
-    public function get_id_from_header() {
+    public function get_id_from_header()
+    {
         $headers = getallheaders();
         if (isset($headers['X-Object-Id'])) {
             return $headers['X-Object-Id'];
         }
-        $this -> errorResponse('Bad request: No Id provided');
+        $this->errorResponse('Bad request: No Id provided');
     }
 
-    private function get_jwt_payload() {
+    private function get_jwt_payload()
+    {
         if (isset($_COOKIE['jwtToken'])) {
             // Extract token from the Authorization header
             $token = $_COOKIE['jwtToken'];
@@ -186,7 +200,6 @@ class Controller {
             try {
                 $payload = $JWT_Token->decode_token($token);
                 return $payload;
-
             } catch (Exception $e) {
                 // Handle invalid or expired JWT token
                 header('HTTP/1.1 401 Unauthorized');
@@ -197,60 +210,67 @@ class Controller {
         return null;
     }
 
-    private function get_user_data() {
-        $jwt_payload = $this -> get_jwt_payload();
+    private function get_user_data()
+    {
+        $jwt_payload = $this->get_jwt_payload();
 
         if (isset($jwt_payload)) {
-            $user_data = $jwt_payload -> data;
+            $user_data = $jwt_payload->data;
             return $user_data;
         }
         return null;
     }
 
-    public function get_user_role() {
-        $user_data = $this -> get_user_data();
+    public function get_user_role()
+    {
+        $user_data = $this->get_user_data();
         if (isset($user_data)) {
-            return $user_data -> user_role;
+            return $user_data->user_role;
         }
         return 'Guest';
     }
 
-    public function get_user_id() {
-        $user_data = $this -> get_user_data();
+    public function get_user_id()
+    {
+        $user_data = $this->get_user_data();
         if (isset($user_data)) {
-            return $user_data -> user_id;
+            return $user_data->user_id;
         }
         return null;
     }
 
-    public function get_user_email() {
-        $user_data = $this -> get_user_data();
+    public function get_user_email()
+    {
+        $user_data = $this->get_user_data();
         if (isset($user_data)) {
-            return $user_data -> user_email;
+            return $user_data->user_email;
         }
         return null;
     }
 
-    public function get_user_info() {
-        $user_data = $this -> get_user_data();
+    public function get_user_info()
+    {
+        $user_data = $this->get_user_data();
         if (isset($user_data)) {
-            return $user_data -> user_info;
+            return $user_data->user_info;
         }
         return null;
     }
 
-    public function get_user_name() {
-        $user_data = $this -> get_user_data();
+    public function get_user_name()
+    {
+        $user_data = $this->get_user_data();
         if (isset($user_data)) {
-            return $user_data -> username;
+            return $user_data->username;
         }
         return null;
     }
 
-    public function get_user_state() {
-        $user_data = $this -> get_user_data();
+    public function get_user_state()
+    {
+        $user_data = $this->get_user_data();
         if (isset($user_data)) {
-            return $user_data -> user_state;
+            return $user_data->user_state;
         }
         return null;
     }

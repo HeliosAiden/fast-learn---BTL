@@ -1,4 +1,4 @@
-<!-- Delete Confirmation Modal -->
+<!-- Delete Course Modal -->
 <div class="modal" id="deleteModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

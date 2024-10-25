@@ -3,10 +3,8 @@ require_once _DIR_ROOT . '/app/apis/Api.php';
 
 $teacher_api = new Api('User');
 $subject_api = new Api('Subject');
+$enrollment_api = new API('CourseEnrollment');
 
-// echo '<pre>';
-// print_r($data['current_course']);
-// echo '</pre>';
 $current_course = $data['current_course'];
 
 $subjects = $subject_api->get_controller()->get_all_subjects();
@@ -27,13 +25,31 @@ foreach ($subjects as $subject) {
         $subject_name = $subject['name'];
     }
 }
+
+$hide_card = false;
+// If user == 'Student' and found enrollment with $user_id and $current_course => true
+// If user_role == 'Teacher' or user+role == 'Admin'
+if ($this -> get_user_role() == 'Teacher' || $this -> get_user_role() == 'Admin') {
+    $hide_card = true;
+}
+$enrollments = $enrollment_api->get_controller()->get_all_course_enrollment();
+foreach($enrollments as $enrollment) {
+    if ($enrollment['student_id'] == $this -> get_user_id() && $enrollment['course_id'] == $current_course['id']) {
+        $hide_card = true;
+    }
+}
+
 ?>
 
 <div class="container">
     <div class="page-inner">
         <h3 class="fw-bold mb-3">Thông tin khóa học</h3>
         <div class="row">
-            <div class="col-md-8">
+            <div class="<?php if ($hide_card) {
+                echo 'col-md-12';
+            } else {
+                echo 'col-md-8';
+            } ?>">
                 <div class="card card-with-nav">
                     <div class="card-header">
                         <div class="row row-nav-line">
@@ -53,6 +69,7 @@ foreach ($subjects as $subject) {
                     </div>
                 </div>
             </div>
+            <?php if (!$hide_card): ?>
             <div class="col-md-4 mb-4">
                 <div class="card">
                     <div class="card-body">
@@ -87,6 +104,7 @@ foreach ($subjects as $subject) {
                     </div>
                 </div>
             </div>
+            <?php endif ?>
         </div>
     </div>
 </div>

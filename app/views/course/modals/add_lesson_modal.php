@@ -29,11 +29,11 @@
                         <div class="selectgroup w-100 mb-2">
                             <label class="selectgroup-item">
                                 <input type="radio" name="videoInputType" id="uploadVideo" autocomplete="off" class="selectgroup-input" checked>
-                                <span class="selectgroup-button">Upload video</span>
+                                <span class="selectgroup-button">Tải video từ file</span>
                             </label>
                             <label class="selectgroup-item">
                                 <input type="radio" name="videoInputType" id="inputURL" autocomplete="off" class="selectgroup-input">
-                                <span class="selectgroup-button">Input Url</span>
+                                <span class="selectgroup-button">Nhập đường dẫn</span>
                             </label>
                         </div>
 
@@ -51,7 +51,7 @@
 
                         <!-- Input URL Field (Hidden by default) -->
                         <div id="urlInput" class="input-group mt-2" style="display: none; margin: 0">
-                            <label for="videoURL" class="input-group-text">Dán đường dẫn vào đây</label>
+                            <label for="videoURL" class="input-group-text" style="margin-bottom: 0;">Dán đường dẫn vào đây</label>
                             <input type="text" class="form-control" id="videoURL" placeholder="https://example.com/video">
                         </div>
 

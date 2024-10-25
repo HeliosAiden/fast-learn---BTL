@@ -15,4 +15,15 @@ switch ($method) {
         $api -> check_user_permission($model, 'insert');
         $api -> get_controller() -> create_course_lesson();
         break;
+    case 'PATCH':
+        $api -> check_user_permission($model, 'insert');
+        $api -> get_controller() -> update_course_lesson();
+        break;
+    case 'DELETE':
+        $api -> check_user_permission($model, 'insert');
+        $api -> get_controller() -> delete_course_lesson();
+    default:
+        // Return an error for unsupported HTTP methods
+        $api-> get_controller() -> errorResponse('unsupported HTTP methods', 405);
+        break;
 }

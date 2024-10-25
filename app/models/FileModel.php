@@ -19,4 +19,16 @@ class FileModel extends Model
         ];
         return $this -> db -> insert($this->__table, $data);
     }
+
+    public function delete_file($id) {
+        return $this -> db -> delete($this->__table, ['id' => $id]);
+    }
+
+    public function get_file_with_condition($condition = [], $keys=[], $exceptions=[]) {
+        $row = $this -> db -> select($this -> __table, $condition, $keys, $exceptions);
+        if (!empty($row)) {
+            return $row[0];
+        }
+        return null;
+    }
 }

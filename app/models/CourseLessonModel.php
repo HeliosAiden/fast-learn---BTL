@@ -9,7 +9,8 @@ class CourseLessonModel extends Model
         $this->init_table_id();
     }
 
-    function create_course_lesson($name, $course_id , $lesson_index, $file_id = null, $video_url = null, $description='') {
+    function create_course_lesson($name, $course_id, $lesson_index, $file_id = null, $video_url = null, $description = '')
+    {
         $data = [
             'name' => $name,
             'course_id' => $course_id,
@@ -24,7 +25,27 @@ class CourseLessonModel extends Model
         if (isset($description)) {
             $data['description'] = $description;
         }
-        return $this -> db -> insert($this -> __table, $data);
+        return $this->db->insert($this->__table, $data);
     }
 
+    function update_course_lesson($id, $name = '', $description = '', $index = null)
+    {
+        $condition = ['id' => $id];
+        $data = [];
+        if (isset($name)) {
+            $data['name'] = $name;
+        }
+        if (isset($description)) {
+            $data['description'] = $description;
+        }
+        if (isset($index)) {
+            $data['index'] = $index;
+        }
+        return $this->db->update($this->__table, $data, $condition);
+    }
+
+    function delete_course_lesson($id)
+    {
+        return $this->db->delete($this->__table, ['id' => $id]);
+    }
 }

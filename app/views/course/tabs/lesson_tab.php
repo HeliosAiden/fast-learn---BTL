@@ -6,17 +6,36 @@
 
 ?>
 
+<?php
+$lesson_api = new Api('CourseLesson');
+$file_api = new Api('File');
+$lessons = $lesson_api->get_controller()->get_lessons($current_course['id']);
+
+?>
+<style>
+    .mfp-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .mfp-close {
+            color: white !important;
+        }
+    }
+</style>
 <div class="tab-pane fade" id="lesson-tab" role="tabpanel" aria-labelledby="li-lesson-tab">
     <div class="card-header">
         <div class="d-flex align-items-center">
             <h4 class="card-title">Các bài học đang quản lý</h4>
-            <button
-                class="btn btn-primary btn-round ms-auto"
-                data-bs-toggle="modal"
-                id="open_add_lesson_modal">
-                <i class="fa fa-plus"></i>
-                Thêm bài học
-            </button>
+            <?php if ($this->get_user_role() == 'Teacher'): ?>
+                <button
+                    class="btn btn-primary btn-round ms-auto"
+                    data-bs-toggle="modal"
+                    id="open_add_lesson_modal">
+                    <i class="fa fa-plus"></i>
+                    Thêm bài học
+                </button>
+            <?php endif ?>
         </div>
     </div>
     <div class="card-body">
@@ -24,8 +43,37 @@
 
         <?php endif ?>
         <?php if ($this->get_user_role() == 'Teacher'): ?>
-
             <?php require_once __DIR__ . '/../modals/add_lesson_modal.php' ?>
+
+            <!-- Edit Lesson modal -->
+            <?php require_once __DIR__ . '/../modals/edit_lesson_modal.php' ?>
+            <script>
+                function openEditModal(button) {
+                    let lesson_id = button.getAttribute('data-lesson-id')
+                    let lesson_name = button.getAttribute('data-lesson-name')
+                    let lesson_description = button.getAttribute('data-lesson-description')
+                    let lesson_index = button.getAttribute('data-lesson-index')
+                    document.getElementById('edit-modal-value').value = lesson_id
+                    document.getElementById('edit_lesson_name').value = lesson_name
+                    document.getElementById('edit_lesson_description').value = lesson_description
+                    document.getElementById('edit_lesson_index').value = lesson_index
+
+                    const modal = new bootstrap.Modal(document.getElementById('edit-lesson-modal'));
+                    modal.show()
+                }
+            </script>
+
+            <?php require_once __DIR__ . '/../modals/remove_lesson_modal.php' ?>
+
+            <!-- Delete Lesson modal -->
+            <script>
+                function openDeleteModal(button) {
+                    let lesson_id = button.getAttribute('data-lesson-id')
+                    document.getElementById('delete-lesson-id').value = lesson_id
+                    const modal = new bootstrap.Modal(document.getElementById('delete-lesson-modal'));
+                    modal.show()
+                }
+            </script>
 
             <div class="table-responsive">
                 <table id="lesson-table" class="display table table-striped table-hover">
@@ -38,19 +86,110 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <?php foreach ($lessons as $lesson) {
+                            echo '
+                                <tr>
+                                    <td>' . $lesson['lesson_index'] . '</td>
+                                    <td>' . $lesson['name'] . '</td>
+                                    <td>';
+                            if (isset($lesson['file_id'])) {
+                                $file_type = '';
+                                $file_obj = $file_api->get_controller()->retrieve_file($lesson['file_id']);
+                                switch ($file_obj['file_type']) {
+                                    case 'video/mp4':
+                                        $file_type = 'video';
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                echo '
+                                    <a data-file-type="' . $file_type . '" href="' . _WEB_ROOT . $file_obj['file_path'] . '" class="btn btn-link video-popup">
+                                        <span class="btn-label">
+                                            <i class="fa fa-link"></i>
+                                        </span>
+                                        <span>' . $file_obj['file_name'] . '</span>
+                                    </a>
+                                        ';
+                            }
+                            if (isset($lesson['video_url'])) {
+                                echo '
+                                    <a href="' . $lesson['video_url'] . '" class="btn btn-link " target="blank">
+                                        <span class="btn-label">
+                                            <i class="fa fa-link"></i>
+                                        </span>
+                                        <span>Video link</span>
+                                    </a>
+                                ';
+                            }
+                            echo '</td>
+                                <td style="width:10%">
+                                    <div class="form-button-action" style="float:right">
+                                        <button
+                                            type="button"
+                                            data-bs-toggle="tooltip"
+                                            class="btn btn-link btn-primary btn-lg"
+                                            data-original-title="Edit lesson"
+                                            data-lesson-id="' . $lesson['id'] . '"
+                                            data-lesson-name="' . $lesson['name'] . '"
+                                            data-lesson-index="' . $lesson['lesson_index'] . '"
+                                            data-lesson-description="' . $lesson['description'] . '"
+                                            onclick="openEditModal(this)"
+                                            >
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            data-bs-toggle="tooltip"
+                                            class="btn btn-link btn-danger btn-lg"
+                                            data-original-title="Remove lesson"
+                                            data-lesson-id="' . $lesson['id'] . '"
+                                            onclick="openDeleteModal(this)"
+                                            >
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                                </tr>
+                            ';
+                        } ?>
 
                     </tbody>
                 </table>
             </div>
-            <div class="embed-responsive embed-responsive-16by9">
-                <video class="embed-responsive-item" controls>
-                    <source src="<?php echo _WEB_ROOT ?>/app/uploads/videos/1729751270_y2mate.com - C in 100 Seconds_720pHF.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </div>
+
         <?php endif ?>
         <?php if ($this->get_user_role() == 'Admin'): ?>
 
         <?php endif ?>
     </div>
 </div>
+<script>
+    $('.video-popup').on('click', function(e) {
+        e.preventDefault(); // Prevent the default link action
+
+        // Get the URL from the href attribute
+        const fileUrl = $(this).attr('href');
+        const fileType = $(this).attr('data-file-type');
+        let fileContent;
+
+        if (fileType == 'video') {
+            // External video (YouTube or Vimeo), use iframe
+            fileContent = `<iframe width="1280" height="720" src="${fileUrl}" frameborder="0" allowfullscreen style="position: relative; left: 10vw"></iframe>`;
+        }
+
+        // Open Magnific Popup with the video content
+        $.magnificPopup.open({
+            items: {
+                src: `<div class="mfp-video">${fileContent}</div>`,
+                type: 'inline'
+            },
+            closeBtnInside: true
+        });
+    });
+    $(document).ready(function() {
+        // Add Row
+        $("#lesson-table").DataTable({
+            pageLength: 5,
+        });
+    });
+</script>

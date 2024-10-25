@@ -30,7 +30,6 @@ switch ($method) {
         $api -> check_user_permission($model, 'delete');
         $api-> get_controller() -> delete_course();
         break;
-
     default:
         // Return an error for unsupported HTTP methods
         $api-> get_controller() -> errorResponse('unsupported HTTP methods', 405);
