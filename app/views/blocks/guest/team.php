@@ -2,8 +2,7 @@
 <div class="container-xxl py-5">
     <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-            <h6 class="section-title bg-white text-center text-primary px-3">Instructors</h6>
-            <h1 class="mb-5">Expert Instructors</h1>
+            <h1 class="mb-5">Đội ngũ giảng viên chất lượng</h1>
         </div>
         <div class="row g-4">
             <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
@@ -19,8 +18,8 @@
                         </div>
                     </div>
                     <div class="text-center p-4">
-                        <h5 class="mb-0">Instructor Name</h5>
-                        <small>Designation</small>
+                        <h5 class="mb-0">Nguyễn Văn A</h5>
+                        <small>Fullstack dev</small>
                     </div>
                 </div>
             </div>
@@ -37,7 +36,7 @@
                         </div>
                     </div>
                     <div class="text-center p-4">
-                        <h5 class="mb-0">Instructor Name</h5>
+                        <h5 class="mb-0">Nguyễn Văn B</h5>
                         <small>Designation</small>
                     </div>
                 </div>
@@ -55,7 +54,7 @@
                         </div>
                     </div>
                     <div class="text-center p-4">
-                        <h5 class="mb-0">Instructor Name</h5>
+                        <h5 class="mb-0">Nguyễn Văn C</h5>
                         <small>Designation</small>
                     </div>
                 </div>
@@ -73,7 +72,7 @@
                         </div>
                     </div>
                     <div class="text-center p-4">
-                        <h5 class="mb-0">Instructor Name</h5>
+                        <h5 class="mb-0">Nguyễn Văn D</h5>
                         <small>Designation</small>
                     </div>
                 </div>

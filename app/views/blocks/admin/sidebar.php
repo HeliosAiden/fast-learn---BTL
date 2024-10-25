@@ -5,10 +5,11 @@
         <div class="logo-header" data-background-color="dark">
             <a href="<?php echo _WEB_ROOT ?>/" class="logo">
                 <img
-                    src="<?php echo _WEB_ROOT ?>/public/assets/admin/img/kaiadmin/logo_light.svg"
+                    src="<?php echo _WEB_ROOT ?>/public/assets/images/fast-learn-logo.png"
                     alt="navbar brand"
-                    class="navbar-brand"
+                    class="navbar-brand me-2"
                     height="20" />
+                    <h2 class="m-0 text-primary" style="color: #6861ce !important">FastLearn.</h2>
             </a>
             <div class="nav-toggle">
                 <button class="btn btn-toggle toggle-sidebar">
@@ -123,7 +124,7 @@
                     } ?>
                 </li>
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a data-bs-toggle="collapse" href="#base">
                         <i class="fas fa-layer-group"></i>
                         <p>Base</p>
@@ -343,7 +344,7 @@
                             </li>
                         </ul>
                     </div>
-                </li>
+                </li> -->
             </ul>
         </div>
     </div>

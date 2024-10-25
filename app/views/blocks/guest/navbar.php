@@ -55,24 +55,19 @@
 <!-- Navbar Start -->
 <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
     <a href="<?php echo _WEB_ROOT ?>/" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-        <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>eLEARNING</h2>
+        <img src="<?php echo _WEB_ROOT ?>/public/assets/images/fast-learn-logo.png" style="width: 80px; height: auto; display: block; margin: 0 auto;">
+        <h2 class="m-0 text-primary">FastLearn.</h2>
+
     </a>
     <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse padd-navbar" id="navbarCollapse">
         <div class="navbar-nav ms-auto p-4 p-lg-0">
-            <a href="<?php echo _WEB_ROOT ?>/" class="nav-item nav-link active">Home</a>
-            <a href="<?php echo _WEB_ROOT ?>/about/" class="nav-item nav-link">About</a>
-            <a href="<?php echo _WEB_ROOT ?>/courses/" class="nav-item nav-link">Courses</a>
-            <div class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
-                <div class="dropdown-menu fade-down m-0">
-                    <a href="<?php echo _WEB_ROOT ?>/team/" class="dropdown-item">Our Team</a>
-                    <a href="<?php echo _WEB_ROOT ?>/testimonial" class="dropdown-item">Testimonial</a>
-                </div>
-            </div>
-            <a href="<?php echo _WEB_ROOT ?>/contact/" class="nav-item nav-link">Contact</a>
+            <a href="<?php echo _WEB_ROOT ?>/" class="nav-item nav-link active">Trang chủ</a>
+            <a href="<?php echo _WEB_ROOT ?>/gioi-thieu/" class="nav-item nav-link">Giới thiệu</a>
+            <a href="<?php echo _WEB_ROOT ?>/cac-khoa-hoc/" class="nav-item nav-link">Các khóa học</a>
+            <a href="<?php echo _WEB_ROOT ?>/lien-he/" class="nav-item nav-link">Liên hệ</a>
         </div>
         <a href="<?php echo _WEB_ROOT ?>/dang-nhap/" class="btn btn-login me-2 h-42">Đăng nhập</a>
         <a href="<?php echo _WEB_ROOT ?>/dang-ky/" class="btn btn-register h-42">Đăng ký</a>

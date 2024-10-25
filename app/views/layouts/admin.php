@@ -52,7 +52,6 @@
         $this -> render('blocks/admin/main_container');
       } else {
         $this->render($data['dir'], $data);
-
       };
       ?>
       <?php $this -> render('blocks/admin/main_footer') ?>

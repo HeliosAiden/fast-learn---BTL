@@ -16,6 +16,17 @@ class Course extends Controller
         return $page_data;
     }
 
+    public function list() {
+        $all_courses = $this->__model->select_all();
+        $page_dir = $this->get_page_dir(__FUNCTION__);
+        $page_data = $this->get_page_data("Thông tin các khóa học hiện tại", $page_dir, ['all_courses' => $all_courses]);
+        $role = $this -> get_user_role();
+        if ($role == 'Guest') {
+            $this -> render_layout('guest', $page_data);
+            return $page_data;
+        }
+    }
+
     public function detail($id = '') {
         $all_courses = $this->__model->select_all();
         $page_dir = $this->get_page_dir(__FUNCTION__);

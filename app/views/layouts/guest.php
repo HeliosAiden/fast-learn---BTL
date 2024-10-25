@@ -43,15 +43,10 @@
     <script type="text/javascript" src="<?php echo _WEB_ROOT; ?>/public/assets/js/script.js"></script>
 
     <?php
-    // $this->render('blocks/guest/spinner', $data);
+    //**  Render header **//
     $this->render('blocks/guest/navbar', $data);
-    $this->render('blocks/guest/carrousel', $data);
-    $this->render('blocks/guest/service', $data);
-    $this->render('blocks/guest/about', $data);
-    $this->render('blocks/guest/category', $data);
-    $this->render('blocks/guest/courses', $data);
-    $this->render('blocks/guest/team', $data);
-    $this->render('blocks/guest/testimonial', $data);
+    $this->render($data['dir'], $data);
+    //** Render footer **//
     $this->render('blocks/guest/footer', $data);
     $this->render('blocks/guest/utils', $data);
     ?>
