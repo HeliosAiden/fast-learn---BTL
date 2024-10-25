@@ -117,12 +117,12 @@ class CourseLesson extends Controller
 
         $row = $this->__model->delete_course_lesson($course_lesson_id);
         if ($row) {
-            // $this->jsonResponse(
-            //     [
-            //         'status' => 'success',
-            //         'message' => 'Course lesson deleted successfully',
-            //     ]
-            // );
+            $this->jsonResponse(
+                [
+                    'status' => 'success',
+                    'message' => 'Course lesson deleted successfully',
+                ]
+            );
         } else {
             $this->errorResponse('Update course lesson fail');
         }

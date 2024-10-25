@@ -6,9 +6,7 @@ $all_course_feedbacks = $course_feedback_api->get_controller()->get_all_course_f
 $user_course_feedback = $course_feedback_api->get_controller()->get_course_feedback_from_user($current_course['id']);
 
 $students = $student_feedback_api->get_controller()->get_users_with_condition(['role' => 'Student'], ['id', 'username', 'email', 'state'], ['state' => 'Removed']);
-// echo '<pre>';
-// print_r($all_course_feedbacks);
-// echo '</pre>';
+
 $user_id = $this->get_user_id();
 $students_course_feedbacks = array_filter($all_course_feedbacks, function ($feedback) use ($user_id) {
     return $feedback['student_id'] !== $user_id;
@@ -55,7 +53,7 @@ $students_course_feedbacks = array_slice($students_course_feedbacks, 0, 5)
             <?php if ($this->get_user_role() == 'Student'): ?>
                 <h4 class="mb-2">Đánh giá của tôi</h4>
                 <?php if (isset($user_course_feedback)): ?>
-                    <div class="card position-relative text-left p-5 border rounded-3" style="max-width: 96%; margin: auto 2%;">
+                    <div class="card position-relative text-left p-5 border rounded-3 mb-4" style="max-width: 96%; margin: auto 2%;">
                         <blockquote>"<?php echo $user_course_feedback['feedback'] ?>"</blockquote>
                         <div class="row">
                             <div class="col-md-6">
@@ -116,7 +114,7 @@ $students_course_feedbacks = array_slice($students_course_feedbacks, 0, 5)
                     }
                 }
                 echo '
-                <div class="card position-relative text-left p-5 border rounded-3 mb-3" style="max-width: 96%; margin: auto 2%;">
+                <div class="card position-relative text-left p-5 border rounded-3 mb-4" style="max-width: 96%; margin: auto 2%;">
         <blockquote>"' . $feedback['feedback'] . '"</blockquote>
         <div class="row">
             <div class="col-md-6">

@@ -40,7 +40,7 @@
                         <!-- Upload Video Input (Hidden by default) -->
                         <div id="uploadInput" class="input-group mt-2">
                             <input type="file" class="form-control" id="videoUpload" accept="video/*" style="display: none;">
-                            <label for="uploadImg2" id="uploadBtn" class="label-input-file btn btn-black btn-round">
+                            <label for="uploadImg2" id="uploadBtn" class="label-input-file btn btn-black btn-round me-2">
                                 <span class="btn-label">
                                     <i class="fa fa-file-image"></i>
                                 </span>

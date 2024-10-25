@@ -39,7 +39,7 @@ class CourseLessonModel extends Model
             $data['description'] = $description;
         }
         if (isset($index)) {
-            $data['index'] = $index;
+            $data['lesson_index'] = $index;
         }
         return $this->db->update($this->__table, $data, $condition);
     }
