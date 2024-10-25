@@ -6,9 +6,7 @@ $all_course_feedbacks = $course_feedback_api->get_controller()->get_all_course_f
 $user_course_feedback = $course_feedback_api->get_controller()->get_course_feedback_from_user($current_course['id']);
 
 $students = $student_feedback_api->get_controller()->get_users_with_condition(['role' => 'Student'], ['id', 'username', 'email', 'state'], ['state' => 'Removed']);
-// echo '<pre>';
-// print_r($all_course_feedbacks);
-// echo '</pre>';
+
 $user_id = $this->get_user_id();
 $students_course_feedbacks = array_filter($all_course_feedbacks, function ($feedback) use ($user_id) {
     return $feedback['student_id'] !== $user_id;
@@ -52,60 +50,62 @@ $students_course_feedbacks = array_slice($students_course_feedbacks, 0, 5)
 <div class="tab-pane fade" id="feedback-tab" role="tabpanel" aria-labelledby="li-feedback-tab">
     <div class="card-body">
         <div class="row mt-3">
-            <h4 class="mb-2">Đánh giá của tôi</h4>
-            <?php if (isset($user_course_feedback)): ?>
-                <div class="card position-relative text-left p-5 border rounded-3" style="max-width: 96%; margin: auto 2%;">
-                    <blockquote>"<?php echo $user_course_feedback['feedback'] ?>"</blockquote>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5 class="mt-1 fw-normal"><?php echo $this->get_user_name() ?></h5>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="star-rating" style="float: right;">
-                                <?php
-                                $max_rating = 5;
-                                $current_rating = $user_course_feedback['rating'];
-                                $remaining_rating = $max_rating - $current_rating;
+            <?php if ($this->get_user_role() == 'Student'): ?>
+                <h4 class="mb-2">Đánh giá của tôi</h4>
+                <?php if (isset($user_course_feedback)): ?>
+                    <div class="card position-relative text-left p-5 border rounded-3 mb-4" style="max-width: 96%; margin: auto 2%;">
+                        <blockquote>"<?php echo $user_course_feedback['feedback'] ?>"</blockquote>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5 class="mt-1 fw-normal"><?php echo $this->get_user_name() ?></h5>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="star-rating" style="float: right;">
+                                    <?php
+                                    $max_rating = 5;
+                                    $current_rating = $user_course_feedback['rating'];
+                                    $remaining_rating = $max_rating - $current_rating;
 
-                                for ($i = 1; $i <= $current_rating; $i++) {
-                                    echo '<i class="fas fa-star star selected" data-value="' . $i . '"></i>';
-                                }
-                                for ($i = 1; $i <= $remaining_rating; $i++) {
-                                    echo '<i class="fas fa-star star" data-value="' . $current_rating + $i . '"></i>';
-                                }
-                                ?>
+                                    for ($i = 1; $i <= $current_rating; $i++) {
+                                        echo '<i class="fas fa-star star selected" data-value="' . $i . '"></i>';
+                                    }
+                                    for ($i = 1; $i <= $remaining_rating; $i++) {
+                                        echo '<i class="fas fa-star star" data-value="' . $current_rating + $i . '"></i>';
+                                    }
+                                    ?>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            <?php else: ?>
-                <div class="col-md-12">
-                    <div class="form-group form-group-default">
-                        <label for="rating">Chất lượng khóa học:</label>
-                        <div class="star-rating">
-                            <!-- Hidden input to store the actual rating value -->
-                            <input type="hidden" name="rating" id="rating" value="0" required>
+                <?php else: ?>
+                    <div class="col-md-12">
+                        <div class="form-group form-group-default">
+                            <label for="rating">Chất lượng khóa học:</label>
+                            <div class="star-rating">
+                                <!-- Hidden input to store the actual rating value -->
+                                <input type="hidden" name="rating" id="rating" value="0" required>
 
-                            <!-- Star icons -->
-                            <i class="fas fa-star star user-select" data-value="1"></i>
-                            <i class="fas fa-star star user-select" data-value="2"></i>
-                            <i class="fas fa-star star user-select" data-value="3"></i>
-                            <i class="fas fa-star star user-select" data-value="4"></i>
-                            <i class="fas fa-star star user-select" data-value="5"></i>
+                                <!-- Star icons -->
+                                <i class="fas fa-star star user-select" data-value="1"></i>
+                                <i class="fas fa-star star user-select" data-value="2"></i>
+                                <i class="fas fa-star star user-select" data-value="3"></i>
+                                <i class="fas fa-star star user-select" data-value="4"></i>
+                                <i class="fas fa-star star user-select" data-value="5"></i>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="form-group form-group-default">
-                        <label for="feedback">Phản hồi về khóa học:</label>
-                        <textarea name="feedback" id="feedback" rows="4" required style="width: 100%"></textarea>
+                    <div class="col-md-12">
+                        <div class="form-group form-group-default">
+                            <label for="feedback">Phản hồi về khóa học:</label>
+                            <textarea name="feedback" id="feedback" rows="4" required style="width: 100%"></textarea>
+                        </div>
                     </div>
-                </div>
-                <div class="text-end mt-2 mb-3">
-                    <button id="save_user_feedback" class="btn btn-success" disabled>Đánh giá</button>
-                </div>
+                    <div class="text-end mt-2 mb-3">
+                        <button id="save_user_feedback" class="btn btn-success" disabled>Đánh giá</button>
+                    </div>
+                <?php endif ?>
             <?php endif ?>
-            <h4 class="my-3">Đánh giá của những học viên khác</h4>
+            <h4 class="mb-3">Đánh giá của khóa học</h4>
             <?php foreach ($students_course_feedbacks as $feedback) {
                 $student_username = 'Không xác định';
                 foreach ($students as $student) {
@@ -114,7 +114,7 @@ $students_course_feedbacks = array_slice($students_course_feedbacks, 0, 5)
                     }
                 }
                 echo '
-                <div class="card position-relative text-left p-5 border rounded-3 mb-3" style="max-width: 96%; margin: auto 2%;">
+                <div class="card position-relative text-left p-5 border rounded-3 mb-4" style="max-width: 96%; margin: auto 2%;">
         <blockquote>"' . $feedback['feedback'] . '"</blockquote>
         <div class="row">
             <div class="col-md-6">
@@ -149,7 +149,6 @@ $students_course_feedbacks = array_slice($students_course_feedbacks, 0, 5)
 
     // Handle star rating click event
     document.querySelectorAll('.star-rating .star.user-select').forEach(star => {
-        console.log(star)
         star.addEventListener('click', function() {
             const ratingValue = this.getAttribute('data-value');
 

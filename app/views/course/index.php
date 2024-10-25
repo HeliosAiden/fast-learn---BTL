@@ -90,7 +90,7 @@ if (empty($filtered_enrollments)) {
 
                                         echo '
                                 <tr>
-                                    <td>' . $row['name'] . '</td>
+                                    <td><a class="btn btn-link" href="' . _WEB_ROOT . '/khoa-hoc/chi-tiet/' . $row['id'] . '" >' . $row['name'] . '</a></td>
                                     <td>' . $teacher_name . '</td>
                                     <td>' . $subject_name . '</td>
                                     <td>' . $row['start_date'] . '</td>

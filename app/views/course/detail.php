@@ -3,10 +3,8 @@ require_once _DIR_ROOT . '/app/apis/Api.php';
 
 $teacher_api = new Api('User');
 $subject_api = new Api('Subject');
+$enrollment_api = new API('CourseEnrollment');
 
-// echo '<pre>';
-// print_r($data['current_course']);
-// echo '</pre>';
 $current_course = $data['current_course'];
 
 $subjects = $subject_api->get_controller()->get_all_subjects();
@@ -27,20 +25,38 @@ foreach ($subjects as $subject) {
         $subject_name = $subject['name'];
     }
 }
+
+$hide_card = false;
+// If user == 'Student' and found enrollment with $user_id and $current_course => true
+// If user_role == 'Teacher' or user+role == 'Admin'
+if ($this -> get_user_role() == 'Teacher' || $this -> get_user_role() == 'Admin') {
+    $hide_card = true;
+}
+$enrollments = $enrollment_api->get_controller()->get_all_course_enrollment();
+foreach($enrollments as $enrollment) {
+    if ($enrollment['student_id'] == $this -> get_user_id() && $enrollment['course_id'] == $current_course['id']) {
+        $hide_card = true;
+    }
+}
+
 ?>
 
 <div class="container">
     <div class="page-inner">
         <h3 class="fw-bold mb-3">Thông tin khóa học</h3>
         <div class="row">
-            <div class="col-md-8">
+            <div class="<?php if ($hide_card) {
+                echo 'col-md-12';
+            } else {
+                echo 'col-md-8';
+            } ?>">
                 <div class="card card-with-nav">
                     <div class="card-header">
                         <div class="row row-nav-line">
                             <ul class="nav nav-tabs nav-line nav-color-secondary w-100 ps-4" role="tablist">
                                 <li class="nav-item submenu" role="presentation"> <a class="nav-link show active" data-bs-toggle="tab" href="#info-tab" id="li-info-tab" role="tab" aria-selected="true">Giới thiệu</a> </li>
                                 <li class="nav-item submenu" role="presentation"> <a class="nav-link" data-bs-toggle="tab" href="#feedback-tab" role="tab" id="li-feedback-tab" aria-selected="false" tabindex="-1">Đánh giá</a> </li>
-                                <li class="nav-item submenu" role="presentation"> <a class="nav-link" data-bs-toggle="tab" href="#profile" role="tab" aria-selected="false" tabindex="-1">Bài học</a> </li>
+                                <li class="nav-item submenu" role="presentation"> <a class="nav-link" data-bs-toggle="tab" href="#lesson-tab" role="tab" id="li-lesson-tab" aria-selected="false" tabindex="-1">Bài học</a> </li>
                                 <li class="nav-item submenu" role="presentation"> <a class="nav-link" data-bs-toggle="tab" href="#settings" role="tab" aria-selected="false" tabindex="-1">Tài liệu</a> </li>
                             </ul>
                         </div>
@@ -48,10 +64,12 @@ foreach ($subjects as $subject) {
                     <div class="tab-content mt-4 mb-3" id="pills-without-border-tabContent">
                         <?php require __DIR__ . '/tabs/info_tab.php' ?>
                         <?php require __DIR__ . '/tabs/feedback_tab.php' ?>
+                        <?php require __DIR__ . '/tabs/lesson_tab.php' ?>
 
                     </div>
                 </div>
             </div>
+            <?php if (!$hide_card): ?>
             <div class="col-md-4 mb-4">
                 <div class="card">
                     <div class="card-body">
@@ -86,6 +104,7 @@ foreach ($subjects as $subject) {
                     </div>
                 </div>
             </div>
+            <?php endif ?>
         </div>
     </div>
 </div>

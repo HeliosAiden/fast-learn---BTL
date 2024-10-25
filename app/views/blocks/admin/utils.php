@@ -29,3 +29,6 @@
 
 <!-- Kaiadmin JS -->
 <script src="<?php echo _WEB_ROOT ?>/public/assets/admin/js/kaiadmin.min.js"></script>
+
+<!-- Magnific popup -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
