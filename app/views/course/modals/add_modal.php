@@ -33,7 +33,6 @@
                     <label for="course_add_teacher_id" class="form-label">Giáo viên đứng lớp<span class="text-danger">*</span></label>
                     <select class="form-select" id="course_add_teacher_id" name="course_add_teacher_id" required>
                         <option value="" disabled selected>Chỉ định 1 giáo viên</option>
-
                     </select>
                 </div>
 
@@ -57,6 +56,18 @@
                     <div class="col-md-6">
                         <label for="course_add_end_date" class="form-label">Ngày kết thúc</label>
                         <input type="date" class="form-control" id="course_add_end_date" name="course_add_end_date">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div id="uploadInput" class="input-group mt-2">
+                        <input type="file" class="form-control" id="imageUpload" accept="image/*" style="display: none;">
+                        <label for="uploadImg" id="uploadBtn" class="label-input-file btn btn-black btn-round me-2">
+                            <span class="btn-label">
+                                <i class="fa fa-file-image"></i>
+                            </span>
+                            Tải ảnh bìa của khóa học
+                        </label>
+                        <div id="imageName" class="mt-3"></div>
                     </div>
                 </div>
             </div>
@@ -149,48 +160,111 @@
         let teacher_id = document.getElementById("course_add_teacher_id").value;
         let start_date = document.getElementById("course_add_start_date").value;
         let end_date = document.getElementById("course_add_end_date").value;
+        let fileInput = document.getElementById('imageUpload');
 
-        var data = {
-            name: name,
-            description: description ?? '',
-            fee: fee ?? 0,
-            subject_id: subject_id,
-            teacher_id: teacher_id,
-            start_date: start_date ?? null,
-            end_date: end_date ?? null,
-        };
+        let url = 'app/apis/course.php'
 
-        let endpoint = 'app/apis/course.php'
-        const response = await httpMixin.postMixin(endpoint, data)
-        if (response.status == 'success') {
-            swal({
-                title: "Thêm môn học thành công!",
-                icon: "success",
-                buttons: {
-                    confirm: {
-                        text: "Xác nhận",
-                        value: true,
-                        visible: true,
-                        className: "btn btn-success",
-                        closeModal: true,
+        console.log(fileInput.files.length)
+
+
+        if (fileInput.files.length > 0) {
+            const formData = new FormData();
+            formData.append('uploaded_file', fileInput.files[0]);
+            formData.append('name', name);
+            formData.append('description', description ?? '');
+            formData.append('subject_id', subject_id);
+            formData.append('teacher_id', teacher_id);
+            formData.append('fee', fee ?? 0);
+            formData.append('start_date', start_date ?? null);
+            formData.append('end_date', end_date ?? null);
+
+            const response = await httpMixin.postMixin(url, formData)
+            if (response.status == 'success') {
+                swal({
+                    title: "Thêm bài học thành công!",
+                    icon: "success",
+                    buttons: {
+                        confirm: {
+                            text: "Xác nhận",
+                            value: true,
+                            visible: true,
+                            className: "btn btn-success",
+                            closeModal: true,
+                        },
                     },
-                },
-            });
-            closeAddModal()
-            window.location.reload()
+                });
+                closeAddLessonModal()
+                window.location.reload()
+            } else {
+                swal(response.message ?? "Thêm bài học thất bại!", {
+                    icon: "error",
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-danger",
+                            closeModal: true,
+                            visible: true
+                        },
+                    },
+                });
+            }
         } else {
-            swal(response.message ?? "Thêm môn học thất bại!", {
-                icon: "error",
-                buttons: {
-                    confirm: {
-                        className: "btn btn-danger",
-                        closeModal: true,
-                        visible: true
+            var data = {
+                name: name,
+                description: description ?? '',
+                fee: fee ?? 0,
+                subject_id: subject_id,
+                teacher_id: teacher_id,
+                start_date: start_date ?? null,
+                end_date: end_date ?? null,
+            };
+            const response = await httpMixin.postMixin(url, data)
+            if (response.status == 'success') {
+                swal({
+                    title: "Thêm môn học thành công!",
+                    icon: "success",
+                    buttons: {
+                        confirm: {
+                            text: "Xác nhận",
+                            value: true,
+                            visible: true,
+                            className: "btn btn-success",
+                            closeModal: true,
+                        },
                     },
-                },
-            });
+                });
+                closeAddModal()
+                window.location.reload()
+            } else {
+                swal(response.message ?? "Thêm môn học thất bại!", {
+                    icon: "error",
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-danger",
+                            closeModal: true,
+                            visible: true
+                        },
+                    },
+                });
+            }
         }
     }
+
+    const uploadBtn = document.getElementById('uploadBtn');
+    const fileInput = document.getElementById('imageUpload');
+    const fileNameDisplay = document.getElementById('imageName');
+
+    uploadBtn.addEventListener('click', function() {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', function() {
+        const file = fileInput.files[0];
+        if (file) {
+            fileNameDisplay.textContent = `Ảnh được chọn: ${file.name}`;
+        } else {
+            fileNameDisplay.textContent = 'Không có ảnh nào được chọn';
+        }
+    });
 
     document.getElementById('open_add_modal').addEventListener('click', openAddModal)
     document.querySelectorAll('.close_add_modal').forEach(btn => {

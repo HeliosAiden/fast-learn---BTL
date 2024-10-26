@@ -48,11 +48,11 @@
     <div class="main-panel">
       <?php $this -> render('blocks/admin/main_header') ?>
       <?php
-      if ($data['dir'] == 'home/index') {
-        $this -> render('blocks/admin/main_container');
-      } else {
-        $this->render($data['dir'], $data);
-      };
+      // if ($data['dir'] == 'home/index') {
+      //   $this -> render('blocks/admin/main_container');
+      // } else {
+      // };
+      $this->render($data['dir'], $data);
       ?>
       <?php $this -> render('blocks/admin/main_footer') ?>
     </div>

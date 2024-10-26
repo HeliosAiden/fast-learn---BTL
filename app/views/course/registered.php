@@ -4,6 +4,7 @@ require_once _DIR_ROOT . '/app/apis/Api.php';
 $teacher_api = new Api('User');
 $subject_api = new Api('Subject');
 $enrollment_api = new API('CourseEnrollment');
+$file_api = new API('File');
 
 $courses = $this->get_all_courses();
 
@@ -67,10 +68,15 @@ $user_role = $this->get_user_role();
                                             $subject_name = $subject['name'];
                                         }
                                     }
+                                    $image_path = '/public/assets/images/software-engineering.jpg';
+                                    if (isset($course['file_id'])) {
+                                        $file_obj = $file_api -> get_controller() -> retrieve_file($course['file_id']);
+                                        $image_path = $file_obj['file_path'];
+                                    }
                                     echo '
                                         <div class="col-md-4 mb-4">
                                             <div class="position-relative overflow-hidden">
-                                                <img class="img-fluid" src="' . _WEB_ROOT . '/app/uploads/images/courses/default.png" alt="default-image" style="object-fit:cover; width:100%">
+                                                <img class="img-fluid" src="' . _WEB_ROOT . $image_path . '" alt="default-image" style="object-fit:cover; width:100%">
                                                 <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
                                                     <a href="' . _WEB_ROOT . '/khoa-hoc/chi-tiet/' . $course['id'] . '" class="flex-shrink-0 btn btn-md btn-success px-3 border-end" style="border-radius: 30px">Vào học</a>
                                                 </div>
@@ -121,10 +127,15 @@ $user_role = $this->get_user_role();
                                         $subject_name = $subject['name'];
                                     }
                                 }
+                                $image_path = '/public/assets/images/software-engineering.jpg';
+                                if (isset($course['file_id'])) {
+                                    $file_obj = $file_api -> get_controller() -> retrieve_file($course['file_id']);
+                                    $image_path = $file_obj['file_path'];
+                                }
                                 echo '
                                     <div class="col-md-4 mb-4">
                                             <div class="position-relative overflow-hidden">
-                                                <img class="img-fluid" src="' . _WEB_ROOT . '/app/uploads/images/courses/default.png" alt="default-image" style="object-fit:cover; width:100%">
+                                                <img class="img-fluid" src="' . _WEB_ROOT . $image_path . '" alt="default-image" style="object-fit:cover; width:100%">
                                                 <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
                                                     <a href="' . _WEB_ROOT . '/khoa-hoc/chi-tiet/' . $course['id'] . '" class="flex-shrink-0 btn btn-md btn-success px-3 border-end" style="border-radius: 30px">Vào học</a>
                                                 </div>
@@ -164,6 +175,35 @@ $user_role = $this->get_user_role();
 <?php endif ?>
 <?php if ($user_role == 'Teacher'):  ?>
     <div class="container">
+        <?php require_once __DIR__ . '/modals/edit_modal.php' ?>
+        <script>
+            function openEditModal(button) {
+                let course_id = button.getAttribute('data-course-id')
+                let course_name = button.getAttribute('data-course-name')
+                let course_description = button.getAttribute('data-course-description')
+                let course_fee = button.getAttribute('data-course-fee')
+                document.getElementById('edit_course_id').value = course_id
+                document.getElementById('edit_course_name').value = course_name
+                document.getElementById('edit_course_description').value = course_description
+                document.getElementById('edit_course_fee').value = course_fee
+
+                const modal = new bootstrap.Modal(document.getElementById('edit-course-modal'));
+                modal.show()
+            }
+        </script>
+        <?php require_once __DIR__ . '/modals/delete_modal.php' ?>
+        <script>
+            function openDeleteModal(button) {
+                let course_id = button.getAttribute('data-course-id')
+                let course_name = button.getAttribute('data-course-name')
+                let subject_name = button.getAttribute('data-subject-name')
+                document.getElementById('delete_course_id').value = course_id
+                document.getElementById('delete_course_name').innerHTML = course_name
+                document.getElementById('delete_course_subject_name').innerHTML = subject_name
+                const modal = new bootstrap.Modal(document.getElementById('delete-course-modal'));
+                modal.show()
+            }
+        </script>
         <div class="page-inner">
             <div class="card">
                 <div class="card-header">
@@ -208,10 +248,25 @@ $user_role = $this->get_user_role();
                                                     <button
                                                         type="button"
                                                         data-bs-toggle="tooltip"
-                                                        class="btn btn-link btn-danger btn-lg"
-                                                        data-original-title="Enable user"
+                                                        class="btn btn-link btn-primary btn-lg"
+                                                        data-original-title="Edit course"
                                                         data-course-id="' . $row['id'] . '"
-                                                        onclick="testButton(this)"
+                                                        data-course-name="' . $row['name'] . '"
+                                                        data-course-description="' . $row['description'] . '"
+                                                        data-course-fee="' . $row['fee'] . '"
+                                                        onclick="openEditModal(this)"
+                                                        >
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        data-bs-toggle="tooltip"
+                                                        class="btn btn-link btn-danger btn-lg"
+                                                        data-original-title="Delete course"
+                                                        data-course-id="' . $row['id'] . '"
+                                                        data-course-name="' . $row['name'] . '"
+                                                        data-subject-name="' . $subject_name . '"
+                                                        onclick="openDeleteModal(this)"
                                                         >
                                                         <i class="fas fa-times"></i>
                                                     </button>
@@ -230,3 +285,11 @@ $user_role = $this->get_user_role();
         </div>
     </div>
 <?php endif ?>
+<script>
+    $(document).ready(function() {
+        // Add Row
+        $("#courses-table").DataTable({
+            pageLength: 5,
+        });
+    });
+</script>

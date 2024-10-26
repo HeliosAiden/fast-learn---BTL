@@ -4,6 +4,7 @@ require_once _DIR_ROOT . '/app/apis/Api.php';
 $teacher_api = new Api('User');
 $subject_api = new Api('Subject');
 $enrollment_api = new API('CourseEnrollment');
+$file_api = new API('File');
 
 $current_course = $data['current_course'];
 
@@ -55,9 +56,11 @@ foreach($enrollments as $enrollment) {
                         <div class="row row-nav-line">
                             <ul class="nav nav-tabs nav-line nav-color-secondary w-100 ps-4" role="tablist">
                                 <li class="nav-item submenu" role="presentation"> <a class="nav-link show active" data-bs-toggle="tab" href="#info-tab" id="li-info-tab" role="tab" aria-selected="true">Giới thiệu</a> </li>
-                                <li class="nav-item submenu" role="presentation"> <a class="nav-link" data-bs-toggle="tab" href="#feedback-tab" role="tab" id="li-feedback-tab" aria-selected="false" tabindex="-1">Đánh giá</a> </li>
+                                <li class="nav-item submenu" role="presentation"> <a class="nav-link" data-bs-toggle="tab" href="#feedback-tab" role="tab" id="li-feedback-tab" aria-selected="false" tabindex="-1">Đánh giá</a></li>
+                                <?php if($hide_card) : ?>
                                 <li class="nav-item submenu" role="presentation"> <a class="nav-link" data-bs-toggle="tab" href="#lesson-tab" role="tab" id="li-lesson-tab" aria-selected="false" tabindex="-1">Bài học</a> </li>
                                 <li class="nav-item submenu" role="presentation"> <a class="nav-link" data-bs-toggle="tab" href="#settings" role="tab" aria-selected="false" tabindex="-1">Tài liệu</a> </li>
+                                <?php endif ?>
                             </ul>
                         </div>
                     </div>
@@ -74,7 +77,15 @@ foreach($enrollments as $enrollment) {
                 <div class="card">
                     <div class="card-body">
                         <div class="position-relative overflow-hidden">
-                            <img class="img-fluid" src="<?php echo _WEB_ROOT ?>/app/uploads/images/courses/default.png" alt="default-image" style="object-fit:cover; width:100%">
+                            <?php
+                            $image_path = '/app/uploads/images/courses/default.png';
+                            if(isset($current_course['file_id'])) {
+                                $file_obj = $file_api -> get_controller() -> retrieve_file($current_course['file_id']);
+                                $image_path = $file_obj['file_path'];
+                            }
+                            echo '<img class="img-fluid" src="' . _WEB_ROOT . $image_path .'" alt="course-image" style="object-fit:cover; width:100%">'
+                            ?>
+
                         </div>
                         <div class="text-center p-4 pb-0">
                             <h3 class="mb-0"><?php echo number_format($current_course['fee'], 0, '.', ',') ?> VNĐ</h3>

@@ -103,7 +103,6 @@ class User extends Controller
         $user_id = $this->__model->register($data['username'], $data['password'], $data['email'], $data['role']);
         if ($user_id) {
             if ($data['role'] == 'Student') {
-                // echo json_encode($user_id);
                 $this->active_user($user_id);
             }
             $this->jsonResponse([

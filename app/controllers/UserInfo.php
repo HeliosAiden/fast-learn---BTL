@@ -46,7 +46,12 @@ class UserInfo extends Controller
             $data['about'] ?? '',
         );
         if ($user_info_id) {
-            return $user_info_id;
+            $this->jsonResponse(
+                [
+                    'status' => 'success',
+                    'message' => 'Created user info successfully',
+                ]
+            );
         } else {
             $this->errorResponse('Create new user info fail');
         }

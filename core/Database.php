@@ -71,7 +71,7 @@ class Database
             }, array_keys($exeption)));
         }
         $stmt = $this->query($sql, array_merge($conditions, $exeption));
-        return $stmt->rowCount() > 0 ? $stmt->fetchAll(PDO::FETCH_ASSOC) : null;  // Fetch the results
+        return $stmt->rowCount() > 0 ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];  // Fetch the results
     }
 
     /**
@@ -83,14 +83,14 @@ class Database
      * @param array $data The data array of key and value pairs.
      * @return string The uuid of the last insert element
      */
-    function insert($table, $data, $primaryKey = 'id') {
+    function insert($table, $data) {
         $columns = implode(',', array_keys($data));
         $placeholders = ':' . implode(', :', array_keys($data));
         $sql = "INSERT INTO $table ($columns) VALUES ($placeholders)";
 
         $stmt = $this->query($sql, $data);
 
-        return $stmt->rowCount() > 0 ? $this->getLastInsertId($table, $primaryKey) : null;;
+        return $stmt->rowCount() > 0 ? $this->getLastInsertId($table) : null;;
     }
 
     /**

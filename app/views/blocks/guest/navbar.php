@@ -67,7 +67,6 @@
             <a href="<?php echo _WEB_ROOT ?>/" class="nav-item nav-link active">Trang chủ</a>
             <a href="<?php echo _WEB_ROOT ?>/gioi-thieu/" class="nav-item nav-link">Giới thiệu</a>
             <a href="<?php echo _WEB_ROOT ?>/cac-khoa-hoc/" class="nav-item nav-link">Các khóa học</a>
-            <a href="<?php echo _WEB_ROOT ?>/lien-he/" class="nav-item nav-link">Liên hệ</a>
         </div>
         <a href="<?php echo _WEB_ROOT ?>/dang-nhap/" class="btn btn-login me-2 h-42">Đăng nhập</a>
         <a href="<?php echo _WEB_ROOT ?>/dang-ky/" class="btn btn-register h-42">Đăng ký</a>

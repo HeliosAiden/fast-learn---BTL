@@ -61,7 +61,7 @@
                     <div class="position-relative overflow-hidden">
                         <img class="img-fluid" src="<?php echo _WEB_ROOT; ?>/public/assets/images/git.png" alt="">
                         <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
-                            <a href="<?php echo _WEB_ROOT; ?>/dang-ky/" class="flex-shrink-0 btn btn-sm btn-primary px-3 border-end" style="border-radius: 30px 0 0 30px;">Tham gia ngay</a>
+                            <a href="<?php echo _WEB_ROOT; ?>/dang-ky/" class="flex-shrink-0 btn btn-sm btn-primary px-3 border-end" style="border-radius: 30px;">Tham gia ngay</a>
                         </div>
                     </div>
                     <div class="text-center p-4 pb-0">
