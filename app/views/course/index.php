@@ -1,5 +1,5 @@
 <?php
-require_once _DIR_ROOT . '/app/apis/Api.php';
+require _DIR_ROOT . '/app/apis/Api.php';
 
 $teacher_api = new Api('User');
 $subject_api = new Api('Subject');

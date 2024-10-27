@@ -44,7 +44,7 @@ class Database
      * @param array $exeption The exeption to not get selected row(s).
      * @return array Rows selected
      */
-    public function select($table, $conditions = [], $keys = [], $exeption = []) {
+    public function select($table, $conditions = [], $keys = [], $exeptions = [], $order_by = [], $limit=0) {
         $sql = "SELECT * FROM $table";
         if (!empty($keys)) {
             $key_str = '';
@@ -59,7 +59,7 @@ class Database
                 return "$key = :$key";
             }, array_keys($conditions)));
         }
-        if (!empty($exeption)) {
+        if (!empty($exeptions)) {
             if (!empty($conditions)) {
                 $sql .= ' AND ';
             } else {
@@ -68,9 +68,16 @@ class Database
             }
             $sql .= implode(' AND ', array_map(function ($key) {
                 return "$key != :$key";
-            }, array_keys($exeption)));
+            }, array_keys($exeptions)));
         }
-        $stmt = $this->query($sql, array_merge($conditions, $exeption));
+        if (!empty($order_by)) {
+            $order_str = is_array($order_by) ? implode(', ', $order_by) : $order_by;
+            $sql .= " ORDER BY $order_str";
+        }
+        if ($limit !== 0) {
+            $sql .= " LIMIT $limit";
+        }
+        $stmt = $this->query($sql, array_merge($conditions, $exeptions));
         return $stmt->rowCount() > 0 ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];  // Fetch the results
     }
 

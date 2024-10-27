@@ -150,7 +150,10 @@ class User extends Controller
 
     public function retrieve_user($user_id)
     {
-        $response = $this->__model->select_all($user_id);
+        $row = $this->__model->select_condition(['id' => $user_id], ['id', 'username', 'email', 'state', 'role']);
+        if (!empty($row)) {
+            return $row[0];
+        }
     }
 
     public function update_user_info($user_info_id)
@@ -174,8 +177,8 @@ class User extends Controller
         return $this->__model->get_current_user_password_hash($user_id);
     }
 
-    public function get_users_with_condition($condition = [], $keys = [], $exeption = [])
+    public function get_users_with_condition($condition = [], $keys = [], $exeptions = [], $order_by = [], $limit=0 )
     {
-        return $this->__model->select_condition($condition, $keys, $exeption);
+        return $this->__model->select_condition($condition, $keys, $exeptions, $order_by, $limit);
     }
 }

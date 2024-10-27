@@ -9,9 +9,30 @@ class UserInfo extends Controller
 
     public function index()
     {
-        $all_user_infos = $this->__model->select_all();
         $page_dir = $this->get_page_dir(__FUNCTION__);
-        $page_data = $this->get_page_data("Thông tin người dùng", $page_dir, ['all_user_infos' => $all_user_infos]);
+        $page_data = $this->get_page_data("Thông tin người dùng", $page_dir);
+        $this->render_layout('admin', $page_data);
+        return $page_data;
+    }
+
+    public function detail($id) {
+        $all_user_infos = $this->__model->select_all();
+        $current_user_info = null;
+        if (!empty($all_user_infos)) {
+            foreach ($all_user_infos as $user_info) {
+                if ($user_info['user_id'] == $id) {
+                    $current_user_info = $user_info;
+                }
+            }
+        }
+        require _DIR_ROOT . '/app/apis/Api.php';
+        $user_api = new Api('User');
+        $current_user = $user_api -> get_controller() -> retrieve_user($id);
+        if (!isset($current_user)) {
+            return null;
+        }
+        $page_dir = $this->get_page_dir(__FUNCTION__);
+        $page_data = $this->get_page_data("Thông tin người dùng", $page_dir, ['current_user_info' => $current_user_info, 'current_user' => $current_user]);
         $this->render_layout('admin', $page_data);
         return $page_data;
     }

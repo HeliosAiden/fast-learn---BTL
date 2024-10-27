@@ -85,9 +85,9 @@ switch ($user_state) {
                         <div class="form-group form-group-default">
                             <label>Giới tính</label>
                             <select class="form-select" id="gender" value="<?php echo $user_info['gender'] ?? '' ?>">
-                                <option value="Male" <?= ($user_info['gender'] == 'Male') ? 'selected' : '' ?>>Nam</option>
-                                <option value="Female" <?= ($user_info['gender'] == 'Female') ? 'selected' : '' ?>>Nữ</option>
-                                <option value="Others" <?= ($user_info['gender'] == 'Others') ? 'selected' : '' ?>>Khác</option>
+                                <option value="Male" <?= (isset($user_info['gender']) && $user_info['gender'] == 'Male') ? 'selected' : '' ?>>Nam</option>
+                                <option value="Female" <?= (isset($user_info['gender']) && $user_info['gender'] == 'Female') ? 'selected' : '' ?>>Nữ</option>
+                                <option value="Others" <?= (isset($user_info['gender']) &&$user_info['gender'] == 'Others') ? 'selected' : '' ?>>Khác</option>
                             </select>
                         </div>
                     </div>

@@ -17,6 +17,8 @@
     $routes['cac-khoa-hoc'] = 'home/courses';
     $routes['gioi-thieu'] = 'home/about';
     $routes['lien-he'] = 'home/contact';
+    $routes['thong-tin-ca-nhan'] = 'userinfo';
+    $routes['thong-tin-ca-nhan/chi-tiet'] = 'userinfo/detail';
 
     // $routes['tin-tuc/(.+)'] = 'news/category/$1'; // tin-tuc/1
     // $routes['tin-tuc/.+-(\d+).html'] = 'news/category/$1'; // tin-tuc/1

@@ -7,10 +7,18 @@
     ?>
 <?php else: ?>
     <?php if ($this->get_user_role() == 'Student'): ?>
-
+        <?php
+        require _DIR_ROOT . '/app/apis/Api.php';
+        $course_api = new Api('Course');
+        $course_api->get_controller()->render('/course/registered')
+        ?>
     <?php endif ?>
     <?php if ($this->get_user_role() == 'Teacher'): ?>
-
+        <?php
+        require _DIR_ROOT . '/app/apis/Api.php';
+        $course_api = new Api('Course');
+        $course_api->get_controller()->render('/course/registered')
+        ?>
     <?php endif ?>
     <?php if ($this->get_user_role() == 'Admin'): ?>
         <?php
