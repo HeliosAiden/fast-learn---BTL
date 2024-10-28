@@ -63,7 +63,6 @@
         }
         let id = document.getElementById('active-modal-value').value
         const response = await httpMixin.putMixin(url, data, id)
-        console.log(response)
         if (response.status == 'success') {
             swal({
                 title: "Thay đổi trạng thái của người dùng thành công!",

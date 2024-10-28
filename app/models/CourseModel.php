@@ -8,20 +8,31 @@ class CourseModel extends Model
         $this->init_table_id();
     }
 
-    function create_course($name, $subject_id, $teacher_id, $description=null, $fee=0, $start_date=null, $end_date=null) {
+    function create_course($name, $subject_id, $teacher_id, $description=null, $fee=0, $start_date=null, $end_date=null, $file_id=null) {
         $data = [
             'name' => $name,
-            'description' => $description,
-            'fee' => $fee,
             'subject_id' => $subject_id,
             'teacher_id' => $teacher_id,
-            'start_date' => $start_date,
-            'end_date' => $end_date,
         ];
+        if (isset($description)) {
+            $data['description'] = $description;
+        }
+        if (isset($fee)) {
+            $data['fee'] = $fee;
+        }
+        if (isset($start_date)) {
+            $data['start_date'] = $start_date;
+        }
+        if (isset($end_date)) {
+            $data['end_date'] = $end_date;
+        }
+        if (isset($file_id)) {
+            $data['file_id'] = $file_id;
+        }
         return $this -> db -> insert($this->__table, $data);
     }
 
-    function update_course($id, $teacher_id=null, $name=null, $description=null, $fee=null, $start_date=null, $end_date=null, $subject_id=null) {
+    function update_course($id, $teacher_id=null, $name=null, $description=null, $fee=null, $start_date=null, $end_date=null, $subject_id=null, $file_id=null) {
         $data = [];
         if (isset($teacher_id)) {
             $data['teacher_id'] = $teacher_id;
@@ -43,6 +54,9 @@ class CourseModel extends Model
         }
         if (isset($subject_id)) {
             $data['subject_id'] = $subject_id;
+        }
+        if (isset($file_id)) {
+            $data['file_id'] = $file_id;
         }
         $condition = [
             'id' => $id

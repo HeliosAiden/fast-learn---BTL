@@ -64,7 +64,7 @@ class CourseLesson extends Controller
                 $this->errorResponse('Can not recognize the file ID');
             }
 
-            $course_lesson_id = $this->__model->create_course_lesson($_POST['name'], $_POST['course_id'], $index, $file_id, null, $data['description'] ?? '');
+            $course_lesson_id = $this->__model->create_course_lesson($_POST['name'], $_POST['course_id'], $index, $file_id, null, $_POST['description'] ?? '');
             if ($course_lesson_id) {
                 $course_lesson_data = [
                     'file_id' => $file_id,

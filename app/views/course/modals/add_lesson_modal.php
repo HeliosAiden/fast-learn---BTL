@@ -17,7 +17,7 @@
 
                 <!-- Lesson Description (Optional) -->
                 <div class="mb-3">
-                    <label for="lesson_add_description" class="form-label">Mô tả khóa học</label>
+                    <label for="lesson_add_description" class="form-label">Mô tả bài học</label>
                     <textarea class="form-control" id="lesson_add_description" name="lesson_add_description" rows="3"></textarea>
                 </div>
 
@@ -25,7 +25,7 @@
                 <div class="mb-3">
                     <div class="form-group">
 
-                        <label for="lesson_add_description" class="form-label">Tải lên video hoặc nhập đường link</label>
+                        <label for="lesson_add_url" class="form-label">Tải lên video hoặc nhập đường link</label>
                         <div class="selectgroup w-100 mb-2">
                             <label class="selectgroup-item">
                                 <input type="radio" name="videoInputType" id="uploadVideo" autocomplete="off" class="selectgroup-input" checked>
@@ -114,8 +114,6 @@
         const description = document.getElementById('lesson_add_description').value;
         const course_id = '<?php echo $current_course['id'] ?>';
         let url = 'app/apis/course_lesson.php';
-
-        const formData = new FormData();
 
         const fileInput = document.getElementById('videoUpload');
 
@@ -220,9 +218,9 @@
         fileInput.addEventListener('change', function() {
             const file = fileInput.files[0];
             if (file) {
-                fileNameDisplay.textContent = `Selected file: ${file.name}`;
+                fileNameDisplay.textContent = `Video được chọn: ${file.name}`;
             } else {
-                fileNameDisplay.textContent = 'No file selected';
+                fileNameDisplay.textContent = 'Không có video nào được chọn';
             }
         });
 

@@ -44,7 +44,7 @@ class Database
      * @param array $exeption The exeption to not get selected row(s).
      * @return array Rows selected
      */
-    public function select($table, $conditions = [], $keys = [], $exeption = []) {
+    public function select($table, $conditions = [], $keys = [], $exeptions = [], $order_by = [], $limit=0) {
         $sql = "SELECT * FROM $table";
         if (!empty($keys)) {
             $key_str = '';
@@ -59,7 +59,7 @@ class Database
                 return "$key = :$key";
             }, array_keys($conditions)));
         }
-        if (!empty($exeption)) {
+        if (!empty($exeptions)) {
             if (!empty($conditions)) {
                 $sql .= ' AND ';
             } else {
@@ -68,10 +68,17 @@ class Database
             }
             $sql .= implode(' AND ', array_map(function ($key) {
                 return "$key != :$key";
-            }, array_keys($exeption)));
+            }, array_keys($exeptions)));
         }
-        $stmt = $this->query($sql, array_merge($conditions, $exeption));
-        return $stmt->rowCount() > 0 ? $stmt->fetchAll(PDO::FETCH_ASSOC) : null;  // Fetch the results
+        if (!empty($order_by)) {
+            $order_str = is_array($order_by) ? implode(', ', $order_by) : $order_by;
+            $sql .= " ORDER BY $order_str";
+        }
+        if ($limit !== 0) {
+            $sql .= " LIMIT $limit";
+        }
+        $stmt = $this->query($sql, array_merge($conditions, $exeptions));
+        return $stmt->rowCount() > 0 ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];  // Fetch the results
     }
 
     /**
@@ -83,14 +90,14 @@ class Database
      * @param array $data The data array of key and value pairs.
      * @return string The uuid of the last insert element
      */
-    function insert($table, $data, $primaryKey = 'id') {
+    function insert($table, $data) {
         $columns = implode(',', array_keys($data));
         $placeholders = ':' . implode(', :', array_keys($data));
         $sql = "INSERT INTO $table ($columns) VALUES ($placeholders)";
 
         $stmt = $this->query($sql, $data);
 
-        return $stmt->rowCount() > 0 ? $this->getLastInsertId($table, $primaryKey) : null;;
+        return $stmt->rowCount() > 0 ? $this->getLastInsertId($table) : null;;
     }
 
     /**

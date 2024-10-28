@@ -90,8 +90,8 @@ class Controller
 
             $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt'];
 
+            $file_category = 'others';
             if (in_array($file_extension, $allowedExtensions)) {
-                $file_category = 'others';
 
                 switch ($file_extension) {
                     case 'jpg':

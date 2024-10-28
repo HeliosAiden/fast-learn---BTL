@@ -85,9 +85,6 @@ class UserModel extends Model
             'id' => $user_id
         ];
         $response = $this -> db -> update($this -> __table, $data, $condition);
-        if (!$response) {
-            echo 'Activate user failed!';
-        }
     }
 
     public function get_current_user_password_hash($user_id) {
