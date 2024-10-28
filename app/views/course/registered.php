@@ -5,6 +5,7 @@ $teacher_api = new Api('User');
 $subject_api = new Api('Subject');
 $enrollment_api = new API('CourseEnrollment');
 $file_api = new API('File');
+$feedback_api = new API('CourseFeedback');
 
 $courses = $this->get_all_courses();
 
@@ -30,6 +31,17 @@ if (!empty($enrollments)) {
 $user_role = $this->get_user_role();
 
 ?>
+<style>
+    .star {
+        font-size: 2rem;
+        color: #ccc;
+        cursor: pointer;
+    }
+
+    .star.selected {
+        color: gold;
+    }
+</style>
 <?php if ($user_role == 'Student'): ?>
     <div class="container">
         <div class="page-inner">
@@ -70,9 +82,10 @@ $user_role = $this->get_user_role();
                                     }
                                     $image_path = '/public/assets/images/software-engineering.jpg';
                                     if (isset($course['file_id'])) {
-                                        $file_obj = $file_api -> get_controller() -> retrieve_file($course['file_id']);
+                                        $file_obj = $file_api->get_controller()->retrieve_file($course['file_id']);
                                         $image_path = $file_obj['file_path'];
                                     }
+                                    $student_enrollments = $enrollment_api->get_controller()->get_course_enrollment_students($course['id']);
                                     echo '
                                         <div class="col-md-4 mb-4">
                                             <div class="position-relative overflow-hidden">
@@ -81,21 +94,42 @@ $user_role = $this->get_user_role();
                                                     <a href="' . _WEB_ROOT . '/khoa-hoc/chi-tiet/' . $course['id'] . '" class="flex-shrink-0 btn btn-md btn-success px-3 border-end" style="border-radius: 30px">Vào học</a>
                                                 </div>
                                             </div>
-                                            <div class="text-center p-4 pb-0">
-                                            <div class="mb-3">
-                                            <small class="fa fa-star text-primary"></small>
-                                            <small class="fa fa-star text-primary"></small>
-                                            <small class="fa fa-star text-primary"></small>
-                                            <small class="fa fa-star text-primary"></small>
-                                            <small class="fa fa-star text-primary"></small>
-                                            <small>(123)</small>
-                                            </div>
-                                            <h3 class="mb-2">' . $course['name'] . '</h3>
+                                            <div class="text-center p-4 pb-0">';
+
+                                    $course_feed_backs = $feedback_api->get_controller()->get_coursefeed_backs($course['id']);
+                                    if (!empty($course_feed_backs)) {
+                                        $stars = 0;
+                                        $sum = 0;
+                                        foreach ($course_feed_backs as $feedback) {
+                                            $sum += $feedback['rating'];
+                                        }
+                                        $total_rating = intdiv($sum, count($course_feed_backs));
+                                        $remaining_rating = 5 - empty($course_feed_backs) ? $total_rating : 0;
+
+                                        echo '
+                                                    <div class="mb-3">
+                                                    ';
+                                        for ($i = 0; $i < $total_rating; $i++) {
+                                            echo '<small class="fas fa-star star selected"></small>';
+                                        }
+                                        for ($j = 0; $j < $remaining_rating; $j++) {
+                                            echo '<small class="fas fa-star star"></small>';
+                                        }
+                                        echo '
+                                                    <small>(' . count($course_feed_backs) . ')</small>
+                                                    </div>
+                                                    ';
+                                    } else {
+                                        for ($j = 0; $j < 5; $j++) {
+                                            echo '<small class="fas fa-star star"></small>';
+                                        }
+                                    }
+                                    echo '<h3 class="mb-2">' . $course['name'] . '</h3>
                                             <h5 class="mb-4">' . $subject_name . '</h5>
                                             </div>
                                             <div class="d-flex border-top">
                                                 <small class="flex-fill text-center border-end py-2"><i class="fa fa-user-tie text-primary me-2"></i>' . $teacher_name . '</small>
-                                                <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>30 Students</small>
+                                                <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>' . count($student_enrollments) . ' Học viên</small>
                                             </div>
                                         </div>
                                         ';
@@ -129,7 +163,7 @@ $user_role = $this->get_user_role();
                                 }
                                 $image_path = '/public/assets/images/software-engineering.jpg';
                                 if (isset($course['file_id'])) {
-                                    $file_obj = $file_api -> get_controller() -> retrieve_file($course['file_id']);
+                                    $file_obj = $file_api->get_controller()->retrieve_file($course['file_id']);
                                     $image_path = $file_obj['file_path'];
                                 }
                                 echo '

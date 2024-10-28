@@ -5,6 +5,7 @@ $teacher_api = new Api('User');
 $subject_api = new Api('Subject');
 $enrollment_api = new API('CourseEnrollment');
 $file_api = new API('File');
+$feedback_api = new API('CourseFeedback');
 
 $courses = $this->get_all_courses();
 
@@ -36,7 +37,17 @@ if (empty($filtered_enrollments)) {
 
 
 ?>
+<style>
+    .star {
+        font-size: 2rem;
+        color: #ccc;
+        cursor: pointer;
+    }
 
+    .star.selected {
+        color: gold;
+    }
+</style>
 <?php if ($this->get_user_role() == 'Admin'): ?>
     <div class="container">
         <?php require_once __DIR__ . '/modals/edit_modal.php' ?>
@@ -217,9 +228,10 @@ if (empty($filtered_enrollments)) {
                                     }
                                     $image_path = '/public/assets/images/software-engineering.jpg';
                                     if (isset($course['file_id'])) {
-                                        $file_obj = $file_api -> get_controller() -> retrieve_file($course['file_id']);
+                                        $file_obj = $file_api->get_controller()->retrieve_file($course['file_id']);
                                         $image_path = $file_obj['file_path'];
                                     }
+                                    $student_enrollments = $enrollment_api->get_controller()->get_course_enrollment_students($course['id']);
                                     echo '
                                         <div class="col-md-4 mb-4">
                                             <div class="position-relative overflow-hidden">
@@ -231,19 +243,41 @@ if (empty($filtered_enrollments)) {
                                             </div>
                                             <div class="text-center p-4 pb-0">
                                                 <h3 class="mb-0">' . number_format($course['fee'], 0, '.', ',') . ' VNĐ</h3>
-                                                <div class="mb-3">
-                                                    <small class="fa fa-star text-primary"></small>
-                                                    <small class="fa fa-star text-primary"></small>
-                                                    <small class="fa fa-star text-primary"></small>
-                                                    <small class="fa fa-star text-primary"></small>
-                                                    <small class="fa fa-star text-primary"></small>
-                                                    <small>(123)</small>
-                                                </div>
-                                                <h5 class="mb-4">' . $course['name'] . '</h5>
+                                                ';
+                                    $course_feed_backs = $feedback_api->get_controller()->get_coursefeed_backs($course['id']);
+                                    if (!empty($course_feed_backs)) {
+                                        $stars = 0;
+                                        $sum = 0;
+                                        foreach ($course_feed_backs as $feedback) {
+                                            $sum += $feedback['rating'];
+                                        }
+                                        $total_rating = intdiv($sum, count($course_feed_backs));
+                                        $remaining_rating = 5 - empty($course_feed_backs) ? $total_rating : 0;
+
+                                        echo '
+                                                    <div class="mb-3">
+                                                    ';
+                                        for ($i = 0; $i < $total_rating; $i++) {
+                                            echo '<small class="fas fa-star star selected"></small>';
+                                        }
+                                        for ($j = 0; $j < $remaining_rating; $j++) {
+                                            echo '<small class="fas fa-star star"></small>';
+                                        }
+                                        echo '
+                                                    <small>(' . count($course_feed_backs) . ')</small>
+                                                    </div>
+                                                    ';
+                                    } else {
+                                        for ($j = 0; $j < 5; $j++) {
+                                            echo '<small class="fas fa-star star"></small>';
+                                        }
+                                    }
+
+                                    echo '  <h5 class="mb-4">' . $course['name'] . '</h5>
                                             </div>
                                             <div class="d-flex border-top">
                                                 <small class="flex-fill text-center border-end py-2"><i class="fa fa-user-tie text-primary me-2"></i>' . $teacher_name . '</small>
-                                                <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>30 Students</small>
+                                                <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>' . count($student_enrollments) . ' Học viên</small>
                                             </div>
                                         </div>
                                         ';
@@ -265,9 +299,10 @@ if (empty($filtered_enrollments)) {
                             foreach ($filtered_course as $course) {
                                 $image_path = '/public/assets/images/software-engineering.jpg';
                                 if (isset($course['file_id'])) {
-                                    $file_obj = $file_api -> get_controller() -> retrieve_file($course['file_id']);
+                                    $file_obj = $file_api->get_controller()->retrieve_file($course['file_id']);
                                     $image_path = $file_obj['file_path'];
                                 }
+                                $student_enrollments = $enrollment_api->get_controller()->get_course_enrollment_students($course['id']);
                                 echo '
                                     <div class="col-md-4 mb-4">
                                         <div class="position-relative overflow-hidden">
@@ -291,7 +326,7 @@ if (empty($filtered_enrollments)) {
                                         </div>
                                         <div class="d-flex border-top">
                                             <small class="flex-fill text-center border-end py-2"><i class="fa fa-user-tie text-primary me-2"></i>' . $teacher_name . '</small>
-                                            <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>30 Students</small>
+                                            <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>' . count($student_enrollments) . ' Học viên</small>
                                         </div>
                                     </div>
                                         ';

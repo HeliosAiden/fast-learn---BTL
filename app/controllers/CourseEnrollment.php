@@ -30,4 +30,8 @@ class CourseEnrollment extends Controller
     public function get_all_course_enrollment() {
         return $this -> __model -> select_all();
     }
+
+    public function get_course_enrollment_students($course_id) {
+        return $this -> __model -> select_condition(['course_id' => $course_id]);
+    }
 }

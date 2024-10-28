@@ -1,14 +1,14 @@
 <?php
 $course_feedback_api = new API('CourseFeedback');
 $student_feedback_api = $teacher_api = new Api('User');
-$all_course_feedbacks = $course_feedback_api->get_controller()->get_all_course_feedbacks();
+$course_feedbacks = $course_feedback_api->get_controller()->get_course_feedbacks($current_course['id']);
 
 $user_course_feedback = $course_feedback_api->get_controller()->get_course_feedback_from_user($current_course['id']);
 
 $students = $student_feedback_api->get_controller()->get_users_with_condition(['role' => 'Student'], ['id', 'username', 'email', 'state'], ['state' => 'Removed']);
 
 $user_id = $this->get_user_id();
-$students_course_feedbacks = array_filter($all_course_feedbacks, function ($feedback) use ($user_id) {
+$students_course_feedbacks = array_filter($course_feedbacks, function ($feedback) use ($user_id) {
     return $feedback['student_id'] !== $user_id;
 });
 
@@ -16,37 +16,6 @@ $students_course_feedbacks = array_slice($students_course_feedbacks, 0, 5)
 
 ?>
 
-<style>
-    .feedback-tab {
-        margin: 20px;
-    }
-
-    .feedback-form {
-        margin-bottom: 20px;
-    }
-
-    .star-rating {
-        display: flex;
-        gap: 5px;
-    }
-
-    .star {
-        font-size: 2rem;
-        color: #ccc;
-        cursor: pointer;
-    }
-
-    .star.selected {
-        color: gold;
-    }
-
-    .feedback-card {
-        border: 1px solid #ccc;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-    }
-</style>
 <div class="tab-pane fade" id="feedback-tab" role="tabpanel" aria-labelledby="li-feedback-tab">
     <div class="card-body">
         <div class="row mt-3">
@@ -105,7 +74,9 @@ $students_course_feedbacks = array_slice($students_course_feedbacks, 0, 5)
                     </div>
                 <?php endif ?>
             <?php endif ?>
+            <?php if(!empty($course_feedbacks)): ?>
             <h4 class="mb-3">Đánh giá của khóa học</h4>
+            <?php endif ?>
             <?php foreach ($students_course_feedbacks as $feedback) {
                 $student_username = 'Không xác định';
                 foreach ($students as $student) {

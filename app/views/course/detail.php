@@ -4,7 +4,9 @@ require_once _DIR_ROOT . '/app/apis/Api.php';
 $teacher_api = new Api('User');
 $subject_api = new Api('Subject');
 $enrollment_api = new API('CourseEnrollment');
+$lesson_api = new API('CourseLesson');
 $file_api = new API('File');
+$feedback_api = new API('CourseFeedback');
 
 $current_course = $data['current_course'];
 
@@ -27,21 +29,53 @@ foreach ($subjects as $subject) {
     }
 }
 
+$lessons = $lesson_api -> get_controller() -> get_lessons($current_course['id']);
+
 $hide_card = false;
 // If user == 'Student' and found enrollment with $user_id and $current_course => true
 // If user_role == 'Teacher' or user+role == 'Admin'
 if ($this -> get_user_role() == 'Teacher' || $this -> get_user_role() == 'Admin') {
     $hide_card = true;
 }
-$enrollments = $enrollment_api->get_controller()->get_all_course_enrollment();
-foreach($enrollments as $enrollment) {
-    if ($enrollment['student_id'] == $this -> get_user_id() && $enrollment['course_id'] == $current_course['id']) {
+$student_enrollments = $enrollment_api->get_controller() -> get_course_enrollment_students($current_course['id']);
+foreach($student_enrollments as $enrollment) {
+    if ($enrollment['student_id'] == $this -> get_user_id()) {
         $hide_card = true;
     }
 }
 
 ?>
+<style>
+    .feedback-tab {
+        margin: 20px;
+    }
 
+    .feedback-form {
+        margin-bottom: 20px;
+    }
+
+    .star-rating {
+        display: flex;
+        gap: 5px;
+    }
+
+    .star {
+        font-size: 2rem;
+        color: #ccc;
+        cursor: pointer;
+    }
+
+    .star.selected {
+        color: gold;
+    }
+
+    .feedback-card {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+</style>
 <div class="container">
     <div class="page-inner">
         <h3 class="fw-bold mb-3">Thông tin khóa học</h3>
@@ -83,6 +117,14 @@ foreach($enrollments as $enrollment) {
                                 $file_obj = $file_api -> get_controller() -> retrieve_file($current_course['file_id']);
                                 $image_path = $file_obj['file_path'];
                             }
+                            $course_feed_backs = $feedback_api -> get_controller() -> get_course_feedbacks($current_course['id']);
+                            $stars = 0;
+                            $sum = 0;
+                            foreach($course_feed_backs as $feedback) {
+                                $sum += $feedback['rating'];
+                            }
+                            $total_rating = intdiv($sum, count($course_feed_backs));
+                            $remaining_rating = 5 - $total_rating;
                             echo '<img class="img-fluid" src="' . _WEB_ROOT . $image_path .'" alt="course-image" style="object-fit:cover; width:100%">'
                             ?>
 
@@ -90,12 +132,15 @@ foreach($enrollments as $enrollment) {
                         <div class="text-center p-4 pb-0">
                             <h3 class="mb-0"><?php echo number_format($current_course['fee'], 0, '.', ',') ?> VNĐ</h3>
                             <div class="mb-3">
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small class="fa fa-star text-primary"></small>
-                                <small>(123)</small>
+                                <?php
+                                    for($i = 0; $i< $total_rating; $i++) {
+                                        echo '<small class="fas fa-star star selected"></small>';
+                                    }
+                                    for($j = 0; $j<$remaining_rating; $j++) {
+                                        echo '<small class="fas fa-star star"></small>';
+                                    }
+                                ?>
+                                <small>(<?php echo count($course_feed_backs) ?>)</small>
                             </div>
                             <h5 class="mb-4"><?php echo $current_course['name'] ?></h5>
                         </div>
@@ -104,12 +149,12 @@ foreach($enrollments as $enrollment) {
                     <div class="card-footer">
                         <div class="row user-stats text-center">
                             <div class="col">
-                                <div class="number">25</div>
+                                <div class="number"><?php echo count($lessons) ?></div>
                                 <div class="title">Bài học</div>
                             </div>
                             <div class="col">
-                                <div class="number">30</div>
-                                <div class="title">Người đăng ký học</div>
+                                <div class="number"><?php echo count($student_enrollments); ?></div>
+                                <div class="title">Học viên</div>
                             </div>
                         </div>
                     </div>

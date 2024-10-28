@@ -241,7 +241,7 @@
                     aria-expanded="false">
                     <div class="avatar-sm">
                         <img
-                            src="<?php echo _WEB_ROOT ?>/public/assets/admin/img/profile.jpg"
+                            src="<?php echo _WEB_ROOT ?>/public/assets/admin/img/default_user.jpg"
                             alt="..."
                             class="avatar-img rounded-circle" />
                     </div>
@@ -256,7 +256,7 @@
                             <div class="user-box">
                                 <div class="avatar-lg">
                                     <img
-                                        src="<?php echo _WEB_ROOT ?>/public/assets/admin/img/profile.jpg"
+                                        src="<?php echo _WEB_ROOT ?>/public/assets/admin/img/default_user.jpg"
                                         alt="image profile"
                                         class="avatar-img rounded" />
                                 </div>

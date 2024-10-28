@@ -47,4 +47,8 @@ class CourseFeedback extends Controller
             return $response[0];
         }
     }
+
+    public function get_course_feedbacks($course_id) {
+        return $this -> __model -> select_condition(['course_id' => $course_id]);
+    }
 }
