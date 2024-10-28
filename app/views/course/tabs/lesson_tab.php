@@ -49,6 +49,9 @@ $lessons = $lesson_api->get_controller()->get_lessons($current_course['id']);
                     <div class="nav flex-column nav-pills nav-secondary nav-pills-no-bd" id="lesson-tab-content-btn-group" role="tablist" aria-orientation="vertical">
                         <?php
                         if (!empty($lessons)) {
+                            usort($lessons, function ($a, $b) {
+                                return $a['lesson_index'] <=> $b['lesson_index'];
+                            });
                             foreach ($lessons as $index => $lesson) {
                                 echo '<a ';
                                 echo 'class="nav-link';

@@ -244,7 +244,7 @@ if (empty($filtered_enrollments)) {
                                             <div class="text-center p-4 pb-0">
                                                 <h3 class="mb-0">' . number_format($course['fee'], 0, '.', ',') . ' VNĐ</h3>
                                                 ';
-                                    $course_feed_backs = $feedback_api->get_controller()->get_coursefeed_backs($course['id']);
+                                    $course_feed_backs = $feedback_api->get_controller()->get_course_feedbacks($course['id']);
                                     if (!empty($course_feed_backs)) {
                                         $stars = 0;
                                         $sum = 0;

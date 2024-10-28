@@ -117,30 +117,40 @@ foreach($student_enrollments as $enrollment) {
                                 $file_obj = $file_api -> get_controller() -> retrieve_file($current_course['file_id']);
                                 $image_path = $file_obj['file_path'];
                             }
-                            $course_feed_backs = $feedback_api -> get_controller() -> get_course_feedbacks($current_course['id']);
-                            $stars = 0;
-                            $sum = 0;
-                            foreach($course_feed_backs as $feedback) {
-                                $sum += $feedback['rating'];
-                            }
-                            $total_rating = intdiv($sum, count($course_feed_backs));
-                            $remaining_rating = 5 - $total_rating;
-                            echo '<img class="img-fluid" src="' . _WEB_ROOT . $image_path .'" alt="course-image" style="object-fit:cover; width:100%">'
+                            echo '<img class="img-fluid" src="' . _WEB_ROOT . $image_path .'" alt="course-image" style="object-fit:cover; width:100%">';
+
                             ?>
 
                         </div>
                         <div class="text-center p-4 pb-0">
                             <h3 class="mb-0"><?php echo number_format($current_course['fee'], 0, '.', ',') ?> VNĐ</h3>
+                            <?php $course_feed_backs = $feedback_api -> get_controller() -> get_course_feedbacks($current_course['id']);
+                            if (!empty($course_feed_backs)) {
+                                $stars = 0;
+                                $sum = 0;
+                                foreach($course_feed_backs as $feedback) {
+                                    $sum += $feedback['rating'];
+                                }
+                                $total_rating = intdiv($sum, count($course_feed_backs));
+                                $remaining_rating = 5 - $total_rating;
+                            } ?>
                             <div class="mb-3">
                                 <?php
-                                    for($i = 0; $i< $total_rating; $i++) {
-                                        echo '<small class="fas fa-star star selected"></small>';
-                                    }
-                                    for($j = 0; $j<$remaining_rating; $j++) {
-                                        echo '<small class="fas fa-star star"></small>';
+                                    if (isset($total_rating) && isset($remaining_rating)) {
+                                        for($i = 0; $i< $total_rating; $i++) {
+                                            echo '<small class="fas fa-star star selected"></small>';
+                                        }
+                                        for($j = 0; $j<$remaining_rating; $j++) {
+                                            echo '<small class="fas fa-star star"></small>';
+                                        }
+                                        echo '<small>(' . count($course_feed_backs) . ')</small>';
+                                    } else {
+                                        for($j = 0; $j<5; $j++) {
+                                            echo '<small class="fas fa-star star"></small>';
+                                        }
                                     }
                                 ?>
-                                <small>(<?php echo count($course_feed_backs) ?>)</small>
+
                             </div>
                             <h5 class="mb-4"><?php echo $current_course['name'] ?></h5>
                         </div>
